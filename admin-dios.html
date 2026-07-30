@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASARI - Panel Dios | Centro de Comando</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #0a0a0f;
+            color: #e5e7eb;
+        }
+        
+        .sidebar {
+            background: rgba(10, 10, 20, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+        }
+        
+        .card-dios {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .card-dios:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+        
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        
+        .input-dios {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-dios:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(139, 92, 246, 0.5);
+            outline: none;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.1);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-activo {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .status-inactivo {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="sidebar w-64 flex-shrink-0 flex flex-col">
+        <div class="p-6 border-b border-white/5">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+                    <i data-lucide="shield" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white">ASARI</h1>
+                    <p class="text-xs text-purple-400">Panel Dios</p>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-purple-600/20 text-purple-300">
+                <i data-lucide="building-2" class="w-5 h-5"></i>
+                <span>Institutos</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-white/5 transition">
+                <i data-lucide="users" class="w-5 h-5"></i>
+                <span>Usuarios</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-white/5 transition">
+                <i data-lucide="activity" class="w-5 h-5"></i>
+                <span>Analíticas</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-white/5 transition">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span>Configuración</span>
+            </a>
+        </nav>
+        
+        <div class="p-4 border-t border-white/5">
+            <button onclick="logout()" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 transition w-full">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto">
+        <!-- Header -->
+        <header class="sticky top-0 z-10 bg-[#0a0a0f]/95 backdrop-blur-xl border-b border-white/5 px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Gestión de Institutos</h2>
+                    <p class="text-sm text-gray-400 mt-1">Administra los institutos de la red ASARI</p>
+                </div>
+                <button onclick="openCreateModal()" class="btn-primary px-6 py-2.5 rounded-lg flex items-center space-x-2 text-white font-medium">
+                    <i data-lucide="plus" class="w-5 h-5"></i>
+                    <span>Nuevo Instituto</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-4 gap-4 p-8 pb-0">
+            <div class="card-dios p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-400">Total Institutos</p>
+                        <p class="text-3xl font-bold text-white mt-1" id="totalInstitutos">0</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-purple-600/20 flex items-center justify-center">
+                        <i data-lucide="building-2" class="w-6 h-6 text-purple-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-dios p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-400">Activos</p>
+                        <p class="text-3xl font-bold text-green-400 mt-1" id="institutosActivos">0</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-green-600/20 flex items-center justify-center">
+                        <i data-lucide="check-circle" class="w-6 h-6 text-green-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-dios p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-400">Total Alumnos</p>
+                        <p class="text-3xl font-bold text-blue-400 mt-1" id="totalAlumnos">0</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-blue-600/20 flex items-center justify-center">
+                        <i data-lucide="users" class="w-6 h-6 text-blue-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-dios p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-400">Módulos Activos</p>
+                        <p class="text-3xl font-bold text-yellow-400 mt-1" id="modulosActivos">0</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-yellow-600/20 flex items-center justify-center">
+                        <i data-lucide="zap" class="w-6 h-6 text-yellow-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Institutos Table -->
+        <div class="p-8">
+            <div class="card-dios overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-white/5">
+                                <th class="text-left p-4 text-sm font-medium text-gray-400">Instituto</th>
+                                <th class="text-left p-4 text-sm font-medium text-gray-400">Slug</th>
+                                <th class="text-left p-4 text-sm font-medium text-gray-400">Estado</th>
+                                <th class="text-center p-4 text-sm font-medium text-gray-400">Módulos</th>
+                                <th class="text-center p-4 text-sm font-medium text-gray-400">Alumnos</th>
+                                <th class="text-right p-4 text-sm font-medium text-gray-400">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="institutosTableBody">
+                            <!-- Datos cargados dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="loadingState" class="p-12 text-center">
+                    <i data-lucide="loader-2" class="w-8 h-8 text-purple-400 animate-spin mx-auto mb-4"></i>
+                    <p class="text-gray-400">Cargando institutos...</p>
+                </div>
+                
+                <div id="emptyState" class="hidden p-12 text-center">
+                    <i data-lucide="building-2" class="w-16 h-16 text-gray-600 mx-auto mb-4"></i>
+                    <p class="text-gray-400 text-lg">No hay institutos registrados</p>
+                    <p class="text-gray-600 text-sm mt-2">Crea tu primer instituto para comenzar</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Crear/Editar Instituto -->
+    <div id="institutoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-overlay absolute inset-0" onclick="closeModal()"></div>
+        <div class="card-dios p-8 w-full max-w-lg relative slide-in">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white" id="modalTitle">Nuevo Instituto</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <form id="institutoForm" class="space-y-6">
+                <input type="hidden" id="institutoId">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Nombre del Instituto
+                    </label>
+                    <input 
+                        type="text" 
+                        id="nombreInstituto" 
+                        placeholder="Ej: Instituto Tecnológico REMAP"
+                        class="input-dios w-full px-4 py-3 text-white"
+                        required
+                    >
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Slug (subdominio)
+                    </label>
+                    <input 
+                        type="text" 
+                        id="slugInstituto" 
+                        placeholder="Ej: remaep"
+                        class="input-dios w-full px-4 py-3 text-white lowercase"
+                        required
+                        pattern="[a-z0-9-]+"
+                        title="Solo letras minúsculas, números y guiones"
+                    >
+                    <p class="text-xs text-gray-500 mt-1">Este será el subdominio: remaep.asari.io</p>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="button" onclick="closeModal()" class="flex-1 px-4 py-3 rounded-lg border border-white/10 text-gray-300 hover:bg-white/5 transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-1 btn-primary px-4 py-3 rounded-lg text-white font-medium">
+                        <span id="submitBtnText">Crear Instituto</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script>
+        // ============================================
+        // VERIFICACIÓN DE SESIÓN
+        // ============================================
+        function verificarSesion() {
+            const session = localStorage.getItem('asari_admin_session');
+            if (!session) {
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            
+            const parsed = JSON.parse(session);
+            const now = new Date();
+            const sessionDate = new Date(parsed.timestamp);
+            const hoursDiff = (now - sessionDate) / (1000 * 60 * 60);
+            
+            if (hoursDiff >= 24) {
+                localStorage.removeItem('asari_admin_session');
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // ============================================
+        // CERRAR SESIÓN
+        // ============================================
+        async function logout() {
+            try {
+                await supabase.auth.signOut();
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+            } finally {
+                localStorage.removeItem('asari_admin_session');
+                window.location.href = 'admin-login.html';
+            }
+        }
+        
+        // ============================================
+        // GESTIÓN DE INSTITUTOS
+        // ============================================
+        let institutosData = [];
+        
+        async function cargarInstitutos() {
+            const loadingState = document.getElementById('loadingState');
+            const emptyState = document.getElementById('emptyState');
+            const tableBody = document.getElementById('institutosTableBody');
+            
+            loadingState.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            tableBody.innerHTML = '';
+            
+            try {
+                const { data, error } = await supabase
+                    .from('sys_institutos')
+                    .select(`
+                        *,
+                        padron_global (count)
+                    `)
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                institutosData = data || [];
+                
+                // Actualizar estadísticas
+                actualizarEstadisticas();
+                
+                loadingState.classList.add('hidden');
+                
+                if (institutosData.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    return;
+                }
+                
+                renderizarInstitutos();
+                
+            } catch (error) {
+                console.error('Error cargando institutos:', error);
+                loadingState.classList.add('hidden');
+                alert('Error al cargar los institutos. Por favor recarga la página.');
+            }
+        }
+        
+        function actualizarEstadisticas() {
+            const total = institutosData.length;
+            const activos = institutosData.filter(i => i.estado === 'activo').length;
+            
+            document.getElementById('totalInstitutos').textContent = total;
+            document.getElementById('institutosActivos').textContent = activos;
+            
+            // Contar módulos activos
+            let modulosCount = 0;
+            let alumnosCount = 0;
+            
+            institutosData.forEach(instituto => {
+                if (instituto.modulos_activos) {
+                    if (instituto.modulos_activos.campus) modulosCount++;
+                    if (instituto.modulos_activos.wallet) modulosCount++;
+                    if (instituto.modulos_activos.validador) modulosCount++;
+                    if (instituto.modulos_activos.portal) modulosCount++;
+                }
+                
+                if (instituto.padron_global && Array.isArray(instituto.padron_global)) {
+                    alumnosCount += instituto.padron_global.length;
+                }
+            });
+            
+            document.getElementById('modulosActivos').textContent = modulosCount;
+            document.getElementById('totalAlumnos').textContent = alumnosCount;
+        }
+        
+        function renderizarInstitutos() {
+            const tableBody = document.getElementById('institutosTableBody');
+            
+            tableBody.innerHTML = institutosData.map(instituto => {
+                const modulos = instituto.modulos_activos || {};
+                
+                return `
+                    <tr class="border-b border-white/5 hover:bg-white/[0.02] transition">
+                        <td class="p-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600/20 to-indigo-600/20 flex items-center justify-center">
+                                    <i data-lucide="building-2" class="w-5 h-5 text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-white">${instituto.nombre}</p>
+                                    <p class="text-xs text-gray-500">Creado: ${new Date(instituto.created_at).toLocaleDateString()}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <code class="text-sm text-purple-400 bg-purple-400/10 px-2 py-1 rounded">${instituto.slug_dominio}</code>
+                        </td>
+                        <td class="p-4">
+                            <span class="status-badge ${instituto.estado === 'activo' ? 'status-activo' : 'status-inactivo'}">
+                                ${instituto.estado}
+                            </span>
+                        </td>
+                        <td class="p-4">
+                            <div class="flex items-center justify-center space-x-3">
+                                <label class="toggle-switch" title="Campus">
+                                    <input type="checkbox" ${modulos.campus ? 'checked' : ''} 
+                                           onchange="toggleModulo('${instituto.id}', 'campus', this.checked)">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <label class="toggle-switch" title="Wallet">
+                                    <input type="checkbox" ${modulos.wallet ? 'checked' : ''} 
+                                           onchange="toggleModulo('${instituto.id}', 'wallet', this.checked)">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <label class="toggle-switch" title="Validador">
+                                    <input type="checkbox" ${modulos.validador ? 'checked' : ''} 
+                                           onchange="toggleModulo('${instituto.id}', 'validador', this.checked)">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <label class="toggle-switch" title="Portal">
+                                    <input type="checkbox" ${modulos.portal ? 'checked' : ''} 
+                                           onchange="toggleModulo('${instituto.id}', 'portal', this.checked)">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td class="p-4 text-center">
+                            <span class="text-sm text-gray-300">${instituto.padron_global?.length || 0}</span>
+                        </td>
+                        <td class="p-4">
+                            <div class="flex items-center justify-end space-x-2">
+                                <button onclick="editarInstituto('${instituto.id}')" 
+                                        class="p-2 rounded-lg hover:bg-white/5 transition text-gray-400 hover:text-white">
+                                    <i data-lucide="edit-2" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="toggleEstadoInstituto('${instituto.id}')" 
+                                        class="p-2 rounded-lg hover:bg-white/5 transition text-gray-400 hover:text-yellow-400">
+                                    <i data-lucide="power" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="eliminarInstituto('${instituto.id}')" 
+                                        class="p-2 rounded-lg hover:bg-red-500/10 transition text-gray-400 hover:text-red-400">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Re-inicializar iconos de Lucide
+            lucide.createIcons();
+        }
+        
+        // ============================================
+        // CRUD OPERATIONS
+        // ============================================
+        async function toggleModulo(institutoId, modulo, enabled) {
+            try {
+                const instituto = institutosData.find(i => i.id === institutoId);
+                if (!instituto) return;
+                
+                const nuevosModulos = { ...instituto.modulos_activos, [modulo]: enabled };
+                
+                const { error } = await supabase
+                    .from('sys_institutos')
+                    .update({ modulos_activos: nuevosModulos })
+                    .eq('id', institutoId);
+                
+                if (error) throw error;
+                
+                // Actualizar datos locales
+                instituto.modulos_activos = nuevosModulos;
+                actualizarEstadisticas();
+                
+                console.log(`✅ Módulo ${modulo} ${enabled ? 'activado' : 'desactivado'} para ${instituto.nombre}`);
+            } catch (error) {
+                console.error('Error actualizando módulo:', error);
+                alert('Error al actualizar el módulo. Recargando...');
+                cargarInstitutos();
+            }
+        }
+        
+        async function toggleEstadoInstituto(institutoId) {
+            const instituto = institutosData.find(i => i.id === institutoId);
+            if (!instituto) return;
+            
+            const nuevoEstado = instituto.estado === 'activo' ? 'inactivo' : 'activo';
+            const confirmacion = confirm(`¿Cambiar estado de "${instituto.nombre}" a ${nuevoEstado}?`);
+            
+            if (!confirmacion) return;
+            
+            try {
+                const { error } = await supabase
+                    .from('sys_institutos')
+                    .update({ estado: nuevoEstado })
+                    .eq('id', institutoId);
+                
+                if (error) throw error;
+                
+                await cargarInstitutos();
+                console.log(`✅ Estado de ${instituto.nombre} cambiado a ${nuevoEstado}`);
+            } catch (error) {
+                console.error('Error cambiando estado:', error);
+                alert('Error al cambiar el estado.');
+            }
+        }
+        
+        async function eliminarInstituto(institutoId) {
+            const instituto = institutosData.find(i => i.id === institutoId);
+            if (!instituto) return;
+            
+            const confirmacion = confirm(`¿Estás seguro de eliminar "${instituto.nombre}"?\n\nEsta acción NO se puede deshacer y eliminará TODOS los datos asociados.`);
+            
+            if (!confirmacion) return;
+            
+            try {
+                const { error } = await supabase
+                    .from('sys_institutos')
+                    .delete()
+                    .eq('id', institutoId);
+                
+                if (error) throw error;
+                
+                await cargarInstitutos();
+                console.log(`🗑️ Instituto ${instituto.nombre} eliminado`);
+            } catch (error) {
+                console.error('Error eliminando instituto:', error);
+                alert('Error al eliminar el instituto.');
+            }
+        }
+        
+        // ============================================
+        // MODAL OPERATIONS
+        // ============================================
+        function openCreateModal() {
+            document.getElementById('modalTitle').textContent = 'Nuevo Instituto';
+            document.getElementById('submitBtnText').textContent = 'Crear Instituto';
+            document.getElementById('institutoForm').reset();
+            document.getElementById('institutoId').value = '';
+            document.getElementById('institutoModal').classList.remove('hidden');
+        }
+        
+        function editarInstituto(institutoId) {
+            const instituto = institutosData.find(i => i.id === institutoId);
+            if (!instituto) return;
+            
+            document.getElementById('modalTitle').textContent = 'Editar Instituto';
+            document.getElementById('submitBtnText').textContent = 'Guardar Cambios';
+            document.getElementById('institutoId').value = instituto.id;
+            document.getElementById('nombreInstituto').value = instituto.nombre;
+            document.getElementById('slugInstituto').value = instituto.slug_dominio;
+            document.getElementById('institutoModal').classList.remove('hidden');
+        }
+        
+        function closeModal() {
+            document.getElementById('institutoModal').classList.add('hidden');
+        }
+        
+        // ============================================
+        // FORM SUBMIT
+        // ============================================
+        document.getElementById('institutoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const institutoId = document.getElementById('institutoId').value;
+            const nombre = document.getElementById('nombreInstituto').value.trim();
+            const slug = document.getElementById('slugInstituto').value.trim().toLowerCase();
+            
+            if (!nombre || !slug) {
+                alert('Por favor completa todos los campos.');
+                return;
+            }
+            
+            try {
+                if (institutoId) {
+                    // Actualizar instituto existente
+                    const { error } = await supabase
+                        .from('sys_institutos')
+                        .update({ nombre, slug_dominio: slug })
+                        .eq('id', institutoId);
+                    
+                    if (error) throw error;
+                    
+                    console.log('✅ Instituto actualizado:', nombre);
+                } else {
+                    // Crear nuevo instituto
+                    const { data, error } = await supabase
+                        .from('sys_institutos')
+                        .insert([
+                            { 
+                                nombre, 
+                                slug_dominio: slug,
+                                modulos_activos: {
+                                    campus: false,
+                                    wallet: false,
+                                    validador: true,
+                                    portal: true
+                                }
+                            }
+                        ])
+                        .select()
+                        .single();
+                    
+                    if (error) {
+                        if (error.code === '23505') {
+                            alert('El slug ya está en uso. Por favor elige otro.');
+                            return;
+                        }
+                        throw error;
+                    }
+                    
+                    // Crear configuración por defecto
+                    await supabase
+                        .from('sys_configuracion')
+                        .insert([
+                            {
+                                instituto_id: data.id,
+                                branding: {
+                                    logo_principal: null,
+                                    logo_secundario: null,
+                                    favicon: null,
+                                    colores: {
+                                        primario: '#7c3aed',
+                                        secundario: '#ffffff'
+                                    }
+                                },
+                                terminologia: {
+                                    alumno: 'Alumno',
+                                    docente: 'Instructor',
+                                    wallet: 'Billetera Virtual',
+                                    matricula: 'Nº de Registro'
+                                }
+                            }
+                        ]);
+                    
+                    console.log('✅ Instituto creado:', nombre);
+                }
+                
+                closeModal();
+                await cargarInstitutos();
+                
+            } catch (error) {
+                console.error('Error guardando instituto:', error);
+                alert('Error al guardar el instituto: ' + error.message);
+            }
+        });
+        
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            // ESC para cerrar modal
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            
+            // Ctrl+N para nuevo instituto
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                openCreateModal();
+            }
+        });
+        
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!verificarSesion()) return;
+            
+            lucide.createIcons();
+            cargarInstitutos();
+        });
+    </script>
+</body>
+</html>
