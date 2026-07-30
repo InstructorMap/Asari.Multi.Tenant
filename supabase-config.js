@@ -10,9 +10,8 @@
 const SUPABASE_URL = 'https://wdewtjdimbecdfyntcll.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
 
-const supabase = window.supabase?.createClient 
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-    : supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Inicializamos el cliente y sobreescribimos la variable global para evitar el error "Identifier 'supabase' has already been declared" por el choque con el CDN.
+window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ============================================
 // FUNCIÓN GLOBAL: Obtener Slug del Tenant
@@ -178,4 +177,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Exportar para uso en otros scripts
 window.getTenantSlug = getTenantSlug;
 window.fetchTenantConfig = fetchTenantConfig;
-window.supabase = supabase;
