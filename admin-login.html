@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASARI - Panel Dios Login</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+            outline: none;
+        }
+        
+        .btn-dios {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-dios:hover {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-md">
+        <!-- Logo y Título -->
+        <div class="text-center mb-8">
+            <div class="inline-block p-4 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 mb-4">
+                <i data-lucide="shield" class="w-12 h-12 text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-white glow-text">ASARI</h1>
+            <p class="text-purple-300 mt-2 text-sm tracking-wider">CENTRO DE COMANDO</p>
+            <div class="w-24 h-1 bg-gradient-to-r from-purple-500 to-transparent mx-auto mt-4"></div>
+        </div>
+
+        <!-- Panel de Login -->
+        <div class="glass-panel rounded-2xl p-8">
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-gray-300 text-sm font-medium mb-2">
+                        <i data-lucide="mail" class="w-4 h-4 inline mr-2"></i>
+                        Email Administrador
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        placeholder="admin@asari.io"
+                        class="input-field w-full px-4 py-3 rounded-lg text-white placeholder-gray-500"
+                        required
+                    >
+                </div>
+                
+                <div>
+                    <label class="block text-gray-300 text-sm font-medium mb-2">
+                        <i data-lucide="key" class="w-4 h-4 inline mr-2"></i>
+                        Contraseña
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            placeholder="••••••••"
+                            class="input-field w-full px-4 py-3 rounded-lg text-white placeholder-gray-500"
+                            required
+                        >
+                        <button 
+                            type="button"
+                            onclick="togglePassword()"
+                            class="absolute right-3 top-3 text-gray-400 hover:text-white transition"
+                        >
+                            <i data-lucide="eye-off" id="eyeIcon" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="errorMessage" class="hidden bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-400 text-sm">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 inline mr-2"></i>
+                    <span id="errorText"></span>
+                </div>
+                
+                <button type="submit" class="btn-dios w-full py-3 rounded-lg text-white font-semibold flex items-center justify-center space-x-2">
+                    <i data-lucide="log-in" class="w-5 h-5"></i>
+                    <span>Acceder al Panel Dios</span>
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-gray-500 text-xs">
+                    <i data-lucide="lock" class="w-3 h-3 inline mr-1"></i>
+                    Acceso exclusivo para administradores del sistema
+                </p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="text-center mt-6">
+            <p class="text-gray-600 text-xs">ASARI v1.0.0 - Arquitectura Multi-Tenant</p>
+        </div>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script>
+        // Inicializar iconos
+        lucide.createIcons();
+        
+        // Toggle visibilidad contraseña
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.setAttribute('data-lucide', 'eye');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.setAttribute('data-lucide', 'eye-off');
+            }
+            lucide.createIcons();
+        }
+        
+        // Manejar Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            
+            // Reset errores
+            errorDiv.classList.add('hidden');
+            
+            // Validación básica
+            if (!email || !password) {
+                errorText.textContent = 'Por favor completa todos los campos.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // Deshabilitar botón
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Verificando...</span>';
+            lucide.createIcons();
+            
+            try {
+                // Intentar login con Supabase Auth
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) {
+                    throw error;
+                }
+                
+                if (data?.user) {
+                    // Verificar si es administrador (podrías tener una tabla de roles)
+                    // Por ahora, asumimos que cualquier login exitoso es admin
+                    
+                    // Guardar sesión
+                    localStorage.setItem('asari_admin_session', JSON.stringify({
+                        user: data.user,
+                        timestamp: new Date().toISOString()
+                    }));
+                    
+                    // Redirigir al panel
+                    window.location.href = 'admin-dios.html';
+                }
+            } catch (error) {
+                console.error('Error de login:', error);
+                
+                let mensaje = 'Error al iniciar sesión. Verifica tus credenciales.';
+                
+                if (error.message.includes('Invalid login credentials')) {
+                    mensaje = 'Credenciales inválidas. Por favor intenta de nuevo.';
+                } else if (error.message.includes('Email not confirmed')) {
+                    mensaje = 'Email no confirmado. Revisa tu bandeja de entrada.';
+                }
+                
+                errorText.textContent = mensaje;
+                errorDiv.classList.remove('hidden');
+                
+                // Restaurar botón
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i data-lucide="log-in" class="w-5 h-5"></i><span>Acceder al Panel Dios</span>';
+                lucide.createIcons();
+            }
+        });
+        
+        // Verificar si ya hay sesión activa
+        window.addEventListener('DOMContentLoaded', () => {
+            const session = localStorage.getItem('asari_admin_session');
+            if (session) {
+                const parsed = JSON.parse(session);
+                // Verificar si la sesión no ha expirado (24 horas)
+                const now = new Date();
+                const sessionDate = new Date(parsed.timestamp);
+                const hoursDiff = (now - sessionDate) / (1000 * 60 * 60);
+                
+                if (hoursDiff < 24) {
+                    // Sesión válida, redirigir al panel
+                    window.location.href = 'admin-dios.html';
+                } else {
+                    // Sesión expirada, limpiar
+                    localStorage.removeItem('asari_admin_session');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
