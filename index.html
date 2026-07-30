@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-termino="portal_titulo">Portal Educativo</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        :root {
+            --color-primary: #7c3aed;
+            --color-secondary: #ffffff;
+            --color-primary-light: #a78bfa;
+            --color-primary-dark: #5b21b6;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+        }
+        
+        .btn-primary-custom {
+            background: var(--color-primary);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary-custom:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-outline-custom {
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-custom:hover {
+            background: var(--color-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .animate-delay-1 { animation-delay: 0.2s; }
+        .animate-delay-2 { animation-delay: 0.4s; }
+        .animate-delay-3 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <img 
+                        data-tenant-logo="principal" 
+                        src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%237c3aed'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='20'>🎓</text></svg>"
+                        alt="Logo Instituto" 
+                        class="h-10 w-10 rounded-lg"
+                        onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%237c3aed%22/><text x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2220%22>🎓</text></svg>'"
+                    >
+                    <div>
+                        <h1 class="text-xl font-bold" style="color: var(--color-primary);" id="institutoNombre">
+                            Cargando...
+                        </h1>
+                        <p class="text-xs text-gray-500">Plataforma Educativa</p>
+                    </div>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#inicio" class="text-gray-600 hover:text-gray-900 transition font-medium">Inicio</a>
+                    <a href="#caracteristicas" class="text-gray-600 hover:text-gray-900 transition font-medium">Características</a>
+                    <a href="#modulos" class="text-gray-600 hover:text-gray-900 transition font-medium">Módulos</a>
+                    <a href="wallet.html" class="btn-primary-custom text-white px-6 py-2 rounded-lg font-medium">
+                        <i data-lucide="wallet" class="w-4 h-4 inline mr-2"></i>
+                        <span data-termino="wallet">Billetera Virtual</span>
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" class="w-6 h-6 text-gray-600"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="hidden md:hidden pb-4">
+                <div class="flex flex-col space-y-3 pt-2">
+                    <a href="#inicio" class="text-gray-600 hover:text-gray-900 transition px-4 py-2 rounded-lg hover:bg-gray-50">Inicio</a>
+                    <a href="#caracteristicas" class="text-gray-600 hover:text-gray-900 transition px-4 py-2 rounded-lg hover:bg-gray-50">Características</a>
+                    <a href="#modulos" class="text-gray-600 hover:text-gray-900 transition px-4 py-2 rounded-lg hover:bg-gray-50">Módulos</a>
+                    <a href="wallet.html" class="btn-primary-custom text-white px-4 py-2 rounded-lg font-medium text-center">
+                        <span data-termino="wallet">Billetera Virtual</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-gradient text-white py-20 lg:py-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 animate-fade-in-up">
+                    <div>
+                        <span class="inline-block px-4 py-2 rounded-full bg-white/20 text-sm font-medium mb-4">
+                            🚀 Plataforma Educativa Digital
+                        </span>
+                        <h2 class="text-4xl lg:text-5xl font-extrabold leading-tight">
+                            Transforma tu 
+                            <span class="text-yellow-300">Educación</span> 
+                            al Siguiente Nivel
+                        </h2>
+                        <p class="text-lg text-white/80 mt-4">
+                            Accede a tu campus virtual, credenciales digitales verificables y mucho más. 
+                            Todo centralizado en una sola plataforma.
+                        </p>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="wallet.html" class="btn-primary-custom bg-white text-gray-900 px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center space-x-2 hover:bg-gray-100">
+                            <i data-lucide="smartphone" class="w-5 h-5"></i>
+                            <span>Mi Billetera Digital</span>
+                        </a>
+                        <a href="campus.html" class="btn-outline-custom border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center space-x-2 hover:bg-white hover:text-gray-900">
+                            <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                            <span>Ir al Campus</span>
+                        </a>
+                    </div>
+                    
+                    <div class="flex items-center space-x-8 pt-4">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
+                            <span class="text-sm">Credenciales Digitales</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
+                            <span class="text-sm">Verificación QR</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
+                            <span class="text-sm">Campus Virtual</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hidden lg:flex justify-center animate-fade-in-up animate-delay-2">
+                    <div class="relative">
+                        <div class="w-80 h-80 rounded-full bg-white/10 absolute -top-10 -right-10 blur-3xl"></div>
+                        <div class="relative glass-card p-8 w-96">
+                            <div class="text-center space-y-4">
+                                <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
+                                    <i data-lucide="shield-check" class="w-10 h-10 text-white"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-900">Credencial Verificable</h3>
+                                <div class="bg-gray-100 rounded-lg p-4">
+                                    <div class="w-32 h-32 bg-white rounded-lg mx-auto flex items-center justify-center">
+                                        <i data-lucide="qr-code" class="w-24 h-24 text-gray-900"></i>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600">Escanea para verificar autenticidad</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="caracteristicas" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                    ¿Por qué elegir nuestra plataforma?
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Ofrecemos herramientas modernas para instituciones educativas que buscan innovar
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass-card p-8 text-center animate-fade-in-up">
+                    <div class="feature-icon mx-auto mb-6">
+                        <i data-lucide="smartphone" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Billetera Digital</h3>
+                    <p class="text-gray-600">
+                        Tus credenciales siempre contigo. Accede desde cualquier dispositivo móvil.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="glass-card p-8 text-center animate-fade-in-up animate-delay-1">
+                    <div class="feature-icon mx-auto mb-6">
+                        <i data-lucide="qr-code" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Verificación QR</h3>
+                    <p class="text-gray-600">
+                        Validación instantánea de credenciales mediante código QR seguro.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="glass-card p-8 text-center animate-fade-in-up animate-delay-2">
+                    <div class="feature-icon mx-auto mb-6">
+                        <i data-lucide="play-circle" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Campus Virtual</h3>
+                    <p class="text-gray-600">
+                        Aprendizaje interactivo con videos, recursos y seguimiento de progreso.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section id="modulos" class="py-20" style="background: var(--color-primary-light); background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4">
+                    Módulos Disponibles
+                </h2>
+                <p class="text-lg text-white/80 max-w-2xl mx-auto">
+                    Explora todas las herramientas que tenemos para ti
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <a href="wallet.html" class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition border border-white/20">
+                    <i data-lucide="wallet" class="w-12 h-12 text-white mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2" data-termino="wallet">Billetera Virtual</h3>
+                    <p class="text-white/70 text-sm">Credenciales digitales</p>
+                </a>
+                
+                <a href="campus.html" class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition border border-white/20">
+                    <i data-lucide="graduation-cap" class="w-12 h-12 text-white mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Campus Virtual</h3>
+                    <p class="text-white/70 text-sm">Aulas y recursos</p>
+                </a>
+                
+                <a href="validador.html" class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition border border-white/20">
+                    <i data-lucide="check-shield" class="w-12 h-12 text-white mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Validador</h3>
+                    <p class="text-white/70 text-sm">Verificación QR</p>
+                </a>
+                
+                <a href="#" class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition border border-white/20">
+                    <i data-lucide="book-open" class="w-12 h-12 text-white mx-auto mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Biblioteca</h3>
+                    <p class="text-white/70 text-sm">Recursos digitales</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img data-tenant-logo="principal" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='white'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%237c3aed' font-size='20'>🎓</text></svg>" alt="Logo" class="h-10 w-10 rounded-lg">
+                        <h3 class="text-lg font-bold" id="footerInstitutoNombre">Instituto</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        Plataforma educativa de última generación con credenciales digitales verificables.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Enlaces Rápidos</h4>
+                    <div class="space-y-2 text-gray-400">
+                        <a href="wallet.html" class="block hover:text-white transition">Billetera Digital</a>
+                        <a href="campus.html" class="block hover:text-white transition">Campus Virtual</a>
+                        <a href="validador.html" class="block hover:text-white transition">Validador QR</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Contacto</h4>
+                    <div class="space-y-2 text-gray-400 text-sm">
+                        <p>📧 soporte@instituto.edu</p>
+                        <p>📱 +54 11 1234-5678</p>
+                        <p>📍 Dirección del Instituto</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2026 <span id="copyrightInstituto">Instituto</span>. Todos los derechos reservados. Powered by ASARI</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="supabase-config.js"></script>
+    <script>
+        // Inicializar iconos de Lucide
+        lucide.createIcons();
+        
+        // Toggle menú móvil
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Aplicar configuración del tenant
+        async function inicializarPortal() {
+            try {
+                const tenant = await fetchTenantConfig();
+                
+                if (tenant) {
+                    const { instituto, configuracion } = tenant;
+                    
+                    // Actualizar nombre del instituto en el DOM
+                    document.getElementById('institutoNombre').textContent = instituto.nombre;
+                    document.getElementById('footerInstitutoNombre').textContent = instituto.nombre;
+                    document.getElementById('copyrightInstituto').textContent = instituto.nombre;
+                    
+                    // Actualizar título de la página
+                    document.title = `${instituto.nombre} - Portal Educativo`;
+                    
+                    // Aplicar terminología
+                    if (configuracion.terminologia) {
+                        document.querySelectorAll('[data-termino]').forEach(el => {
+                            const key = el.getAttribute('data-termino');
+                            if (configuracion.terminologia[key]) {
+                                el.textContent = configuracion.terminologia[key];
+                            }
+                        });
+                    }
+                    
+                    console.log('✅ Portal inicializado para:', instituto.nombre);
+                } else {
+                    // Configuración por defecto si no hay tenant
+                    document.getElementById('institutoNombre').textContent = 'ASARI';
+                    document.getElementById('footerInstitutoNombre').textContent = 'ASARI';
+                    document.getElementById('copyrightInstituto').textContent = 'ASARI';
+                }
+            } catch (error) {
+                console.error('Error inicializando portal:', error);
+                document.getElementById('institutoNombre').textContent = 'Plataforma Educativa';
+            }
+        }
+        
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Inicializar al cargar
+        window.addEventListener('DOMContentLoaded', inicializarPortal);
+    </script>
+    
+    <!-- Registrar Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker registrado:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('❌ Error registrando Service Worker:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
