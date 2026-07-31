@@ -8,9 +8,6 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
@@ -95,6 +92,7 @@
                     <input 
                         type="email" 
                         id="email" 
+                        autocomplete="username"
                         placeholder="admin@asari.io"
                         class="input-field w-full px-4 py-3 rounded-lg text-white placeholder-gray-500"
                         required
@@ -110,6 +108,7 @@
                         <input 
                             type="password" 
                             id="password" 
+                            autocomplete="current-password"
                             placeholder="••••••••"
                             class="input-field w-full px-4 py-3 rounded-lg text-white placeholder-gray-500"
                             required
@@ -149,17 +148,8 @@
         </div>
     </div>
 
-    <script>
-        // ============================================
-        // INICIALIZACIÓN DE SUPABASE
-        // ============================================
-        const SUPABASE_URL = 'https://wdewtjdimbecdfyntcll.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
-        
-        window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const supabase = window.supabase;
-    </script>
-
+    <!-- El ?v=2 evita que el navegador cargue un archivo JS roto de la caché -->
+    <script src="supabase-config.js?v=2"></script>
     <script>
         // Inicializar iconos
         lucide.createIcons();
@@ -205,8 +195,8 @@
             lucide.createIcons();
             
             try {
-                // Intentar login con Supabase Auth
-                const { data, error } = await supabase.auth.signInWithPassword({
+                // Como quitamos el const en supabase-config.js, usamos window.supabase
+                const { data, error } = await window.supabase.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
