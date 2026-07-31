@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#7c3aed">
-    <title data-termino="wallet">Billetera Digital</title>
+    <meta name="theme-color" content="#0f172a">
+    <title>Mi Billetera - Plataforma Educativa</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💳</text></svg>">
     
     <!-- Tailwind CSS CDN -->
@@ -22,12 +22,14 @@
     <link rel="manifest" href="manifest.json">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         * {
             font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         
         :root {
@@ -39,49 +41,194 @@
         }
         
         body {
-            background: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: #0f172a;
+            color: #e2e8f0;
             min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
-        .phone-frame {
-            width: 100%;
-            max-width: 400px;
-            min-height: 100vh;
-            background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+        /* Fondo con textura sutil */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(99, 102, 241, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Contenedor principal */
+        .app-container {
             position: relative;
-            overflow-x: hidden;
-            overflow-y: auto;
+            z-index: 1;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             flex-direction: column;
         }
         
-        @media (min-width: 401px) {
-            .phone-frame {
-                border-radius: 30px;
-                min-height: 90vh;
-                max-height: 95vh;
-                margin: 20px;
-            }
+        /* Header */
+        .app-header {
+            padding: 16px 20px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
+        .header-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+        
+        .header-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .header-logo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+        }
+        
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-icon:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        
+        .btn-icon:active {
+            transform: scale(0.95);
+        }
+        
+        /* Main Content */
+        .app-content {
+            flex: 1;
+            padding: 20px;
+            padding-bottom: calc(100px + var(--safe-area-bottom));
+            overflow-y: auto;
+        }
+        
+        /* Saludo */
+        .greeting {
+            margin-bottom: 8px;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .greeting h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        
+        .greeting .wave {
+            display: inline-block;
+            animation: wave 1.5s ease-in-out infinite;
+            transform-origin: 70% 70%;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-5deg); }
+            75% { transform: rotate(10deg); }
+        }
+        
+        .greeting p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        /* Sección de tarjetas */
+        .cards-section {
+            margin-top: 24px;
+        }
+        
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 16px;
+            padding-left: 4px;
+        }
+        
+        /* Tarjeta Credencial Principal */
         .credential-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
             border-radius: 20px;
             padding: 24px;
-            position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            margin: 20px;
-            transition: transform 0.3s ease;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 16px;
         }
         
+        .credential-card:active {
+            transform: scale(0.98);
+        }
+        
+        .credential-card.primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .credential-card.secondary {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+        }
+        
+        .credential-card.tertiary {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+        
+        /* Efecto de brillo en la tarjeta */
         .credential-card::before {
             content: '';
             position: absolute;
@@ -89,47 +236,200 @@
             right: -50%;
             width: 200px;
             height: 200px;
-            background: rgba(255, 255, 255, 0.1);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
             border-radius: 50%;
+            pointer-events: none;
         }
         
-        .credential-card::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -20%;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
         }
         
-        .qr-container {
-            background: white;
+        .card-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card-badge.active {
+            background: rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        
+        .card-type {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.6);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-detail {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-footer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-number {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 0.5px;
+        }
+        
+        .card-chip {
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 255, 255, 0.2));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Quick Actions Grid */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+            animation: fadeInUp 0.6s ease-out 0.3s both;
+        }
+        
+        .action-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
-            padding: 16px;
-            display: inline-block;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 10px;
         }
         
+        .action-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+        
+        .action-card:active {
+            transform: scale(0.97);
+        }
+        
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        
+        .action-icon.purple {
+            background: rgba(124, 58, 237, 0.2);
+            color: #a78bfa;
+        }
+        
+        .action-icon.blue {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+        
+        .action-icon.green {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+        
+        .action-icon.orange {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+        }
+        
+        .action-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .action-sub {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* Tab Bar inferior */
         .tab-bar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: var(--safe-area-bottom);
-            margin-top: auto;
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(30px);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 8px 20px;
+            padding-bottom: calc(8px + var(--safe-area-bottom));
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 20;
         }
         
         .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            cursor: pointer;
             transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
             position: relative;
         }
         
         .tab-item.active {
-            color: var(--color-primary);
+            color: var(--color-primary-light);
         }
         
-        .tab-item.active::after {
+        .tab-item.active::before {
             content: '';
             position: absolute;
             top: -8px;
@@ -141,228 +441,550 @@
             background: var(--color-primary);
         }
         
-        .pulse-dot {
-            width: 10px;
-            height: 10px;
-            background: #10b981;
+        .tab-item span {
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
+            50% { box-shadow: 0 0 20px 4px rgba(124, 58, 237, 0.2); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+        
+        /* Loader */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.3s ease;
+        }
+        
+        .loader-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--color-primary);
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            animation: spin 0.8s linear infinite;
         }
         
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .animate-slide-up {
-            animation: slideUp 0.5s ease-out;
+        /* Responsive ajustes */
+        @media (min-width: 481px) {
+            .app-container {
+                border-left: 1px solid rgba(255, 255, 255, 0.05);
+                border-right: 1px solid rgba(255, 255, 255, 0.05);
+            }
+            
+            .credential-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="phone-frame">
-        <!-- Header -->
-        <div class="px-5 pt-12 pb-6">
-            <div class="flex items-center justify-between">
-                <button onclick="history.back()" class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition">
-                    <i data-lucide="arrow-left" class="w-5 h-5 text-white"></i>
-                </button>
-                <h1 class="text-white font-bold text-lg" data-termino="wallet">Billetera Digital</h1>
-                <button class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition">
-                    <i data-lucide="more-vertical" class="w-5 h-5 text-white"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="flex-1 px-5 space-y-6">
-            <!-- Credential Card -->
-            <div class="credential-card animate-slide-up">
-                <div class="relative z-10">
-                    <!-- Institute Logo & Name -->
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="flex items-center space-x-3">
-                            <img data-tenant-logo="principal" src="" alt="Logo" class="w-12 h-12 rounded-lg bg-white/20" onerror="this.style.display='none'">
-                            <div>
-                                <p class="text-white/80 text-xs" id="institutoLabel">Instituto</p>
-                                <p class="text-white font-bold text-sm" id="institutoNombre">Cargando...</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <div class="pulse-dot"></div>
-                            <span class="text-white text-xs font-medium">ACTIVO</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Student Info -->
-                    <div class="mb-6">
-                        <h2 class="text-white text-2xl font-bold" id="nombreAlumno">Estudiante</h2>
-                        <p class="text-white/70 text-sm mt-1" id="rolAlumno">Rol del estudiante</p>
-                    </div>
-                    
-                    <!-- Dynamic Data -->
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <p class="text-white/60 text-xs" data-termino="matricula">Nº de Registro</p>
-                            <p class="text-white font-semibold" id="numeroMatricula">000000</p>
-                        </div>
-                        <div>
-                            <p class="text-white/60 text-xs">Documento</p>
-                            <p class="text-white font-semibold" id="documentoAlumno">00.000.000</p>
-                        </div>
-                        <div class="col-span-2">
-                            <p class="text-white/60 text-xs">Válido hasta</p>
-                            <p class="text-white font-semibold">31/12/2026</p>
-                        </div>
-                    </div>
-                    
-                    <!-- QR Code -->
-                    <div class="text-center">
-                        <div class="qr-container inline-block mb-3">
-                            <i data-lucide="qr-code" class="w-32 h-32 text-gray-900"></i>
-                        </div>
-                        <p class="text-white/60 text-xs">Mostrar este código para validar</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Quick Actions -->
-            <div class="grid grid-cols-2 gap-4 animate-slide-up" style="animation-delay: 0.2s;">
-                <a href="campus.html" class="bg-white/20 backdrop-blur-lg rounded-2xl p-6 text-center hover:bg-white/30 transition border border-white/20">
-                    <i data-lucide="graduation-cap" class="w-8 h-8 text-white mx-auto mb-2"></i>
-                    <span class="text-white font-medium text-sm">Campus Virtual</span>
-                </a>
-                
-                <a href="#" class="bg-white/20 backdrop-blur-lg rounded-2xl p-6 text-center hover:bg-white/30 transition border border-white/20">
-                    <i data-lucide="book-open" class="w-8 h-8 text-white mx-auto mb-2"></i>
-                    <span class="text-white font-medium text-sm">Biblioteca</span>
-                </a>
-            </div>
-            
-            <!-- Recent Activity -->
-            <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 animate-slide-up" style="animation-delay: 0.3s;">
-                <h3 class="text-white font-semibold mb-4">Actividad Reciente</h3>
-                <div class="space-y-3">
-                    <div class="flex items-center space-x-3 text-white/80">
-                        <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
-                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-white">Credencial verificada</p>
-                            <p class="text-xs text-white/60">Hace 2 horas</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3 text-white/80">
-                        <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                            <i data-lucide="book-open" class="w-4 h-4 text-blue-400"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-white">Acceso al campus</p>
-                            <p class="text-xs text-white/60">Ayer</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Loader inicial -->
+    <div class="loader-overlay" id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+    
+    <!-- Contenedor principal -->
+    <div class="app-container">
         
-        <!-- Bottom Tab Bar -->
-        <div class="tab-bar px-6 py-3 mt-6">
-            <div class="flex justify-between items-center">
-                <button class="tab-item active flex flex-col items-center space-y-1">
-                    <i data-lucide="wallet" class="w-6 h-6"></i>
-                    <span class="text-xs font-medium">Billetera</span>
-                </button>
-                <button class="tab-item flex flex-col items-center space-y-1 text-gray-400" onclick="window.location.href='campus.html'">
-                    <i data-lucide="play-circle" class="w-6 h-6"></i>
-                    <span class="text-xs font-medium">Campus</span>
-                </button>
-                <button class="tab-item flex flex-col items-center space-y-1 text-gray-400">
-                    <i data-lucide="user" class="w-6 h-6"></i>
-                    <span class="text-xs font-medium">Perfil</span>
-                </button>
+        <!-- Header -->
+        <header class="app-header">
+            <!-- Logo del Instituto -->
+            <div class="header-logo" id="headerLogoContainer">
+                <div class="header-logo-placeholder" id="headerLogoPlaceholder">
+                    <span>🎓</span>
+                </div>
+                <img 
+                    data-tenant-logo="principal" 
+                    src="" 
+                    alt="Logo" 
+                    id="headerLogoImg"
+                    style="display: none;"
+                    onerror="this.style.display='none'; document.getElementById('headerLogoPlaceholder').style.display='flex';"
+                    onload="this.style.display='block'; document.getElementById('headerLogoPlaceholder').style.display='none';"
+                >
             </div>
-        </div>
+            
+            <!-- Nombre del Instituto (móvil) -->
+            <div class="hidden sm:block">
+                <span class="text-sm font-semibold text-white" id="headerInstituteName">Instituto</span>
+            </div>
+            
+            <!-- Botón Cerrar Sesión -->
+            <button class="btn-icon" onclick="handleLogout()" aria-label="Cerrar Sesión" title="Cerrar Sesión">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+            </button>
+        </header>
+        
+        <!-- Contenido principal -->
+        <main class="app-content">
+            
+            <!-- Saludo Personalizado -->
+            <div class="greeting">
+                <h1>
+                    Hola, <span id="studentName">Estudiante</span> 
+                    <span class="wave">👋</span>
+                </h1>
+                <p>Tus credenciales y certificados</p>
+            </div>
+            
+            <!-- Sección de Tarjetas -->
+            <div class="cards-section">
+                <p class="section-title">Credencial Principal</p>
+                
+                <!-- Tarjeta Principal - Matrícula -->
+                <div class="credential-card primary pulse-glow" onclick="expandCard(this)">
+                    <div class="card-header">
+                        <span class="card-type">Matrícula Activa</span>
+                        <span class="card-badge active">ACTIVO</span>
+                    </div>
+                    <h2 class="card-name" id="cardStudentName">María García</h2>
+                    <p class="card-detail" id="cardStudentRole">Alumna Regular</p>
+                    <div class="card-footer">
+                        <div>
+                            <span class="card-number" id="cardMatricula">Nº 2024-00123</span>
+                        </div>
+                        <div class="card-chip">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-yellow-300"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta Secundaria - Certificación -->
+                <div class="credential-card secondary" onclick="expandCard(this)">
+                    <div class="card-header">
+                        <span class="card-type">Certificación</span>
+                        <span class="card-badge">EN CURSO</span>
+                    </div>
+                    <h2 class="card-name">Programa Académico</h2>
+                    <p class="card-detail">Curso 2026 - Primer Semestre</p>
+                    <div class="card-footer">
+                        <div>
+                            <span class="card-number">Progreso: 65%</span>
+                        </div>
+                        <div class="card-chip">
+                            <i data-lucide="graduation-cap" class="w-4 h-4 text-white/60"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta Terciaria - Certificado Adicional -->
+                <div class="credential-card tertiary" onclick="expandCard(this)">
+                    <div class="card-header">
+                        <span class="card-type">Taller Complementario</span>
+                        <span class="card-badge" style="background: rgba(16, 185, 129, 0.3); border: 1px solid rgba(16, 185, 129, 0.4);">COMPLETADO</span>
+                    </div>
+                    <h2 class="card-name">Habilidades Digitales</h2>
+                    <p class="card-detail">Finalizado: Diciembre 2025</p>
+                    <div class="card-footer">
+                        <div>
+                            <span class="card-number">Certificado Nº 2025-089</span>
+                        </div>
+                        <div class="card-chip">
+                            <i data-lucide="award" class="w-4 h-4 text-white/60"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Acciones Rápidas -->
+            <div class="quick-actions">
+                <div class="action-card" onclick="window.location.href='campus.html'">
+                    <div class="action-icon purple">
+                        <i data-lucide="play-circle" class="w-6 h-6"></i>
+                    </div>
+                    <span class="action-label">Campus Virtual</span>
+                    <span class="action-sub">Continuar aprendiendo</span>
+                </div>
+                
+                <div class="action-card" onclick="showQRCode()">
+                    <div class="action-icon blue">
+                        <i data-lucide="qr-code" class="w-6 h-6"></i>
+                    </div>
+                    <span class="action-label">Mostrar QR</span>
+                    <span class="action-sub">Para validación</span>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='validador.html'">
+                    <div class="action-icon green">
+                        <i data-lucide="check-shield" class="w-6 h-6"></i>
+                    </div>
+                    <span class="action-label">Validador</span>
+                    <span class="action-sub">Verificar credencial</span>
+                </div>
+                
+                <div class="action-card" onclick="alert('📚 Biblioteca - Próximamente')">
+                    <div class="action-icon orange">
+                        <i data-lucide="book-open" class="w-6 h-6"></i>
+                    </div>
+                    <span class="action-label">Biblioteca</span>
+                    <span class="action-sub">Recursos digitales</span>
+                </div>
+            </div>
+            
+        </main>
+        
+        <!-- Tab Bar inferior -->
+        <nav class="tab-bar">
+            <a href="#" class="tab-item active">
+                <i data-lucide="wallet" class="w-5 h-5"></i>
+                <span>Billetera</span>
+            </a>
+            <a href="campus.html" class="tab-item">
+                <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                <span>Campus</span>
+            </a>
+            <a href="#" class="tab-item" onclick="showQRCode()">
+                <i data-lucide="qr-code" class="w-5 h-5"></i>
+                <span>Mi QR</span>
+            </a>
+            <a href="#" class="tab-item" onclick="alert('👤 Perfil - Próximamente')">
+                <i data-lucide="user" class="w-5 h-5"></i>
+                <span>Perfil</span>
+            </a>
+        </nav>
+        
     </div>
 
-    <script src="supabase-config.js"></script>
+    <!-- ============================================ -->
+    <!-- CONFIGURACIÓN CENTRAL -->
+    <!-- ============================================ -->
+    <script src="supabase-config.js?v=3"></script>
+
+    <!-- ============================================ -->
+    <!-- LÓGICA DE LA BILLETERA -->
+    <!-- ============================================ -->
     <script>
-        // Inicializar iconos
+        // ============================================
+        // INICIALIZACIÓN DE ICONOS
+        // ============================================
         lucide.createIcons();
         
-        // Cargar datos del estudiante y configuración del tenant
-        async function inicializarWallet() {
+        // ============================================
+        // REFERENCIAS AL DOM
+        // ============================================
+        const loader = document.getElementById('loader');
+        const studentName = document.getElementById('studentName');
+        const cardStudentName = document.getElementById('cardStudentName');
+        const cardStudentRole = document.getElementById('cardStudentRole');
+        const cardMatricula = document.getElementById('cardMatricula');
+        const headerLogoImg = document.getElementById('headerLogoImg');
+        const headerLogoPlaceholder = document.getElementById('headerLogoPlaceholder');
+        const headerInstituteName = document.getElementById('headerInstituteName');
+        
+        // ============================================
+        // VERIFICACIÓN DE SESIÓN (PROTECCIÓN DE RUTA)
+        // ============================================
+        async function checkAuth() {
             try {
-                const slug = getTenantSlug();
-                const tenant = await fetchTenantConfig();
+                const { data: { session }, error } = await window.supabase.auth.getSession();
+                
+                if (error) {
+                    console.error('Error verificando sesión:', error);
+                    redirectToLogin();
+                    return false;
+                }
+                
+                if (!session?.user) {
+                    console.warn('⚠️ No hay sesión activa');
+                    redirectToLogin();
+                    return false;
+                }
+                
+                console.log('✅ Sesión verificada:', session.user.email);
+                
+                // Guardar datos básicos del usuario
+                window.__CURRENT_USER__ = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    lastSignIn: session.user.last_sign_in_at
+                };
+                
+                return true;
+                
+            } catch (error) {
+                console.error('Error crítico verificando sesión:', error);
+                redirectToLogin();
+                return false;
+            }
+        }
+        
+        function redirectToLogin() {
+            const tenantSlug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+            const loginUrl = `login.html?instituto=${encodeURIComponent(tenantSlug)}`;
+            
+            console.log('🔒 Redirigiendo a login:', loginUrl);
+            
+            // Pequeño retraso para que el loader sea visible
+            setTimeout(() => {
+                window.location.href = loginUrl;
+            }, 500);
+        }
+        
+        // ============================================
+        // CERRAR SESIÓN
+        // ============================================
+        async function handleLogout() {
+            // Confirmación visual
+            const confirmed = confirm('¿Estás seguro de que deseas cerrar sesión?');
+            
+            if (!confirmed) return;
+            
+            try {
+                // Mostrar loader
+                loader.classList.remove('hidden');
+                
+                // Cerrar sesión en Supabase
+                const { error } = await window.supabase.auth.signOut();
+                
+                if (error) {
+                    console.error('Error al cerrar sesión:', error);
+                    throw error;
+                }
+                
+                // Limpiar datos locales
+                localStorage.removeItem('asari_user_session');
+                
+                console.log('👋 Sesión cerrada exitosamente');
+                
+                // Redirigir al login
+                redirectToLogin();
+                
+            } catch (error) {
+                console.error('Error en logout:', error);
+                alert('Hubo un error al cerrar sesión. Intenta de nuevo.');
+                loader.classList.add('hidden');
+            }
+        }
+        
+        // ============================================
+        // INICIALIZACIÓN DEL TENANT (BRANDING)
+        // ============================================
+        async function inicializarTenant() {
+            try {
+                // Esperar a que fetchTenantConfig esté disponible
+                if (typeof window.fetchTenantConfig !== 'function') {
+                    console.warn('fetchTenantConfig no disponible aún, reintentando...');
+                    setTimeout(inicializarTenant, 100);
+                    return;
+                }
+                
+                const tenant = await window.fetchTenantConfig();
                 
                 if (tenant) {
                     const { instituto, configuracion } = tenant;
                     
-                    // Actualizar UI con datos del instituto
-                    document.getElementById('institutoNombre').textContent = instituto.nombre;
-                    document.getElementById('institutoLabel').textContent = instituto.slug_dominio;
-                    document.title = `${configuracion.terminologia?.wallet || 'Billetera'} - ${instituto.nombre}`;
+                    // Actualizar nombre del instituto en el header
+                    headerInstituteName.textContent = instituto.nombre;
                     
-                    // Cargar datos del estudiante (simulado)
-                    // En producción, esto vendría de padron_global con auth.uid()
-                    const datosDemo = {
-                        nombre: 'María García',
-                        rol: configuracion.terminologia?.alumno || 'Alumno',
-                        matricula: '2024-00123',
-                        documento: '12.345.678'
-                    };
+                    // Actualizar título de la página
+                    document.title = `Mi Billetera - ${instituto.nombre}`;
                     
-                    document.getElementById('nombreAlumno').textContent = datosDemo.nombre;
-                    document.getElementById('rolAlumno').textContent = datosDemo.rol;
-                    document.getElementById('numeroMatricula').textContent = datosDemo.matricula;
-                    document.getElementById('documentoAlumno').textContent = datosDemo.documento;
-                    
-                    // Aplicar terminología
-                    document.querySelectorAll('[data-termino]').forEach(el => {
-                        const key = el.getAttribute('data-termino');
-                        if (configuracion.terminologia[key]) {
-                            el.textContent = configuracion.terminologia[key];
-                        }
-                    });
-                    
-                    // Aplicar color primario al theme-color
-                    if (configuracion.branding?.colores?.primario) {
-                        document.querySelector('meta[name="theme-color"]')
-                            .setAttribute('content', configuracion.branding.colores.primario);
+                    // Actualizar logo si existe en branding
+                    if (configuracion?.branding?.logo_principal) {
+                        headerLogoImg.src = configuracion.branding.logo_principal;
+                        headerLogoImg.style.display = 'block';
+                        headerLogoPlaceholder.style.display = 'none';
+                    } else {
+                        headerLogoImg.style.display = 'none';
+                        headerLogoPlaceholder.style.display = 'flex';
+                        headerLogoPlaceholder.style.background = 
+                            `linear-gradient(135deg, var(--color-primary-light), var(--color-primary))`;
                     }
+                    
+                    // Aplicar terminología si existe
+                    if (configuracion?.terminologia) {
+                        const term = configuracion.terminologia;
+                        
+                        // Actualizar textos con terminología personalizada
+                        if (term.alumno) {
+                            cardStudentRole.textContent = term.alumno + ' Regular';
+                        }
+                        if (term.matricula) {
+                            cardMatricula.textContent = term.matricula + ' 2024-00123';
+                        }
+                        
+                        // Actualizar data-termino elements
+                        document.querySelectorAll('[data-termino]').forEach(el => {
+                            const key = el.getAttribute('data-termino');
+                            if (term[key]) {
+                                el.textContent = term[key];
+                            }
+                        });
+                    }
+                    
+                    console.log('✅ Wallet inicializada para:', instituto.nombre);
+                } else {
+                    // Fallback
+                    headerInstituteName.textContent = 'Instituto';
                 }
             } catch (error) {
-                console.error('Error inicializando wallet:', error);
+                console.error('Error inicializando tenant en wallet:', error);
+                headerInstituteName.textContent = 'Instituto';
             }
         }
         
-        // Prevenir scroll no deseado en iOS
-        document.body.addEventListener('touchmove', function(e) {
+        // ============================================
+        // CARGAR DATOS DEL ESTUDIANTE (SIMULADO)
+        // ============================================
+        async function cargarDatosEstudiante() {
+            try {
+                // En el futuro, esto consultará padron_global con auth.uid()
+                // Por ahora, datos simulados
+                
+                const userEmail = window.__CURRENT_USER__?.email || 'estudiante@instituto.edu';
+                
+                // Simular carga
+                await new Promise(resolve => setTimeout(resolve, 600));
+                
+                // Datos de demostración
+                const datosDemo = {
+                    nombre: 'María García',
+                    rol: 'Alumna Regular',
+                    matricula: 'Nº 2024-00123'
+                };
+                
+                // Actualizar UI
+                studentName.textContent = datosDemo.nombre;
+                cardStudentName.textContent = datosDemo.nombre;
+                cardStudentRole.textContent = datosDemo.rol;
+                cardMatricula.textContent = datosDemo.matricula;
+                
+                console.log('👩‍🎓 Datos del estudiante cargados');
+                
+            } catch (error) {
+                console.error('Error cargando datos del estudiante:', error);
+            }
+        }
+        
+        // ============================================
+        // FUNCIONES DE UI
+        // ============================================
+        
+        // Expandir tarjeta (efecto visual)
+        function expandCard(card) {
+            // Pequeño efecto de escala
+            card.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.transform = 'scale(1.02)';
+            
+            setTimeout(() => {
+                card.style.transform = 'scale(1)';
+            }, 300);
+            
+            // Mostrar detalle (en el futuro abrirá un modal con QR)
+            const cardName = card.querySelector('.card-name')?.textContent || 'Credencial';
+            console.log('📇 Tarjeta seleccionada:', cardName);
+        }
+        
+        // Mostrar QR Code
+        function showQRCode() {
+            // Simulación de QR - en el futuro generará QR real
+            alert(
+                '📱 Código QR de Verificación\n\n' +
+                'Escanea este código para validar tu credencial.\n\n' +
+                'Próximamente: QR dinámico con datos reales.'
+            );
+        }
+        
+        // ============================================
+        // INICIALIZACIÓN PRINCIPAL
+        // ============================================
+        async function inicializar() {
+            console.log('💳 Inicializando Billetera ASARI...');
+            
+            // 1. Verificar autenticación
+            const isAuthenticated = await checkAuth();
+            
+            if (!isAuthenticated) {
+                return; // Ya se redirigió al login
+            }
+            
+            // 2. Inicializar tenant (branding, colores, logos)
+            await inicializarTenant();
+            
+            // 3. Cargar datos del estudiante
+            await cargarDatosEstudiante();
+            
+            // 4. Ocultar loader
+            setTimeout(() => {
+                loader.classList.add('hidden');
+            }, 300);
+            
+            console.log('✅ Billetera inicializada correctamente');
+        }
+        
+        // ============================================
+        // EVENTOS DEL DOM
+        // ============================================
+        window.addEventListener('DOMContentLoaded', inicializar);
+        
+        // Prevenir scroll no deseado en iOS cuando se arrastra hacia abajo
+        document.addEventListener('touchmove', function(e) {
             if (e.target === document.body) {
                 e.preventDefault();
             }
         }, { passive: false });
         
-        // Inicializar
-        window.addEventListener('DOMContentLoaded', inicializarWallet);
+        // Refrescar iconos si hay cambios dinámicos
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+        });
+        
+        // Manejar el botón de retroceso del navegador
+        window.addEventListener('popstate', () => {
+            // Prevenir que el usuario navegue hacia atrás al login
+            history.pushState(null, '', window.location.href);
+        });
+        
+        // Empujar estado inicial para prevenir retroceso
+        history.pushState(null, '', window.location.href);
+        
+        console.log('💳 Wallet ASARI - Lista');
     </script>
     
-    <!-- Registrar Service Worker -->
+    <!-- Registrar Service Worker para PWA -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then(registration => {
-                        console.log('✅ SW registrado en wallet');
+                        console.log('✅ SW registrado en wallet:', registration.scope);
                     })
                     .catch(error => {
-                        console.log('Error SW:', error);
+                        console.log('⚠️ Error registrando SW:', error);
                     });
             });
         }
