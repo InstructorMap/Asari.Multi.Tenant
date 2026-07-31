@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Plataforma Educativa</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --color-primary: #7c3aed;
+            --color-secondary: #ffffff;
+            --color-primary-light: #a78bfa;
+            --color-primary-dark: #5b21b6;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        /* Fondo animado con patrón sutil */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .login-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+        }
+        
+        .login-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+        }
+        
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 42px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.2s ease;
+            z-index: 2;
+        }
+        
+        .password-toggle:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-login:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+        }
+        
+        .btn-login:hover:not(:disabled)::before {
+            left: 100%;
+        }
+        
+        .btn-login:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fca5a5;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            animation: shake 0.4s ease;
+        }
+        
+        .error-message.hidden {
+            display: none;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .animate-delay-1 { animation-delay: 0.1s; }
+        .animate-delay-2 { animation-delay: 0.2s; }
+        .animate-delay-3 { animation-delay: 0.3s; }
+        
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin: 0 auto 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .logo-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .institute-name {
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+        
+        .institute-subtitle {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 24px 0;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-text {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+            margin-top: 32px;
+        }
+        
+        .footer-text a {
+            color: var(--color-primary-light);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .footer-text a:hover {
+            color: white;
+        }
+        
+        /* Loader spinner */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .animate-spin {
+            animation: spin 0.8s linear infinite;
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 28px 24px;
+                border-radius: 20px;
+            }
+            
+            .institute-name {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            
+            <!-- Logo del Instituto -->
+            <div class="logo-container animate-fade-in-up" id="logoContainer">
+                <div class="logo-placeholder" id="logoPlaceholder">
+                    <span>🎓</span>
+                </div>
+                <img 
+                    data-tenant-logo="principal" 
+                    src="" 
+                    alt="Logo Instituto" 
+                    id="logoInstituto"
+                    style="display: none;"
+                    onerror="this.style.display='none'; document.getElementById('logoPlaceholder').style.display='flex';"
+                    onload="this.style.display='block'; document.getElementById('logoPlaceholder').style.display='none';"
+                >
+            </div>
+            
+            <!-- Nombre del Instituto -->
+            <h1 class="institute-name animate-fade-in-up animate-delay-1" id="institutoNombre">
+                Cargando...
+            </h1>
+            <p class="institute-subtitle animate-fade-in-up animate-delay-1" id="institutoSlug">
+                Plataforma Educativa
+            </p>
+            
+            <!-- Mensaje de Error -->
+            <div id="errorMessage" class="error-message hidden">
+                <i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0"></i>
+                <span id="errorText">Credenciales inválidas</span>
+            </div>
+            
+            <!-- Formulario de Login -->
+            <form id="loginForm" class="animate-fade-in-up animate-delay-2">
+                <!-- Email -->
+                <div class="input-group">
+                    <label class="input-label" for="email">
+                        <i data-lucide="mail" class="w-4 h-4 inline mr-2"></i>
+                        Correo Electrónico
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="input-field" 
+                        placeholder="tu@email.com"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+                
+                <!-- Contraseña -->
+                <div class="input-group">
+                    <label class="input-label" for="password">
+                        <i data-lucide="lock" class="w-4 h-4 inline mr-2"></i>
+                        Contraseña
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="input-field" 
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                        required
+                    >
+                    <button 
+                        type="button" 
+                        class="password-toggle" 
+                        onclick="togglePasswordVisibility()"
+                        aria-label="Mostrar/ocultar contraseña"
+                        tabindex="-1"
+                    >
+                        <i data-lucide="eye-off" id="eyeIcon" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <!-- Recordarme (opcional visual) -->
+                <div class="flex items-center justify-between mb-6">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input 
+                            type="checkbox" 
+                            id="rememberMe"
+                            class="w-4 h-4 rounded border-gray-600 bg-gray-800 text-purple-600 focus:ring-purple-500 focus:ring-offset-0 cursor-pointer"
+                        >
+                        <span class="text-sm text-gray-400 group-hover:text-gray-300 transition">
+                            Recordarme
+                        </span>
+                    </label>
+                    <a href="#" class="text-sm text-gray-400 hover:text-purple-400 transition">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                </div>
+                
+                <!-- Botón de Login -->
+                <button type="submit" class="btn-login" id="submitBtn">
+                    <i data-lucide="log-in" class="w-5 h-5"></i>
+                    <span>Iniciar Sesión</span>
+                </button>
+            </form>
+            
+            <!-- Separador -->
+            <div class="divider animate-fade-in-up animate-delay-3">
+                <span>Acceso seguro</span>
+            </div>
+            
+            <!-- Link al portal -->
+            <div class="text-center animate-fade-in-up animate-delay-3">
+                <a href="index.html" class="text-sm text-gray-400 hover:text-purple-400 transition inline-flex items-center gap-2">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    Volver al Portal
+                </a>
+            </div>
+            
+            <!-- Footer -->
+            <p class="footer-text animate-fade-in-up animate-delay-3">
+                Protegido por <strong>ASARI</strong>
+                <br>
+                <span style="font-size: 11px;">Autenticación Multi-Tenant Segura</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CONFIGURACIÓN CENTRAL -->
+    <!-- ============================================ -->
+    <script src="supabase-config.js?v=3"></script>
+
+    <!-- ============================================ -->
+    <!-- LÓGICA DEL LOGIN -->
+    <!-- ============================================ -->
+    <script>
+        // ============================================
+        // INICIALIZACIÓN DE ICONOS
+        // ============================================
+        lucide.createIcons();
+        
+        // ============================================
+        // REFERENCIAS AL DOM
+        // ============================================
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const logoInstituto = document.getElementById('logoInstituto');
+        const logoPlaceholder = document.getElementById('logoPlaceholder');
+        const institutoNombre = document.getElementById('institutoNombre');
+        const institutoSlug = document.getElementById('institutoSlug');
+        const rememberMe = document.getElementById('rememberMe');
+        
+        // ============================================
+        // TOGGLE VISIBILIDAD DE CONTRASEÑA
+        // ============================================
+        function togglePasswordVisibility() {
+            const isPassword = passwordInput.type === 'password';
+            
+            passwordInput.type = isPassword ? 'text' : 'password';
+            
+            // Actualizar icono
+            eyeIcon.setAttribute('data-lucide', isPassword ? 'eye' : 'eye-off');
+            lucide.createIcons();
+            
+            // Mantener foco en el input
+            passwordInput.focus();
+        }
+        
+        // ============================================
+        // MOSTRAR ERROR
+        // ============================================
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+            
+            // Sacudir el formulario para feedback visual
+            errorMessage.style.animation = 'none';
+            errorMessage.offsetHeight; // Trigger reflow
+            errorMessage.style.animation = 'shake 0.4s ease';
+            
+            // Ocultar después de 5 segundos
+            clearTimeout(window._errorTimeout);
+            window._errorTimeout = setTimeout(() => {
+                errorMessage.classList.add('hidden');
+            }, 5000);
+        }
+        
+        function hideError() {
+            errorMessage.classList.add('hidden');
+            clearTimeout(window._errorTimeout);
+        }
+        
+        // ============================================
+        // ESTADO DE CARGA DEL BOTÓN
+        // ============================================
+        function setLoadingState(isLoading) {
+            submitBtn.disabled = isLoading;
+            
+            if (isLoading) {
+                submitBtn.innerHTML = `
+                    <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+                    <span>Verificando...</span>
+                `;
+            } else {
+                submitBtn.innerHTML = `
+                    <i data-lucide="log-in" class="w-5 h-5"></i>
+                    <span>Iniciar Sesión</span>
+                `;
+            }
+            
+            lucide.createIcons();
+        }
+        
+        // ============================================
+        // REDIRIGIR SI YA HAY SESIÓN ACTIVA
+        // ============================================
+        async function checkExistingSession() {
+            try {
+                const { data: { session }, error } = await window.supabase.auth.getSession();
+                
+                if (error) {
+                    console.warn('Error verificando sesión existente:', error);
+                    return false;
+                }
+                
+                if (session?.user) {
+                    console.log('✅ Sesión activa detectada, redirigiendo a wallet...');
+                    return true;
+                }
+                
+                return false;
+            } catch (error) {
+                console.error('Error en verificación de sesión:', error);
+                return false;
+            }
+        }
+        
+        // ============================================
+        // MANEJAR LOGIN
+        // ============================================
+        async function handleLogin(email, password) {
+            try {
+                const { data, error } = await window.supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) {
+                    // Mapear errores comunes a mensajes amigables
+                    switch (error.message) {
+                        case 'Invalid login credentials':
+                            throw new Error('Email o contraseña incorrectos. Verifica tus datos.');
+                        case 'Email not confirmed':
+                            throw new Error('Debes confirmar tu correo electrónico antes de iniciar sesión.');
+                        case 'User not found':
+                            throw new Error('No existe una cuenta con este correo electrónico.');
+                        default:
+                            throw new Error(error.message);
+                    }
+                }
+                
+                if (!data?.user) {
+                    throw new Error('No se pudo completar el inicio de sesión.');
+                }
+                
+                // Guardar información de sesión en localStorage
+                const sessionData = {
+                    user: {
+                        id: data.user.id,
+                        email: data.user.email,
+                        lastSignIn: data.user.last_sign_in_at
+                    },
+                    session: {
+                        expiresAt: data.session?.expires_at
+                    },
+                    timestamp: new Date().toISOString(),
+                    tenantSlug: window.getTenantSlug?.() || 'default'
+                };
+                
+                localStorage.setItem('asari_user_session', JSON.stringify(sessionData));
+                
+                // Si "Recordarme" está marcado, persistir el email
+                if (rememberMe.checked) {
+                    localStorage.setItem('asari_remembered_email', email);
+                } else {
+                    localStorage.removeItem('asari_remembered_email');
+                }
+                
+                console.log('✅ Login exitoso:', data.user.email);
+                return true;
+                
+            } catch (error) {
+                console.error('❌ Error de login:', error);
+                throw error;
+            }
+        }
+        
+        // ============================================
+        // SUBMIT DEL FORMULARIO
+        // ============================================
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Ocultar errores previos
+            hideError();
+            
+            // Obtener valores
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Validaciones básicas
+            if (!email) {
+                showError('Por favor ingresa tu correo electrónico.');
+                emailInput.focus();
+                return;
+            }
+            
+            if (!password) {
+                showError('Por favor ingresa tu contraseña.');
+                passwordInput.focus();
+                return;
+            }
+            
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Por favor ingresa un correo electrónico válido.');
+                emailInput.focus();
+                return;
+            }
+            
+            // Validar longitud mínima de contraseña
+            if (password.length < 6) {
+                showError('La contraseña debe tener al menos 6 caracteres.');
+                passwordInput.focus();
+                return;
+            }
+            
+            // Activar estado de carga
+            setLoadingState(true);
+            
+            try {
+                const success = await handleLogin(email, password);
+                
+                if (success) {
+                    // Pequeña pausa para feedback visual
+                    submitBtn.innerHTML = `
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                        <span>¡Acceso concedido!</span>
+                    `;
+                    lucide.createIcons();
+                    
+                    // Redirigir a wallet
+                    setTimeout(() => {
+                        window.location.href = 'wallet.html';
+                    }, 800);
+                }
+            } catch (error) {
+                // Mostrar error
+                showError(error.message);
+                
+                // Restaurar botón
+                setLoadingState(false);
+                
+                // Enfocar el campo correspondiente
+                if (error.message.includes('Email') || error.message.includes('correo')) {
+                    emailInput.focus();
+                    emailInput.select();
+                } else {
+                    passwordInput.focus();
+                    passwordInput.select();
+                }
+            }
+        });
+        
+        // ============================================
+        // INICIALIZACIÓN DEL TENANT (BRANDING)
+        // ============================================
+        async function inicializarTenant() {
+            try {
+                // Esperar a que fetchTenantConfig esté disponible
+                if (typeof window.fetchTenantConfig !== 'function') {
+                    console.warn('fetchTenantConfig no disponible aún, reintentando...');
+                    setTimeout(inicializarTenant, 100);
+                    return;
+                }
+                
+                const tenant = await window.fetchTenantConfig();
+                
+                if (tenant) {
+                    const { instituto, configuracion } = tenant;
+                    
+                    // Actualizar nombre del instituto
+                    institutoNombre.textContent = instituto.nombre;
+                    institutoSlug.textContent = instituto.slug_dominio;
+                    
+                    // Actualizar título de la página
+                    document.title = `Iniciar Sesión - ${instituto.nombre}`;
+                    
+                    // Actualizar logo si existe en branding
+                    if (configuracion?.branding?.logo_principal) {
+                        logoInstituto.src = configuracion.branding.logo_principal;
+                        logoInstituto.style.display = 'block';
+                        logoPlaceholder.style.display = 'none';
+                    } else {
+                        logoInstituto.style.display = 'none';
+                        logoPlaceholder.style.display = 'flex';
+                        
+                        // Aplicar color primario al placeholder
+                        logoPlaceholder.style.background = 
+                            `linear-gradient(135deg, var(--color-primary-light), var(--color-primary))`;
+                    }
+                    
+                    console.log('✅ Login inicializado para:', instituto.nombre);
+                } else {
+                    // Fallback si no hay tenant
+                    institutoNombre.textContent = 'Plataforma Educativa';
+                    institutoSlug.textContent = 'Accede a tu cuenta';
+                }
+            } catch (error) {
+                console.error('Error inicializando tenant en login:', error);
+                institutoNombre.textContent = 'Plataforma Educativa';
+                institutoSlug.textContent = 'Accede a tu cuenta';
+            }
+        }
+        
+        // ============================================
+        // INICIALIZACIÓN PRINCIPAL
+        // ============================================
+        async function inicializar() {
+            try {
+                // 1. Verificar si ya hay una sesión activa
+                const hasSession = await checkExistingSession();
+                
+                if (hasSession) {
+                    // Mostrar mensaje de redirección
+                    institutoNombre.textContent = 'Sesión Activa';
+                    institutoSlug.textContent = 'Redirigiendo a tu billetera...';
+                    
+                    submitBtn.innerHTML = `
+                        <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+                        <span>Redirigiendo...</span>
+                    `;
+                    lucide.createIcons();
+                    submitBtn.disabled = true;
+                    
+                    // Redirigir después de una breve pausa
+                    setTimeout(() => {
+                        window.location.href = 'wallet.html';
+                    }, 1000);
+                    
+                    return;
+                }
+                
+                // 2. Inicializar tenant (branding, colores, logos)
+                await inicializarTenant();
+                
+                // 3. Restaurar email recordado si existe
+                const rememberedEmail = localStorage.getItem('asari_remembered_email');
+                if (rememberedEmail) {
+                    emailInput.value = rememberedEmail;
+                    rememberMe.checked = true;
+                    passwordInput.focus();
+                } else {
+                    emailInput.focus();
+                }
+                
+            } catch (error) {
+                console.error('Error en inicialización:', error);
+            }
+        }
+        
+        // ============================================
+        // EVENTOS DEL DOM
+        // ============================================
+        window.addEventListener('DOMContentLoaded', inicializar);
+        
+        // Prevenir envío accidental con Enter en campos que no son el formulario
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') {
+                e.preventDefault();
+            }
+        });
+        
+        // Limpiar errores al empezar a escribir
+        emailInput.addEventListener('input', hideError);
+        passwordInput.addEventListener('input', hideError);
+        
+        // Atajo: Ctrl+Shift+P para toggle de contraseña
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'P') {
+                e.preventDefault();
+                togglePasswordVisibility();
+            }
+        });
+        
+        console.log('🔐 Login Satélite ASARI - Listo');
+    </script>
+</body>
+</html>
