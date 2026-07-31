@@ -578,12 +578,10 @@
             tableBody.innerHTML = '';
             
             try {
+                // VERSIÓN LIMPIA: Eliminamos la petición de "padron_global (count)"
                 const { data, error } = await window.supabase
                     .from('sys_institutos')
-                    .select(`
-                        *,
-                        padron_global (count)
-                    `)
+                    .select('*')
                     .order('created_at', { ascending: false });
                 
                 if (error) throw error;
@@ -606,7 +604,7 @@
             } catch (error) {
                 console.error('Error cargando institutos:', error);
                 loadingState.classList.add('hidden');
-                alert('Error al cargar los institutos. Por favor recarga la página.');
+                alert('Error al cargar la lista. Revisa la consola para más detalles.');
             }
         }
         
