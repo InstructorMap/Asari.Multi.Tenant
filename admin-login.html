@@ -149,7 +149,17 @@
         </div>
     </div>
 
-    <script src="supabase-config.js"></script>
+    <script>
+        // ============================================
+        // INICIALIZACIÓN DE SUPABASE
+        // ============================================
+        const SUPABASE_URL = 'https://wdewtjdimbecdfyntcll.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
+        
+        window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = window.supabase;
+    </script>
+
     <script>
         // Inicializar iconos
         lucide.createIcons();
@@ -206,9 +216,6 @@
                 }
                 
                 if (data?.user) {
-                    // Verificar si es administrador (podrías tener una tabla de roles)
-                    // Por ahora, asumimos que cualquier login exitoso es admin
-                    
                     // Guardar sesión
                     localStorage.setItem('asari_admin_session', JSON.stringify({
                         user: data.user,
