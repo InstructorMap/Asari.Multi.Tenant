@@ -858,35 +858,59 @@
         }
         
         // ============================================
-        // CARGAR DATOS DEL ESTUDIANTE (SIMULADO)
+        // CARGAR DATOS DEL ESTUDIANTE (CONECTADO A SUPABASE)
         // ============================================
         async function cargarDatosEstudiante() {
             try {
-                // En el futuro, esto consultará padron_global con auth.uid()
-                // Por ahora, datos simulados
+                // 1. Obtener el email del usuario logueado
+                const userEmail = window.__CURRENT_USER__?.email;
                 
-                const userEmail = window.__CURRENT_USER__?.email || 'estudiante@instituto.edu';
+                // 2. Obtener el ID del instituto actual
+                const tenantConfig = await window.fetchTenantConfig();
+                const institutoId = tenantConfig?.instituto?.id;
                 
-                // Simular carga
-                await new Promise(resolve => setTimeout(resolve, 600));
+                if (!userEmail || !institutoId) {
+                    throw new Error('Faltan datos de sesión o instituto');
+                }
                 
-                // Datos de demostración
-                const datosDemo = {
-                    nombre: 'María García',
-                    rol: 'Alumna Regular',
-                    matricula: 'Nº 2024-00123'
-                };
+                // 3. Buscar al alumno en el Padrón Global
+                const { data, error } = await window.supabase
+                    .from('padron_global')
+                    .select('*')
+                    .eq('email', userEmail)
+                    .eq('instituto_id', institutoId)
+                    .single();
                 
-                // Actualizar UI
-                studentName.textContent = datosDemo.nombre;
-                cardStudentName.textContent = datosDemo.nombre;
-                cardStudentRole.textContent = datosDemo.rol;
-                cardMatricula.textContent = datosDemo.matricula;
+                if (error) {
+                    if (error.code === 'PGRST116') {
+                        throw new Error('Tu correo no está registrado en el padrón de este instituto.');
+                    }
+                    throw error;
+                }
                 
-                console.log('👩‍🎓 Datos del estudiante cargados');
+                if (data) {
+                    // 4. Inyectar los datos reales en el HTML (La Tarjeta)
+                    const nombrePila = data.nombre_completo.split(' ')[0]; // Para el saludo
+                    
+                    studentName.textContent = nombrePila;
+                    cardStudentName.textContent = data.nombre_completo;
+                    cardStudentRole.textContent = data.rol || 'Alumno Regular';
+                    
+                    // Manejar la matrícula dinámica
+                    const matriculaReal = data.datos_dinamicos?.matricula || 'Sin Matrícula asignada';
+                    
+                    // Si hay terminología personalizada, se aplica
+                    const prefijoMatricula = tenantConfig?.configuracion?.terminologia?.matricula || 'Nº';
+                    cardMatricula.textContent = `${prefijoMatricula}: ${matriculaReal}`;
+                    
+                    console.log('✅ Datos del estudiante cargados:', data.nombre_completo);
+                }
                 
             } catch (error) {
-                console.error('Error cargando datos del estudiante:', error);
+                console.error('Error cargando datos:', error.message);
+                studentName.textContent = 'Usuario';
+                cardStudentName.textContent = 'Datos no encontrados';
+                cardMatricula.textContent = error.message;
             }
         }
         
