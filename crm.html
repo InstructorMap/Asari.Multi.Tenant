@@ -985,7 +985,7 @@
     <script src="supabase-config.js?v=3"></script>
 
     <!-- ============================================ -->
-    <!-- LÓGICA DEL CRM (REGISTRO SILENCIOSO) -->
+    <!-- LÓGICA DEL CRM (REGISTRO SILENCIOSO VÍA API NATIVA) -->
     <!-- ============================================ -->
     <script>
         // ============================================
@@ -994,20 +994,54 @@
         lucide.createIcons();
         
         // ============================================
-        // CLIENTE SECUNDARIO PARA SIGNUP SILENCIOSO
-        // (No persiste sesión para no desloguear al Director)
+        // CREDENCIALES DE BÓVEDA (para API nativa)
         // Variables renombradas para evitar conflicto con supabase-config.js
         // ============================================
         const SILENT_URL = 'https://wdewtjdimbecdfyntcll.supabase.co';
         const SILENT_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
-        
-        const silentClient = window.supabase.createClient(SILENT_URL, SILENT_KEY, {
-            auth: {
-                persistSession: false, // CRÍTICO: No guarda sesión, no desloguea al Director
-                autoRefreshToken: false,
-                detectSessionInUrl: false
+
+        // ============================================
+        // REGISTRO SILENCIOSO EN SUPABASE AUTH (VÍA API NATIVA HTTP)
+        // Sin dependencia de la librería JS - No interfiere con la sesión del Director
+        // ============================================
+        async function registrarUsuarioEnAuth(email, password, nombreCompleto) {
+            try {
+                console.log(`🔐 Intentando registrar en Auth (API Directa): ${email}`);
+
+                const response = await fetch(`${SILENT_URL}/auth/v1/signup`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SILENT_KEY
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        data: { nombre_completo: nombreCompleto }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Si el usuario ya existe, lo dejamos pasar
+                    if (data.msg?.includes('already registered') || 
+                        data.msg?.includes('already exists') || 
+                        response.status === 422) {
+                        console.log('⚠️ Usuario ya existe en Auth, continuando silenciosamente...');
+                        return { success: true, alreadyExists: true };
+                    }
+                    throw new Error(data.msg || 'Error en registro de bóveda');
+                }
+
+                console.log('✅ Usuario creado exitosamente en Bóveda!');
+                return { success: true, alreadyExists: false };
+
+            } catch (error) {
+                console.error('❌ Error en registro silencioso API:', error);
+                throw error;
             }
-        });
+        }
         
         // ============================================
         // ESTADO GLOBAL
@@ -1315,45 +1349,6 @@
         }
         
         // ============================================
-        // REGISTRO SILENCIOSO EN SUPABASE AUTH
-        // ============================================
-        async function registrarUsuarioEnAuth(email, password, nombreCompleto) {
-            try {
-                console.log(`🔐 Intentando registrar en Auth: ${email}`);
-                
-                // Usar el cliente secundario (persistSession: false)
-                const { data, error } = await silentClient.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            nombre_completo: nombreCompleto
-                        }
-                    }
-                });
-                
-                if (error) {
-                    // Si el usuario ya existe, no es un error crítico
-                    if (error.message.includes('already registered') || 
-                        error.message.includes('already exists') ||
-                        error.status === 422) {
-                        console.log('⚠️ Usuario ya existe en Auth, continuando...');
-                        return { success: true, alreadyExists: true };
-                    }
-                    
-                    throw error;
-                }
-                
-                console.log('✅ Usuario creado en Auth:', data.user?.id);
-                return { success: true, alreadyExists: false, userId: data.user?.id };
-                
-            } catch (error) {
-                console.error('❌ Error en registro silencioso:', error);
-                throw error;
-            }
-        }
-        
-        // ============================================
         // MODAL OPERATIONS
         // ============================================
         function openCreateModal() {
@@ -1398,7 +1393,7 @@
         }
         
         // ============================================
-        // FORM SUBMIT CON REGISTRO SILENCIOSO
+        // FORM SUBMIT CON REGISTRO SILENCIOSO (API NATIVA)
         // ============================================
         alumnoForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1438,7 +1433,7 @@
             lucide.createIcons();
             
             try {
-                // PASO 1: Registrar/verificar usuario en Auth (silencioso)
+                // PASO 1: Registrar/verificar usuario en Auth vía API Nativa (silencioso)
                 if (!alumnoId) {
                     // Solo crear en Auth si es un alumno NUEVO
                     await registrarUsuarioEnAuth(email, password, nombreCompleto);
@@ -1635,7 +1630,7 @@
             }
         });
         
-        console.log('📋 CRM ASARI - Listo (Registro Silencioso Activado)');
+        console.log('📋 CRM ASARI - Listo (Registro Silencioso vía API Nativa)');
     </script>
 </body>
 </html>
