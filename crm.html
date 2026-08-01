@@ -996,11 +996,12 @@
         // ============================================
         // CLIENTE SECUNDARIO PARA SIGNUP SILENCIOSO
         // (No persiste sesión para no desloguear al Director)
+        // Variables renombradas para evitar conflicto con supabase-config.js
         // ============================================
-        const SUPABASE_URL = 'https://wdewtjdimbecdfyntcll.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
+        const SILENT_URL = 'https://wdewtjdimbecdfyntcll.supabase.co';
+        const SILENT_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
         
-        const silentClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        const silentClient = window.supabase.createClient(SILENT_URL, SILENT_KEY, {
             auth: {
                 persistSession: false, // CRÍTICO: No guarda sesión, no desloguea al Director
                 autoRefreshToken: false,
