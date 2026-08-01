@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title data-termino="campus_titulo">Campus Virtual</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
     
@@ -24,6 +26,7 @@
         * {
             font-family: 'Inter', sans-serif;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         
         :root {
@@ -32,6 +35,7 @@
             --color-primary-light: #a78bfa;
             --color-primary-dark: #5b21b6;
             --sidebar-width: 280px;
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
         }
         
         body {
@@ -41,6 +45,36 @@
             min-height: 100vh;
         }
         
+        /* Loader */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.3s ease;
+        }
+        
+        .loader-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(124, 58, 237, 0.1);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* Sidebar */
         .sidebar {
             position: fixed;
@@ -54,6 +88,7 @@
             transition: transform 0.3s ease;
             overflow-y: auto;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding-bottom: calc(80px + var(--safe-area-bottom));
         }
         
         .sidebar-overlay {
@@ -87,6 +122,7 @@
             margin-left: var(--sidebar-width);
             min-height: 100vh;
             transition: margin-left 0.3s ease;
+            padding-bottom: calc(80px + var(--safe-area-bottom)); /* Espacio para el Tab Bar */
         }
         
         @media (max-width: 1024px) {
@@ -189,59 +225,67 @@
             border-radius: 10px;
             transition: width 0.6s ease;
         }
-        
-        /* Badge Card */
-        .badge-card {
+
+        /* Tab Bar inferior (Estilo PWA Mobile) */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .badge-card.earned {
-            border-color: var(--color-primary);
-            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
-        }
-        
-        .badge-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin: 0 auto 12px;
+            border-top: 1px solid #e2e8f0;
+            padding: 8px 20px;
+            padding-bottom: calc(8px + var(--safe-area-bottom));
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 28px;
+            justify-content: space-around;
+            z-index: 50;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
         }
         
-        .badge-card.earned .badge-icon {
-            background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        /* Ocultar Tab Bar en Desktop (se usa el sidebar) */
+        @media (min-width: 1024px) {
+            .tab-bar {
+                display: none;
+            }
         }
         
-        .badge-card.locked .badge-icon {
-            background: #f1f5f9;
-            filter: grayscale(100%);
-            opacity: 0.5;
-        }
-        
-        /* Resource Card */
-        .resource-card {
-            background: white;
-            border: 1px solid #e2e8f0;
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
             border-radius: 12px;
-            padding: 16px;
-            transition: all 0.2s ease;
             cursor: pointer;
+            transition: all 0.2s ease;
+            color: #94a3b8;
+            text-decoration: none;
+            position: relative;
         }
         
-        .resource-card:hover {
-            border-color: var(--color-primary-light);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        .tab-item.active {
+            color: var(--color-primary);
         }
         
+        .tab-item.active::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--color-primary);
+        }
+        
+        .tab-item span {
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* Animaciones */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -253,6 +297,11 @@
     </style>
 </head>
 <body>
+    <!-- Loader inicial -->
+    <div class="loader-overlay" id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
     <!-- Sidebar Overlay (mobile) -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     
@@ -263,34 +312,37 @@
             <div class="flex items-center space-x-3 mb-6">
                 <img 
                     data-tenant-logo="principal" 
-                    src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%237c3aed'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='20'>🎓</text></svg>"
+                    src=""
                     alt="Logo" 
-                    class="w-10 h-10 rounded-lg"
+                    id="sidebarLogoImg"
+                    class="w-12 h-12 object-contain hidden"
                 >
+                <div id="sidebarLogoPlaceholder" class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-2xl hidden">🎓</div>
+                
                 <div>
                     <h2 class="font-bold text-gray-900 text-sm" id="institutoNombre">Campus</h2>
                     <p class="text-xs text-gray-500">Virtual</p>
                 </div>
             </div>
             
-            <!-- Student Info -->
+            <!-- Student Info (Dinámico) -->
             <div class="bg-gray-50 rounded-xl p-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center text-white font-bold text-lg">
-                        MG
+                    <div id="campusStudentInitials" class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md" style="background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));">
+                        --
                     </div>
                     <div>
-                        <p class="font-semibold text-gray-900 text-sm">María García</p>
-                        <p class="text-xs text-gray-500" data-termino="alumno">Alumno</p>
+                        <p class="font-semibold text-gray-900 text-sm" id="campusStudentName">Cargando...</p>
+                        <p class="text-xs text-gray-500" id="campusStudentRole">Alumno</p>
                     </div>
                 </div>
-                <div class="mt-3">
+                <div class="mt-4">
                     <div class="flex justify-between text-xs text-gray-500 mb-1">
                         <span>Progreso General</span>
-                        <span id="progresoGeneral">65%</span>
+                        <span>0%</span>
                     </div>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 65%;"></div>
+                        <div class="progress-fill" style="width: 5%;"></div>
                     </div>
                 </div>
             </div>
@@ -302,7 +354,6 @@
                 Módulos del Curso
             </h3>
             <div id="modulesList">
-                <!-- Módulo 1 -->
                 <div class="module-item active" onclick="selectModule(this, 1)" data-module="1">
                     <div class="flex items-center space-x-3">
                         <div class="module-icon">
@@ -310,74 +361,23 @@
                         </div>
                         <div class="flex-1">
                             <p class="font-medium text-sm">Módulo 1: Introducción</p>
-                            <p class="text-xs opacity-70">3 lecciones • 45 min</p>
-                        </div>
-                        <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center">
-                            <i data-lucide="check" class="w-4 h-4 text-green-600"></i>
+                            <p class="text-xs opacity-70">En curso</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Módulo 2 -->
                 <div class="module-item" onclick="selectModule(this, 2)" data-module="2">
                     <div class="flex items-center space-x-3">
                         <div class="module-icon">
-                            <i data-lucide="file-text" class="w-5 h-5"></i>
+                            <i data-lucide="lock" class="w-5 h-5 text-gray-400"></i>
                         </div>
                         <div class="flex-1">
-                            <p class="font-medium text-sm">Módulo 2: Fundamentos</p>
-                            <p class="text-xs opacity-70">5 lecciones • 1.5 hrs</p>
-                        </div>
-                        <div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center">
-                            <span class="text-xs text-gray-500">2/5</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Módulo 3 -->
-                <div class="module-item" onclick="selectModule(this, 3)" data-module="3">
-                    <div class="flex items-center space-x-3">
-                        <div class="module-icon">
-                            <i data-lucide="code-2" class="w-5 h-5"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-medium text-sm">Módulo 3: Práctica</p>
-                            <p class="text-xs opacity-70">4 lecciones • 2 hrs</p>
-                        </div>
-                        <div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center">
-                            <i data-lucide="lock" class="w-3 h-3 text-gray-400"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Módulo 4 -->
-                <div class="module-item" onclick="selectModule(this, 4)" data-module="4">
-                    <div class="flex items-center space-x-3">
-                        <div class="module-icon">
-                            <i data-lucide="award" class="w-5 h-5"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-medium text-sm">Módulo 4: Evaluación</p>
-                            <p class="text-xs opacity-70">2 lecciones • 1 hr</p>
-                        </div>
-                        <div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center">
-                            <i data-lucide="lock" class="w-3 h-3 text-gray-400"></i>
+                            <p class="font-medium text-sm text-gray-400">Módulo 2: Fundamentos</p>
+                            <p class="text-xs opacity-70 text-gray-400">Bloqueado</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Sidebar Footer -->
-        <div class="p-4 border-t border-gray-100 mt-auto">
-            <a href="wallet.html" class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition text-gray-600">
-                <i data-lucide="wallet" class="w-5 h-5"></i>
-                <span class="text-sm" data-termino="wallet">Billetera Digital</span>
-            </a>
-            <a href="index.html" class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition text-gray-600">
-                <i data-lucide="home" class="w-5 h-5"></i>
-                <span class="text-sm">Portal Principal</span>
-            </a>
         </div>
     </aside>
     
@@ -385,31 +385,29 @@
     <main class="main-content">
         <!-- Top Bar -->
         <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
-            <div class="flex items-center justify-between px-6 py-4">
+            <div class="flex items-center justify-between px-4 lg:px-6 py-4">
                 <div class="flex items-center space-x-4">
                     <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition">
                         <i data-lucide="menu" class="w-6 h-6 text-gray-600"></i>
                     </button>
                     <div>
-                        <h1 class="text-xl font-bold text-gray-900" id="moduleTitle">Módulo 1: Introducción</h1>
-                        <p class="text-sm text-gray-500">Lección 1 de 3 • Video Principal</p>
+                        <h1 class="text-lg lg:text-xl font-bold text-gray-900" id="moduleTitle">Módulo 1: Introducción</h1>
+                        <p class="text-xs lg:text-sm text-gray-500">Material de Estudio</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button class="p-2 rounded-lg hover:bg-gray-100 transition relative">
+                    <button class="p-2 rounded-lg hover:bg-gray-100 transition relative hidden sm:block">
                         <i data-lucide="bell" class="w-5 h-5 text-gray-600"></i>
-                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                     </button>
-                    <button onclick="window.location.href='wallet.html'" class="px-4 py-2 rounded-lg font-medium text-white text-sm" style="background: var(--color-primary);">
-                        <i data-lucide="smartphone" class="w-4 h-4 inline mr-2"></i>
-                        Mi Billetera
+                    <button onclick="handleLogout()" class="p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-gray-600 transition" title="Cerrar Sesión">
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
         </header>
         
         <!-- Content Area -->
-        <div class="p-6 lg:p-8">
+        <div class="p-4 lg:p-8">
             <div class="grid lg:grid-cols-3 gap-8">
                 <!-- Main Video & Content (2/3) -->
                 <div class="lg:col-span-2 space-y-6">
@@ -420,14 +418,11 @@
                                 <div class="play-button mx-auto mb-4">
                                     <i data-lucide="play" class="w-10 h-10 text-white fill-current"></i>
                                 </div>
-                                <p class="text-white text-lg font-semibold">Reproducir Video</p>
-                                <p class="text-gray-400 text-sm mt-1">Duración: 15:30 minutos</p>
+                                <p class="text-white text-lg font-semibold">Reproducir Clase</p>
                             </div>
                         </div>
-                        <!-- Video real (oculto inicialmente) -->
                         <video id="mainVideo" class="hidden w-full h-full object-cover" controls>
                             <source src="#" type="video/mp4">
-                            Tu navegador no soporta video HTML5.
                         </video>
                     </div>
                     
@@ -435,201 +430,38 @@
                     <div class="bg-white rounded-2xl p-6 border border-gray-200 animate-fade-in">
                         <div class="flex items-start justify-between mb-4">
                             <div>
-                                <h3 class="text-lg font-bold text-gray-900">Lección 1: Bienvenida al Curso</h3>
-                                <p class="text-sm text-gray-500 mt-1">Publicado el 15 de Marzo, 2026</p>
+                                <h3 class="text-lg font-bold text-gray-900">Lección 1: Bienvenida</h3>
                             </div>
-                            <button class="px-4 py-2 rounded-lg bg-green-50 text-green-700 text-sm font-medium">
-                                <i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i>
-                                Completado
-                            </button>
                         </div>
-                        <p class="text-gray-600 leading-relaxed">
-                            En esta lección introductoria, exploraremos los conceptos fundamentales del curso. 
-                            Aprenderás sobre la estructura del programa, los objetivos de aprendizaje y cómo 
-                            aprovechar al máximo los recursos disponibles en el campus virtual.
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Bienvenido al campus virtual. Selecciona los recursos o el video para comenzar tu aprendizaje.
                         </p>
-                        
-                        <!-- Video Actions -->
-                        <div class="flex items-center space-x-4 mt-4 pt-4 border-t border-gray-100">
-                            <button class="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition">
-                                <i data-lucide="thumbs-up" class="w-4 h-4"></i>
-                                <span class="text-sm">Útil (245)</span>
-                            </button>
-                            <button class="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition">
-                                <i data-lucide="message-circle" class="w-4 h-4"></i>
-                                <span class="text-sm">Comentarios (12)</span>
-                            </button>
-                            <button class="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition">
-                                <i data-lucide="share-2" class="w-4 h-4"></i>
-                                <span class="text-sm">Compartir</span>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Resources Section -->
-                    <div class="animate-fade-in">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">Recursos de la Lección</h3>
-                        <div class="grid sm:grid-cols-2 gap-4">
-                            <div class="resource-card">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                                        <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900 text-sm">Presentación PDF</p>
-                                        <p class="text-xs text-gray-500">2.4 MB • 25 páginas</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="resource-card">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                                        <i data-lucide="download" class="w-5 h-5 text-green-600"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900 text-sm">Material Complementario</p>
-                                        <p class="text-xs text-gray-500">1.8 MB • ZIP</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="resource-card">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                                        <i data-lucide="link" class="w-5 h-5 text-purple-600"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900 text-sm">Enlace de Referencia</p>
-                                        <p class="text-xs text-gray-500">Artículo externo</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="resource-card">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
-                                        <i data-lucide="video" class="w-5 h-5 text-orange-600"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900 text-sm">Video Complementario</p>
-                                        <p class="text-xs text-gray-500">Duración: 8:45</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
-                <!-- Right Sidebar (1/3) - Progress & Badges -->
+                <!-- Right Sidebar (1/3) - Resources -->
                 <div class="space-y-6">
-                    <!-- Course Progress -->
                     <div class="bg-white rounded-2xl p-6 border border-gray-200 animate-fade-in">
-                        <h3 class="font-bold text-gray-900 mb-4">Tu Progreso</h3>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between text-sm mb-2">
-                                    <span class="text-gray-600">Módulo 1</span>
-                                    <span class="font-medium text-green-600">100%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 100%;"></div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <div class="flex justify-between text-sm mb-2">
-                                    <span class="text-gray-600">Módulo 2</span>
-                                    <span class="font-medium" style="color: var(--color-primary);">40%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 40%;"></div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <div class="flex justify-between text-sm mb-2">
-                                    <span class="text-gray-600">Módulo 3</span>
-                                    <span class="font-medium text-gray-400">0%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <div class="flex justify-between text-sm mb-2">
-                                    <span class="text-gray-600">Módulo 4</span>
-                                    <span class="font-medium text-gray-400">0%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6 pt-4 border-t border-gray-100">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Total del Curso</span>
-                                <span class="text-lg font-bold" style="color: var(--color-primary);">35%</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Badges / Achievements -->
-                    <div class="bg-white rounded-2xl p-6 border border-gray-200 animate-fade-in">
-                        <h3 class="font-bold text-gray-900 mb-4">Insignias Ganadas</h3>
-                        
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="badge-card earned">
-                                <div class="badge-icon">🌟</div>
-                                <p class="font-semibold text-sm text-gray-900">Primer Login</p>
-                                <p class="text-xs text-gray-500">¡Bienvenido!</p>
-                            </div>
-                            
-                            <div class="badge-card earned">
-                                <div class="badge-icon">📖</div>
-                                <p class="font-semibold text-sm text-gray-900">Módulo 1</p>
-                                <p class="text-xs text-gray-500">Completado</p>
-                            </div>
-                            
-                            <div class="badge-card locked">
-                                <div class="badge-icon">🎯</div>
-                                <p class="font-semibold text-sm text-gray-400">Módulo 2</p>
-                                <p class="text-xs text-gray-400">En progreso</p>
-                            </div>
-                            
-                            <div class="badge-card locked">
-                                <div class="badge-icon">🏆</div>
-                                <p class="font-semibold text-sm text-gray-400">Curso Completo</p>
-                                <p class="text-xs text-gray-400">Bloqueado</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Upcoming Deadlines -->
-                    <div class="bg-white rounded-2xl p-6 border border-gray-200 animate-fade-in">
-                        <h3 class="font-bold text-gray-900 mb-4">Próximas Entregas</h3>
+                        <h3 class="font-bold text-gray-900 mb-4">Material de Estudio</h3>
                         
                         <div class="space-y-3">
-                            <div class="flex items-center space-x-3 p-3 bg-red-50 rounded-xl">
-                                <div class="w-10 h-10 rounded-lg bg-red-200 flex items-center justify-center">
-                                    <i data-lucide="alert-circle" class="w-5 h-5 text-red-600"></i>
+                            <div class="flex items-center space-x-3 p-3 border border-gray-100 rounded-xl hover:border-blue-200 cursor-pointer transition">
+                                <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                                    <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i>
                                 </div>
                                 <div>
-                                    <p class="font-medium text-sm text-gray-900">Tarea Módulo 2</p>
-                                    <p class="text-xs text-red-600">Vence en 2 días</p>
+                                    <p class="font-medium text-sm text-gray-900">Guía de Estudio PDF</p>
+                                    <p class="text-xs text-gray-500">Descargar</p>
                                 </div>
                             </div>
                             
-                            <div class="flex items-center space-x-3 p-3 bg-yellow-50 rounded-xl">
-                                <div class="w-10 h-10 rounded-lg bg-yellow-200 flex items-center justify-center">
-                                    <i data-lucide="clock" class="w-5 h-5 text-yellow-600"></i>
+                            <div class="flex items-center space-x-3 p-3 border border-gray-100 rounded-xl hover:border-purple-200 cursor-pointer transition">
+                                <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
+                                    <i data-lucide="message-circle" class="w-5 h-5 text-purple-600"></i>
                                 </div>
                                 <div>
-                                    <p class="font-medium text-sm text-gray-900">Cuestionario Módulo 1</p>
-                                    <p class="text-xs text-yellow-600">Vence en 5 días</p>
+                                    <p class="font-medium text-sm text-gray-900">Foro de Consultas</p>
+                                    <p class="text-xs text-gray-500">Participar</p>
                                 </div>
                             </div>
                         </div>
@@ -639,140 +471,202 @@
         </div>
     </main>
 
-    <script src="supabase-config.js"></script>
+    <!-- Tab Bar inferior (Móvil) -->
+    <nav class="tab-bar">
+        <a href="#" id="linkWallet" class="tab-item">
+            <i data-lucide="wallet" class="w-5 h-5"></i>
+            <span>Billetera</span>
+        </a>
+        <a href="#" class="tab-item active">
+            <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+            <span>Campus</span>
+        </a>
+        <a href="#" class="tab-item" onclick="alert('👤 Perfil - Próximamente')">
+            <i data-lucide="user" class="w-5 h-5"></i>
+            <span>Perfil</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="supabase-config.js?v=3"></script>
     <script>
-        // Inicializar iconos
         lucide.createIcons();
         
-        // Toggle Sidebar (móvil)
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-        }
-        
-        // Seleccionar módulo
-        function selectModule(element, moduleNumber) {
-            // Remover active de todos
-            document.querySelectorAll('.module-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Agregar active al seleccionado
-            element.classList.add('active');
-            
-            // Actualizar título
-            const titles = {
-                1: 'Módulo 1: Introducción',
-                2: 'Módulo 2: Fundamentos',
-                3: 'Módulo 3: Práctica',
-                4: 'Módulo 4: Evaluación'
-            };
-            
-            document.getElementById('moduleTitle').textContent = titles[moduleNumber] || 'Módulo';
-            
-            // Cerrar sidebar en móvil
-            if (window.innerWidth < 1024) {
-                toggleSidebar();
+        const loader = document.getElementById('loader');
+
+        // ============================================
+        // VERIFICACIÓN DE SESIÓN (PROTECCIÓN DE RUTA)
+        // ============================================
+        async function checkAuth() {
+            try {
+                const { data: { session }, error } = await window.supabase.auth.getSession();
+                
+                if (error || !session?.user) {
+                    console.warn('⚠️ No hay sesión activa. Redirigiendo...');
+                    redirectToLogin();
+                    return false;
+                }
+                
+                window.__CURRENT_USER__ = {
+                    id: session.user.id,
+                    email: session.user.email
+                };
+                
+                return true;
+            } catch (error) {
+                console.error('Error crítico verificando sesión:', error);
+                redirectToLogin();
+                return false;
             }
         }
-        
-        // Simular reproducción de video
-        function playVideo() {
-            const placeholder = document.getElementById('videoPlaceholder');
-            const video = document.getElementById('mainVideo');
-            
-            placeholder.classList.add('hidden');
-            video.classList.remove('hidden');
-            
-            // Simular video (en producción, cargar src real)
-            video.poster = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450"><rect fill="%231e293b" width="800" height="450"/><text fill="%23a78bfa" font-size="20" x="50%25" y="50%25" text-anchor="middle" dy=".3em">Video Educativo - Módulo 1</text></svg>';
-            
-            // Intentar reproducir
-            video.play().catch(e => {
-                console.log('Reproducción simulada:', e);
-            });
+
+        function redirectToLogin() {
+            const tenantSlug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+            window.location.href = `login.html?instituto=${encodeURIComponent(tenantSlug)}`;
         }
-        
-        // Cargar configuración del tenant
-        async function inicializarCampus() {
+
+        // ============================================
+        // CERRAR SESIÓN
+        // ============================================
+        async function handleLogout() {
+            const confirmed = confirm('¿Deseas salir del Campus Virtual?');
+            if (!confirmed) return;
+            
             try {
-                const tenant = await fetchTenantConfig();
+                loader.classList.remove('hidden');
+                await window.supabase.auth.signOut();
+                localStorage.removeItem('asari_user_session');
+                redirectToLogin();
+            } catch (error) {
+                console.error('Error en logout:', error);
+                loader.classList.add('hidden');
+            }
+        }
+
+        // ============================================
+        // INICIALIZACIÓN DEL TENANT (BRANDING)
+        // ============================================
+        async function inicializarTenant() {
+            try {
+                if (typeof window.fetchTenantConfig !== 'function') {
+                    setTimeout(inicializarTenant, 100);
+                    return null;
+                }
+                
+                const tenant = await window.fetchTenantConfig();
                 
                 if (tenant) {
                     const { instituto, configuracion } = tenant;
                     
-                    // Actualizar nombre del instituto
                     document.getElementById('institutoNombre').textContent = instituto.nombre;
-                    document.title = `Campus Virtual - ${instituto.nombre}`;
+                    document.title = `Campus - ${instituto.nombre}`;
                     
-                    // Aplicar terminología
-                    if (configuracion.terminologia) {
-                        document.querySelectorAll('[data-termino]').forEach(el => {
-                            const key = el.getAttribute('data-termino');
-                            if (configuracion.terminologia[key]) {
-                                el.textContent = configuracion.terminologia[key];
-                            }
-                        });
+                    // Configurar Logo Sidebar
+                    const logoImg = document.getElementById('sidebarLogoImg');
+                    const logoPlaceholder = document.getElementById('sidebarLogoPlaceholder');
+                    
+                    if (configuracion?.branding?.logo_principal) {
+                        logoImg.src = configuracion.branding.logo_principal;
+                        logoImg.classList.remove('hidden');
+                    } else {
+                        logoPlaceholder.classList.remove('hidden');
                     }
+
+                    // Actualizar link de Wallet en Tab Bar
+                    const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+                    document.getElementById('linkWallet').href = `wallet.html?instituto=${encodeURIComponent(slug)}`;
                     
-                    console.log('✅ Campus inicializado para:', instituto.nombre);
+                    window.__TENANT_CONFIG__ = tenant;
+                    return tenant;
                 }
             } catch (error) {
-                console.error('Error inicializando campus:', error);
+                console.error('Error inicializando tenant:', error);
             }
         }
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            switch(e.key) {
-                case 'm':
-                    if (e.ctrlKey || e.metaKey) {
-                        e.preventDefault();
-                        toggleSidebar();
+
+        // ============================================
+        // CARGAR DATOS DEL ESTUDIANTE
+        // ============================================
+        async function cargarDatosEstudiante() {
+            try {
+                const userEmail = window.__CURRENT_USER__?.email;
+                const tenantConfig = window.__TENANT_CONFIG__;
+                const institutoId = tenantConfig?.instituto?.id;
+                
+                if (!userEmail || !institutoId) return;
+                
+                const { data, error } = await window.supabase
+                    .from('padron_global')
+                    .select('*')
+                    .eq('email', userEmail)
+                    .eq('instituto_id', institutoId)
+                    .single();
+                
+                if (data) {
+                    document.getElementById('campusStudentName').textContent = data.nombre_completo;
+                    document.getElementById('campusStudentRole').textContent = data.rol || 'Alumno';
+                    
+                    // Generar iniciales (ej: "Juan Perez" -> "JP")
+                    const partesNombre = data.nombre_completo.split(' ');
+                    let iniciales = partesNombre[0].charAt(0);
+                    if (partesNombre.length > 1) {
+                        iniciales += partesNombre[1].charAt(0);
                     }
-                    break;
-                case ' ':
-                    if (e.target === document.body) {
-                        e.preventDefault();
-                        const video = document.getElementById('mainVideo');
-                        if (!video.classList.contains('hidden')) {
-                            video.paused ? video.play() : video.pause();
-                        } else {
-                            playVideo();
-                        }
-                    }
-                    break;
+                    document.getElementById('campusStudentInitials').textContent = iniciales.toUpperCase();
+                }
+            } catch (error) {
+                console.error('Error cargando datos del estudiante:', error);
             }
-        });
+        }
+
+        // ============================================
+        // UI & INTERACCIÓN
+        // ============================================
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
         
-        // Manejar redimensionamiento
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 1024) {
-                document.getElementById('sidebar').classList.remove('open');
-                document.getElementById('sidebarOverlay').classList.remove('active');
-            }
-        });
-        
-        // Inicializar
-        window.addEventListener('DOMContentLoaded', inicializarCampus);
-    </script>
-    
-    <!-- Registrar Service Worker -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('✅ SW registrado en campus');
-                    })
-                    .catch(error => {
-                        console.log('Error SW:', error);
-                    });
+        function selectModule(element, moduleNumber) {
+            document.querySelectorAll('.module-item').forEach(item => {
+                item.classList.remove('active');
             });
+            element.classList.add('active');
+            
+            const titles = {
+                1: 'Módulo 1: Introducción',
+                2: 'Módulo 2: Fundamentos'
+            };
+            
+            document.getElementById('moduleTitle').textContent = titles[moduleNumber] || 'Módulo';
+            
+            if (window.innerWidth < 1024) toggleSidebar();
         }
+        
+        function playVideo() {
+            document.getElementById('videoPlaceholder').classList.add('hidden');
+            const video = document.getElementById('mainVideo');
+            video.classList.remove('hidden');
+            // En prod se cambiaría el src real.
+            video.play().catch(e => console.log('Reproducción simulada'));
+        }
+
+        // ============================================
+        // INICIALIZACIÓN PRINCIPAL
+        // ============================================
+        async function inicializar() {
+            const isAuthenticated = await checkAuth();
+            if (!isAuthenticated) return;
+            
+            await inicializarTenant();
+            await cargarDatosEstudiante();
+            
+            setTimeout(() => {
+                loader.classList.add('hidden');
+            }, 300);
+        }
+
+        window.addEventListener('DOMContentLoaded', inicializar);
     </script>
 </body>
 </html>
