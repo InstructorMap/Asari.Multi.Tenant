@@ -16,7 +16,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         * {
             font-family: 'Inter', sans-serif;
@@ -36,15 +36,21 @@
             background: #f8fafc;
             color: #1e293b;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Layout */
+        /* ============================================ */
+        /* LAYOUT PRINCIPAL */
+        /* ============================================ */
         .app-layout {
             display: flex;
             min-height: 100vh;
         }
         
-        /* Sidebar */
+        /* ============================================ */
+        /* SIDEBAR */
+        /* ============================================ */
         .sidebar {
             width: 260px;
             background: white;
@@ -57,7 +63,7 @@
             bottom: 0;
             z-index: 40;
             transition: transform 0.3s ease;
-            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.04);
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.03);
         }
         
         .sidebar-header {
@@ -65,7 +71,7 @@
             border-bottom: 1px solid #f1f5f9;
         }
         
-        .sidebar-logo {
+        .sidebar-logo-box {
             width: 44px;
             height: 44px;
             border-radius: 12px;
@@ -75,7 +81,7 @@
             flex-shrink: 0;
         }
         
-        .sidebar-logo img {
+        .sidebar-logo-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -92,10 +98,9 @@
         }
         
         .sidebar-institute-name {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: #1e293b;
-            margin-top: 2px;
             line-height: 1.2;
         }
         
@@ -138,7 +143,7 @@
             font-weight: 600;
         }
         
-        .nav-item .badge {
+        .nav-item .nav-badge {
             margin-left: auto;
             background: #e2e8f0;
             color: #64748b;
@@ -148,7 +153,7 @@
             font-weight: 600;
         }
         
-        .nav-item.active .badge {
+        .nav-item.active .nav-badge {
             background: #d1fae5;
             color: #059669;
         }
@@ -178,7 +183,7 @@
             background: #fef2f2;
         }
         
-        /* Overlay para móvil */
+        /* Overlay móvil */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -192,7 +197,9 @@
             display: block;
         }
         
-        /* Main Content */
+        /* ============================================ */
+        /* MAIN CONTENT */
+        /* ============================================ */
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -200,7 +207,9 @@
             transition: margin-left 0.3s ease;
         }
         
-        /* Top Bar */
+        /* ============================================ */
+        /* TOP BAR */
+        /* ============================================ */
         .topbar {
             background: white;
             border-bottom: 1px solid #e2e8f0;
@@ -252,7 +261,7 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
             transition: all 0.2s ease;
@@ -261,12 +270,18 @@
         
         .btn-primary:hover {
             background: var(--color-primary-dark);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
             transform: translateY(-1px);
         }
         
         .btn-primary:active {
             transform: translateY(0);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .btn-secondary {
@@ -278,7 +293,7 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
             transition: all 0.15s ease;
@@ -289,15 +304,17 @@
             border-color: #cbd5e1;
         }
         
-        /* Content Area */
+        /* ============================================ */
+        /* CONTENT AREA */
+        /* ============================================ */
         .content-area {
             padding: 24px 28px;
         }
         
-        /* Stats Cards */
+        /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 16px;
             margin-bottom: 28px;
         }
@@ -311,10 +328,10 @@
         }
         
         .stat-card:hover {
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
         
-        .stat-icon {
+        .stat-icon-box {
             width: 44px;
             height: 44px;
             border-radius: 12px;
@@ -337,7 +354,9 @@
             margin-top: 4px;
         }
         
-        /* Table Card */
+        /* ============================================ */
+        /* TABLA */
+        /* ============================================ */
         .table-card {
             background: white;
             border: 1px solid #e2e8f0;
@@ -440,13 +459,8 @@
             border-radius: 50%;
         }
         
-        .status-dot.green {
-            background: #10b981;
-        }
-        
-        .status-dot.red {
-            background: #ef4444;
-        }
+        .status-dot.green { background: #10b981; }
+        .status-dot.red { background: #ef4444; }
         
         .btn-icon-sm {
             width: 34px;
@@ -474,7 +488,9 @@
             color: #ef4444;
         }
         
-        /* Modal */
+        /* ============================================ */
+        /* MODAL */
+        /* ============================================ */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -495,7 +511,7 @@
             background: white;
             border-radius: 18px;
             width: 100%;
-            max-width: 500px;
+            max-width: 520px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
@@ -503,14 +519,8 @@
         }
         
         @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95) translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
         
         .modal-header {
@@ -562,7 +572,8 @@
             margin-bottom: 6px;
         }
         
-        .form-input {
+        .form-input,
+        .form-select {
             width: 100%;
             padding: 10px 14px;
             border: 1px solid #e2e8f0;
@@ -574,7 +585,8 @@
             background: #fafbfc;
         }
         
-        .form-input:focus {
+        .form-input:focus,
+        .form-select:focus {
             border-color: var(--color-primary-light);
             box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
             background: white;
@@ -582,6 +594,12 @@
         
         .form-input::placeholder {
             color: #cbd5e1;
+        }
+        
+        .form-hint {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 4px;
         }
         
         .modal-footer {
@@ -592,7 +610,9 @@
             justify-content: flex-end;
         }
         
-        /* Notification Toast */
+        /* ============================================ */
+        /* TOAST */
+        /* ============================================ */
         .toast {
             position: fixed;
             bottom: 24px;
@@ -601,7 +621,7 @@
             border-radius: 12px;
             font-size: 14px;
             font-weight: 500;
-            z-index: 100;
+            z-index: 200;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -621,28 +641,18 @@
         }
         
         @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes toastOut {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(20px);
-            }
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
         }
         
-        /* Loader */
+        /* ============================================ */
+        /* LOADING & EMPTY STATES */
+        /* ============================================ */
         .loading-row td {
             text-align: center;
             padding: 40px;
@@ -669,13 +679,9 @@
             color: #94a3b8;
         }
         
-        .empty-state i {
-            display: block;
-            margin: 0 auto 12px;
-            opacity: 0.4;
-        }
-        
-        /* Responsive */
+        /* ============================================ */
+        /* RESPONSIVE */
+        /* ============================================ */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -692,10 +698,6 @@
             .btn-hamburger {
                 display: flex;
             }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
         
         @media (max-width: 640px) {
@@ -707,10 +709,6 @@
                 padding: 12px 16px;
             }
             
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .table-header {
                 flex-direction: column;
                 align-items: stretch;
@@ -718,6 +716,10 @@
             
             .search-input {
                 width: 100%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .modal-card {
@@ -731,12 +733,13 @@
     <!-- Sidebar Overlay (móvil) -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     
-    <!-- Sidebar -->
+    <!-- ============================================ -->
+    <!-- SIDEBAR -->
+    <!-- ============================================ -->
     <aside class="sidebar" id="sidebar">
-        <!-- Header -->
         <div class="sidebar-header">
             <div class="flex items-center gap-3">
-                <div class="sidebar-logo">
+                <div class="sidebar-logo-box">
                     <div class="sidebar-logo-placeholder" id="sidebarLogoPlaceholder">
                         <span>🎓</span>
                     </div>
@@ -757,7 +760,6 @@
             </div>
         </div>
         
-        <!-- Navegación -->
         <nav class="sidebar-nav">
             <a href="#" class="nav-item">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
@@ -766,7 +768,7 @@
             <a href="#" class="nav-item active">
                 <i data-lucide="users" class="w-5 h-5"></i>
                 <span>Padrón de Alumnos</span>
-                <span class="badge" id="alumnosCount">0</span>
+                <span class="nav-badge" id="alumnosCount">0</span>
             </a>
             <a href="#" class="nav-item">
                 <i data-lucide="award" class="w-5 h-5"></i>
@@ -782,7 +784,6 @@
             </a>
         </nav>
         
-        <!-- Footer -->
         <div class="sidebar-footer">
             <button class="btn-logout" onclick="handleLogout()">
                 <i data-lucide="log-out" class="w-5 h-5"></i>
@@ -791,7 +792,9 @@
         </div>
     </aside>
     
-    <!-- Main Content -->
+    <!-- ============================================ -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================================ -->
     <main class="main-content">
         <!-- Top Bar -->
         <header class="topbar">
@@ -815,32 +818,32 @@
             <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: #ede9fe;">
+                    <div class="stat-icon-box" style="background: #ede9fe;">
                         <i data-lucide="users" class="w-5 h-5" style="color: var(--color-primary);"></i>
                     </div>
                     <div class="stat-value" id="statTotalAlumnos">0</div>
                     <div class="stat-label">Total Alumnos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: #d1fae5;">
+                    <div class="stat-icon-box" style="background: #d1fae5;">
                         <i data-lucide="user-check" class="w-5 h-5" style="color: #059669;"></i>
                     </div>
                     <div class="stat-value" id="statActivos">0</div>
                     <div class="stat-label">Activos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: #fef3c7;">
-                        <i data-lucide="clock" class="w-5 h-5" style="color: #d97706;"></i>
+                    <div class="stat-icon-box" style="background: #fef3c7;">
+                        <i data-lucide="shield-alert" class="w-5 h-5" style="color: #d97706;"></i>
                     </div>
-                    <div class="stat-value" id="statPendientes">0</div>
-                    <div class="stat-label">Pendientes</div>
+                    <div class="stat-value" id="statSuspendidos">0</div>
+                    <div class="stat-label">Suspendidos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon" style="background: #fce7f3;">
-                        <i data-lucide="graduation-cap" class="w-5 h-5" style="color: #db2777;"></i>
+                    <div class="stat-icon-box" style="background: #dbeafe;">
+                        <i data-lucide="graduation-cap" class="w-5 h-5" style="color: #2563eb;"></i>
                     </div>
-                    <div class="stat-value" id="statCertificados">0</div>
-                    <div class="stat-label">Certificados</div>
+                    <div class="stat-value" id="statTotalRegistros">0</div>
+                    <div class="stat-label">Registros Totales</div>
                 </div>
             </div>
             
@@ -851,7 +854,7 @@
                     <input 
                         type="text" 
                         class="search-input" 
-                        placeholder="🔍 Buscar por nombre o documento..." 
+                        placeholder="🔍 Buscar por nombre, email o documento..." 
                         id="searchInput"
                         oninput="filtrarAlumnos()"
                     >
@@ -861,9 +864,10 @@
                         <thead>
                             <tr>
                                 <th>Nombre Completo</th>
-                                <th>Documento</th>
                                 <th>Email</th>
+                                <th>Documento</th>
                                 <th>Matrícula</th>
+                                <th>Rol</th>
                                 <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
@@ -877,7 +881,9 @@
         </div>
     </main>
     
-    <!-- Modal Crear Alumno -->
+    <!-- ============================================ -->
+    <!-- MODAL CREAR/EDITAR ALUMNO -->
+    <!-- ============================================ -->
     <div class="modal-overlay hidden" id="alumnoModal">
         <div class="modal-card">
             <div class="modal-header">
@@ -902,17 +908,6 @@
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="documento">Documento (DNI/Pasaporte) *</label>
-                        <input 
-                            type="text" 
-                            id="documento" 
-                            class="form-input" 
-                            placeholder="Ej: 12.345.678"
-                            required
-                        >
-                    </div>
-                    
-                    <div class="form-group">
                         <label class="form-label" for="emailAlumno">Correo Electrónico *</label>
                         <input 
                             type="email" 
@@ -921,6 +916,19 @@
                             placeholder="Ej: maria@email.com"
                             required
                         >
+                        <p class="form-hint">Se usará para crear su cuenta de acceso</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="documento">Documento (DNI/Pasaporte) *</label>
+                        <input 
+                            type="text" 
+                            id="documento" 
+                            class="form-input" 
+                            placeholder="Ej: 12.345.678"
+                            required
+                        >
+                        <p class="form-hint">También será su contraseña inicial</p>
                     </div>
                     
                     <div class="form-group">
@@ -932,6 +940,25 @@
                             placeholder="Ej: 2024-00123"
                             required
                         >
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label" for="rolAlumno">Rol</label>
+                            <select id="rolAlumno" class="form-select">
+                                <option value="alumno">Alumno</option>
+                                <option value="profesor">Profesor</option>
+                                <option value="directivo">Directivo</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="estadoAlumno">Estado</label>
+                            <select id="estadoAlumno" class="form-select">
+                                <option value="activo">Activo</option>
+                                <option value="suspendido">Suspendido</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -947,7 +974,9 @@
         </div>
     </div>
     
-    <!-- Toast Notification -->
+    <!-- ============================================ -->
+    <!-- TOAST NOTIFICATION -->
+    <!-- ============================================ -->
     <div id="toast" class="toast hidden"></div>
 
     <!-- ============================================ -->
@@ -956,13 +985,28 @@
     <script src="supabase-config.js?v=3"></script>
 
     <!-- ============================================ -->
-    <!-- LÓGICA DEL CRM -->
+    <!-- LÓGICA DEL CRM (REGISTRO SILENCIOSO) -->
     <!-- ============================================ -->
     <script>
         // ============================================
         // INICIALIZACIÓN DE ICONOS
         // ============================================
         lucide.createIcons();
+        
+        // ============================================
+        // CLIENTE SECUNDARIO PARA SIGNUP SILENCIOSO
+        // (No persiste sesión para no desloguear al Director)
+        // ============================================
+        const SUPABASE_URL = 'https://wdewtjdimbecdfyntcll.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
+        
+        const silentClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                persistSession: false, // CRÍTICO: No guarda sesión, no desloguea al Director
+                autoRefreshToken: false,
+                detectSessionInUrl: false
+            }
+        });
         
         // ============================================
         // ESTADO GLOBAL
@@ -1052,25 +1096,21 @@
                 if (tenantConfig) {
                     const { instituto, configuracion } = tenantConfig;
                     
-                    // Actualizar UI
                     document.getElementById('sidebarInstituteName').textContent = instituto.nombre;
                     document.getElementById('tenantSubtitle').textContent = 
                         `Gestiona los alumnos de ${instituto.nombre}`;
                     document.title = `Panel Director - ${instituto.nombre}`;
                     
-                    // Actualizar logo
                     if (configuracion?.branding?.logo_principal) {
                         document.getElementById('sidebarLogoImg').src = configuracion.branding.logo_principal;
                         document.getElementById('sidebarLogoImg').style.display = 'block';
                         document.getElementById('sidebarLogoPlaceholder').style.display = 'none';
                     }
                     
-                    // Guardar en window para uso global
                     window.__TENANT_CONFIG__ = tenantConfig;
                     
                     console.log('✅ CRM inicializado para:', instituto.nombre);
                     
-                    // Cargar alumnos después de tener el tenant
                     await cargarAlumnos();
                 }
             } catch (error) {
@@ -1093,7 +1133,7 @@
             try {
                 alumnosTableBody.innerHTML = `
                     <tr class="loading-row">
-                        <td colspan="6">
+                        <td colspan="7">
                             <div class="spinner"></div>
                             <p style="margin-top: 12px;">Cargando alumnos...</p>
                         </td>
@@ -1119,9 +1159,9 @@
                 console.error('Error cargando alumnos:', error);
                 alumnosTableBody.innerHTML = `
                     <tr>
-                        <td colspan="6">
+                        <td colspan="7">
                             <div class="empty-state">
-                                <i data-lucide="alert-triangle" class="w-12 h-12"></i>
+                                <i data-lucide="alert-triangle" class="w-12 h-12" style="display: block; margin: 0 auto 12px; opacity: 0.4;"></i>
                                 <p style="font-weight: 600; color: #dc2626;">Error al cargar alumnos</p>
                                 <p style="font-size: 13px; margin-top: 4px;">${error.message}</p>
                                 <button class="btn-secondary" style="margin-top: 16px;" onclick="cargarAlumnos()">
@@ -1142,9 +1182,9 @@
             if (data.length === 0) {
                 alumnosTableBody.innerHTML = `
                     <tr>
-                        <td colspan="6">
+                        <td colspan="7">
                             <div class="empty-state">
-                                <i data-lucide="users" class="w-12 h-12"></i>
+                                <i data-lucide="users" class="w-12 h-12" style="display: block; margin: 0 auto 12px; opacity: 0.4;"></i>
                                 <p style="font-weight: 600;">No hay alumnos registrados</p>
                                 <p style="font-size: 13px; margin-top: 4px;">
                                     Comienza agregando el primer alumno al padrón
@@ -1174,12 +1214,12 @@
                                 </div>
                                 <div>
                                     <div style="font-weight: 600;">${alumno.nombre_completo || 'Sin nombre'}</div>
-                                    <div style="font-size: 12px; color: #94a3b8;">${alumno.rol || 'Alumno'}</div>
+                                    <div style="font-size: 12px; color: #94a3b8;">ID: ${alumno.id?.substring(0, 8) || 'N/A'}</div>
                                 </div>
                             </div>
                         </td>
-                        <td>${alumno.documento || '-'}</td>
                         <td style="font-size: 13px;">${alumno.email || '-'}</td>
+                        <td>${alumno.documento || '-'}</td>
                         <td>
                             <code style="
                                 background: #f1f5f9;
@@ -1188,6 +1228,16 @@
                                 font-size: 12px;
                                 color: var(--color-primary);
                             ">${alumno.datos_dinamicos?.matricula || '-'}</code>
+                        </td>
+                        <td>
+                            <span style="
+                                background: #f1f5f9;
+                                padding: 4px 10px;
+                                border-radius: 6px;
+                                font-size: 12px;
+                                font-weight: 500;
+                                color: #64748b;
+                            ">${alumno.rol || 'alumno'}</span>
                         </td>
                         <td>
                             <span class="status-badge ${alumno.estado_credencial === 'activo' ? 'activo' : 'suspendido'}">
@@ -1212,9 +1262,7 @@
                 `).join('');
             }
             
-            // Actualizar contador en sidebar
             document.getElementById('alumnosCount').textContent = data.length;
-            
             lucide.createIcons();
         }
         
@@ -1261,8 +1309,47 @@
             
             document.getElementById('statTotalAlumnos').textContent = total;
             document.getElementById('statActivos').textContent = activos;
-            document.getElementById('statPendientes').textContent = suspendidos;
-            document.getElementById('statCertificados').textContent = '0'; // Futuro
+            document.getElementById('statSuspendidos').textContent = suspendidos;
+            document.getElementById('statTotalRegistros').textContent = total;
+        }
+        
+        // ============================================
+        // REGISTRO SILENCIOSO EN SUPABASE AUTH
+        // ============================================
+        async function registrarUsuarioEnAuth(email, password, nombreCompleto) {
+            try {
+                console.log(`🔐 Intentando registrar en Auth: ${email}`);
+                
+                // Usar el cliente secundario (persistSession: false)
+                const { data, error } = await silentClient.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            nombre_completo: nombreCompleto
+                        }
+                    }
+                });
+                
+                if (error) {
+                    // Si el usuario ya existe, no es un error crítico
+                    if (error.message.includes('already registered') || 
+                        error.message.includes('already exists') ||
+                        error.status === 422) {
+                        console.log('⚠️ Usuario ya existe en Auth, continuando...');
+                        return { success: true, alreadyExists: true };
+                    }
+                    
+                    throw error;
+                }
+                
+                console.log('✅ Usuario creado en Auth:', data.user?.id);
+                return { success: true, alreadyExists: false, userId: data.user?.id };
+                
+            } catch (error) {
+                console.error('❌ Error en registro silencioso:', error);
+                throw error;
+            }
         }
         
         // ============================================
@@ -1276,6 +1363,8 @@
             `;
             alumnoForm.reset();
             document.getElementById('alumnoId').value = '';
+            document.getElementById('rolAlumno').value = 'alumno';
+            document.getElementById('estadoAlumno').value = 'activo';
             alumnoModal.classList.remove('hidden');
             lucide.createIcons();
         }
@@ -1297,16 +1386,18 @@
             `;
             document.getElementById('alumnoId').value = alumno.id;
             document.getElementById('nombreCompleto').value = alumno.nombre_completo || '';
-            document.getElementById('documento').value = alumno.documento || '';
             document.getElementById('emailAlumno').value = alumno.email || '';
+            document.getElementById('documento').value = alumno.documento || '';
             document.getElementById('matricula').value = alumno.datos_dinamicos?.matricula || '';
+            document.getElementById('rolAlumno').value = alumno.rol || 'alumno';
+            document.getElementById('estadoAlumno').value = alumno.estado_credencial || 'activo';
             
             alumnoModal.classList.remove('hidden');
             lucide.createIcons();
         }
         
         // ============================================
-        // FORM SUBMIT (CREAR/EDITAR ALUMNO)
+        // FORM SUBMIT CON REGISTRO SILENCIOSO
         // ============================================
         alumnoForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1318,13 +1409,24 @@
             
             const alumnoId = document.getElementById('alumnoId').value;
             const nombreCompleto = document.getElementById('nombreCompleto').value.trim();
-            const documento = document.getElementById('documento').value.trim();
             const email = document.getElementById('emailAlumno').value.trim();
+            const documentoRaw = document.getElementById('documento').value.trim();
             const matricula = document.getElementById('matricula').value.trim();
+            const rol = document.getElementById('rolAlumno').value;
+            const estado = document.getElementById('estadoAlumno').value;
+            
+            // Limpiar documento para contraseña (quitar puntos, espacios, guiones)
+            const documentoLimpio = documentoRaw.replace(/[.\-\s]/g, '');
+            const password = documentoLimpio;
             
             // Validaciones
-            if (!nombreCompleto || !documento || !email || !matricula) {
+            if (!nombreCompleto || !email || !documentoRaw || !matricula) {
                 showToast('Todos los campos son obligatorios', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showToast('El documento debe tener al menos 6 caracteres (sin puntos)', 'error');
                 return;
             }
             
@@ -1335,13 +1437,20 @@
             lucide.createIcons();
             
             try {
+                // PASO 1: Registrar/verificar usuario en Auth (silencioso)
+                if (!alumnoId) {
+                    // Solo crear en Auth si es un alumno NUEVO
+                    await registrarUsuarioEnAuth(email, password, nombreCompleto);
+                }
+                
+                // PASO 2: Insertar/actualizar en padron_global
                 const alumnoData = {
                     instituto_id: tenantConfig.instituto.id,
                     nombre_completo: nombreCompleto,
-                    documento: documento,
+                    documento: documentoRaw,
                     email: email,
-                    rol: 'alumno',
-                    estado_credencial: 'activo',
+                    rol: rol,
+                    estado_credencial: estado,
                     datos_dinamicos: {
                         matricula: matricula
                     }
@@ -1377,10 +1486,12 @@
                 
                 closeModal();
                 await cargarAlumnos();
-                showToast(
-                    `Alumno ${alumnoId ? 'actualizado' : 'creado'} exitosamente`, 
-                    'success'
-                );
+                
+                const mensaje = alumnoId 
+                    ? 'Alumno actualizado exitosamente' 
+                    : 'Alumno creado exitosamente. Su contraseña es su número de documento.';
+                
+                showToast(mensaje, 'success');
                 
             } catch (error) {
                 console.error('Error guardando alumno:', error);
@@ -1448,38 +1559,42 @@
         // TOAST NOTIFICATIONS
         // ============================================
         function showToast(message, type = 'success') {
-            toast.textContent = message;
+            toast.textContent = '';
             toast.className = `toast ${type}`;
             
-            // Icono
             const icon = document.createElement('i');
             icon.setAttribute('data-lucide', type === 'success' ? 'check-circle' : 'alert-circle');
             icon.style.width = '20px';
             icon.style.height = '20px';
-            toast.prepend(icon);
+            toast.appendChild(icon);
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = message;
+            toast.appendChild(textSpan);
+            
+            toast.classList.remove('hidden');
+            
             lucide.createIcons();
             
-            // Auto-ocultar
             clearTimeout(window._toastTimeout);
             window._toastTimeout = setTimeout(() => {
-                toast.style.animation = 'toastOut 0.3s ease-out forwards';
+                toast.style.animation = 'toastOut 0.3s ease forwards';
                 setTimeout(() => {
                     toast.classList.add('hidden');
                     toast.style.animation = '';
+                    toast.innerHTML = '';
                 }, 300);
-            }, 3500);
+            }, 4000);
         }
         
         // ============================================
         // KEYBOARD SHORTCUTS
         // ============================================
         document.addEventListener('keydown', (e) => {
-            // ESC para cerrar modal
             if (e.key === 'Escape' && !alumnoModal.classList.contains('hidden')) {
                 closeModal();
             }
             
-            // Ctrl+K para buscar
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
                 searchInput.focus();
@@ -1492,11 +1607,9 @@
         async function inicializar() {
             console.log('📋 Inicializando CRM del Instituto...');
             
-            // 1. Verificar autenticación
             const isAuthenticated = await checkAuth();
             if (!isAuthenticated) return;
             
-            // 2. Inicializar tenant y cargar alumnos
             await inicializarTenant();
             
             console.log('✅ CRM inicializado correctamente');
@@ -1507,7 +1620,6 @@
         // ============================================
         window.addEventListener('DOMContentLoaded', inicializar);
         
-        // Cerrar sidebar al hacer clic en un enlace (móvil)
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', () => {
                 if (window.innerWidth < 1024) {
@@ -1516,14 +1628,13 @@
             });
         });
         
-        // Cerrar modal al hacer clic fuera
         alumnoModal.addEventListener('click', (e) => {
             if (e.target === alumnoModal) {
                 closeModal();
             }
         });
         
-        console.log('📋 CRM ASARI - Listo');
+        console.log('📋 CRM ASARI - Listo (Registro Silencioso Activado)');
     </script>
 </body>
 </html>
