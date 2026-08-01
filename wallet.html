@@ -321,6 +321,36 @@
             justify-content: center;
         }
         
+        /* Datos adicionales en la tarjeta */
+        .card-data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-data-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        
+        .card-data-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 4px;
+        }
+        
+        .card-data-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+        }
+        
         /* Quick Actions Grid */
         .quick-actions {
             display: grid;
@@ -644,11 +674,24 @@
                 <div class="credential-card primary pulse-glow" onclick="expandCard(this)">
                     <div class="card-header">
                         <span class="card-type">Matrícula Activa</span>
-                        <span class="card-badge active">ACTIVO</span>
+                        <span class="card-badge active" id="alumnoEstado">ACTIVO</span>
                     </div>
-                    <h2 class="card-name" id="cardStudentName">Cargando...</h2>
-                    <p class="card-detail" id="cardStudentRole">Alumno</p>
-                    <div class="card-footer">
+                    <h2 class="card-name" id="alumnoNombre">Cargando...</h2>
+                    <p class="card-detail" id="alumnoRol">Alumno</p>
+                    
+                    <!-- Datos adicionales del padrón -->
+                    <div class="card-data-grid">
+                        <div class="card-data-item">
+                            <div class="card-data-label">Documento</div>
+                            <div class="card-data-value" id="alumnoDni">---</div>
+                        </div>
+                        <div class="card-data-item">
+                            <div class="card-data-label">Matrícula</div>
+                            <div class="card-data-value" id="alumnoMatricula">---</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer" style="margin-top: 16px;">
                         <div>
                             <span class="card-number" id="cardMatricula">Nº ---</span>
                         </div>
@@ -797,9 +840,6 @@
         // ============================================
         const loader = document.getElementById('loader');
         const studentName = document.getElementById('studentName');
-        const cardStudentName = document.getElementById('cardStudentName');
-        const cardStudentRole = document.getElementById('cardStudentRole');
-        const cardMatricula = document.getElementById('cardMatricula');
         const headerLogoImg = document.getElementById('headerLogoImg');
         const headerLogoPlaceholder = document.getElementById('headerLogoPlaceholder');
         const headerInstituteName = document.getElementById('headerInstituteName');
@@ -943,56 +983,84 @@
         }
         
         // ============================================
-        // CARGAR DATOS DEL ESTUDIANTE (CONECTADO A SUPABASE)
+        // CARGAR DATOS DEL ESTUDIANTE EN LA BILLETERA
+        // (CONECTADO A PADRÓN GLOBAL CON IDs CORRECTOS)
         // ============================================
         async function cargarDatosEstudiante() {
             try {
                 const userEmail = window.__CURRENT_USER__?.email;
-                const tenantConfig = window.__TENANT_CONFIG__ || await window.fetchTenantConfig();
+                const tenantConfig = window.__TENANT_CONFIG__;
                 const institutoId = tenantConfig?.instituto?.id;
                 
-                if (!userEmail || !institutoId) {
-                    throw new Error('Faltan datos de sesión o instituto');
-                }
+                if (!userEmail || !institutoId) return;
                 
-                console.log('🔍 Buscando alumno con email:', userEmail, 'en instituto:', institutoId);
-                
+                // 1. Buscamos al alumno en el padrón
                 const { data, error } = await window.supabase
                     .from('padron_global')
                     .select('*')
                     .eq('email', userEmail)
                     .eq('instituto_id', institutoId)
                     .single();
-                
-                if (error) {
-                    if (error.code === 'PGRST116') {
-                        throw new Error('Tu correo no está registrado en el padrón de este instituto.');
-                    }
-                    throw error;
-                }
+                    
+                if (error) throw error;
                 
                 if (data) {
+                    console.log("✅ Datos del alumno recuperados:", data);
+
                     // ⚠️ GUARDAR EL ID DEL PADRÓN PARA EL QR
                     window.__CURRENT_USER__.id_padron = data.id;
+
+                    // 2. Conectamos los datos con el HTML (IDs corregidos)
+                    const elNombre = document.getElementById('alumnoNombre');
+                    const elRol = document.getElementById('alumnoRol');
+                    const elDni = document.getElementById('alumnoDni');
+                    const elMatricula = document.getElementById('alumnoMatricula');
+                    const elEstado = document.getElementById('alumnoEstado');
+                    const elCardMatricula = document.getElementById('cardMatricula');
+                    const elStudentName = document.getElementById('studentName');
                     
-                    const nombrePila = data.nombre_completo.split(' ')[0];
+                    // 3. Pintamos los datos
+                    const nombrePila = data.nombre_completo?.split(' ')[0] || 'Estudiante';
                     
-                    studentName.textContent = nombrePila;
-                    cardStudentName.textContent = data.nombre_completo;
-                    cardStudentRole.textContent = data.rol || 'Alumno Regular';
+                    if (elStudentName) elStudentName.textContent = nombrePila;
+                    if (elNombre) elNombre.textContent = data.nombre_completo || 'Sin nombre';
+                    if (elRol) elRol.textContent = data.rol ? data.rol.toUpperCase() : 'ALUMNO';
+                    if (elDni) elDni.textContent = data.documento || '---';
                     
-                    const matriculaReal = data.datos_dinamicos?.matricula || 'Sin Matrícula asignada';
+                    // La matrícula está dentro de datos_dinamicos (JSON)
+                    const matriculaReal = data.datos_dinamicos?.matricula || 'Sin Matrícula';
                     const prefijoMatricula = tenantConfig?.configuracion?.terminologia?.matricula || 'Nº';
-                    cardMatricula.textContent = `${prefijoMatricula}: ${matriculaReal}`;
                     
-                    console.log('✅ Datos del estudiante cargados:', data.nombre_completo, '| ID:', data.id);
+                    if (elMatricula) elMatricula.textContent = matriculaReal;
+                    if (elCardMatricula) elCardMatricula.textContent = `${prefijoMatricula}: ${matriculaReal}`;
+                    
+                    // Pintamos el estado con su color correspondiente
+                    if (elEstado) {
+                        const esActivo = data.estado_credencial === 'activo';
+                        elEstado.textContent = esActivo ? 'ACTIVO' : 'SUSPENDIDO';
+                        
+                        // Cambiamos el estilo de la etiqueta (Verde o Rojo)
+                        if (esActivo) {
+                            elEstado.className = 'card-badge active';
+                        } else {
+                            elEstado.className = 'card-badge';
+                            elEstado.style.background = 'rgba(239, 68, 68, 0.3)';
+                            elEstado.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+                        }
+                    }
+                    
+                    console.log('✅ Datos del estudiante pintados en la tarjeta');
                 }
                 
             } catch (error) {
-                console.error('Error cargando datos:', error.message);
-                studentName.textContent = 'Usuario';
-                cardStudentName.textContent = 'Datos no encontrados';
-                cardMatricula.textContent = error.message;
+                console.error('❌ Error cargando datos del estudiante:', error.message);
+                
+                // Fallback visual
+                const elNombre = document.getElementById('alumnoNombre');
+                const elCardMatricula = document.getElementById('cardMatricula');
+                
+                if (elNombre) elNombre.textContent = 'Datos no encontrados';
+                if (elCardMatricula) elCardMatricula.textContent = error.message;
             }
         }
         
