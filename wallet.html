@@ -409,10 +409,6 @@
             transition: opacity 0.3s ease;
         }
         
-        #qrModal.flex {
-            display: flex;
-        }
-        
         #qrModal .modal-content {
             background: white;
             border-radius: 24px;
@@ -445,7 +441,6 @@
             justify-content: center;
             color: #64748b;
             transition: all 0.15s ease;
-            font-size: 18px;
         }
         
         .btn-close-qr:hover {
@@ -832,7 +827,7 @@
                     id: session.user.id,
                     email: session.user.email,
                     lastSignIn: session.user.last_sign_in_at,
-                    id_padron: null // Se llenará después
+                    id_padron: null // Se llenará después con los datos reales del padrón
                 };
                 
                 return true;
@@ -1015,11 +1010,18 @@
         }
         
         // ============================================
-        // GENERAR Y MOSTRAR CÓDIGO QR
+        // GENERAR Y MOSTRAR CÓDIGO QR (CORREGIDO - SIN DUPLICADOS)
         // ============================================
         let qrCodeInstancia = null;
+        let qrModalAbierto = false;
 
         function showQRCode() {
+            // Evitar doble ejecución
+            if (qrModalAbierto) {
+                console.log('⚠️ QR Modal ya está abierto, ignorando...');
+                return;
+            }
+            
             // 1. Validar que tengamos los datos
             const alumnoId = window.__CURRENT_USER__?.id_padron;
             const tenantSlug = window.getTenantSlug ? window.getTenantSlug() : 'default';
@@ -1028,6 +1030,9 @@
                 alert("Aún estamos cargando tu credencial. Intenta en un segundo.");
                 return;
             }
+
+            // Marcar como abierto
+            qrModalAbierto = true;
 
             // 2. Armar la URL mágica del validador
             const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
@@ -1044,8 +1049,9 @@
 
             // 4. Limpiar QR anterior si existe
             qrContainer.innerHTML = '';
+            qrCodeInstancia = null;
             
-            // 5. Dibujar el nuevo QR
+            // 5. Dibujar el nuevo QR (solo una vez)
             qrCodeInstancia = new QRCode(qrContainer, {
                 text: urlValidador,
                 width: 220,
@@ -1055,15 +1061,16 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
 
-            // 6. Mostrar el Modal con animación
-            modal.classList.add('flex');
+            // 6. Mostrar el Modal con animación controlada
+            modal.style.display = 'flex';
             modal.style.opacity = '0';
             
+            // Doble requestAnimationFrame para asegurar que display:flex se aplicó
             requestAnimationFrame(() => {
-                modal.style.opacity = '1';
-                setTimeout(() => {
+                requestAnimationFrame(() => {
+                    modal.style.opacity = '1';
                     modalContent.classList.add('scale-in');
-                }, 50);
+                });
             });
             
             lucide.createIcons();
@@ -1073,24 +1080,35 @@
             const modal = document.getElementById('qrModal');
             const modalContent = document.getElementById('qrModalContent');
             
+            // Marcar como cerrado
+            qrModalAbierto = false;
+            
             modalContent.classList.remove('scale-in');
             modal.style.opacity = '0';
             
             setTimeout(() => {
-                modal.classList.remove('flex');
+                modal.style.display = 'none';
                 modal.style.opacity = '';
                 
                 // Limpiar QR para liberar memoria
                 const qrContainer = document.getElementById('qrcode');
-                qrContainer.innerHTML = '';
+                if (qrContainer) {
+                    qrContainer.innerHTML = '';
+                }
                 qrCodeInstancia = null;
             }, 300);
         }
         
-        // Cerrar modal al hacer clic fuera
-        document.addEventListener('click', function(e) {
-            const modal = document.getElementById('qrModal');
-            if (e.target === modal) {
+        // Cerrar modal al hacer clic fuera del contenido
+        document.getElementById('qrModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarQR();
+            }
+        });
+        
+        // Cerrar QR con tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && qrModalAbierto) {
                 cerrarQR();
             }
         });
@@ -1127,31 +1145,25 @@
         // ============================================
         window.addEventListener('DOMContentLoaded', inicializar);
         
+        // Prevenir scroll no deseado en iOS cuando se arrastra hacia abajo
         document.addEventListener('touchmove', function(e) {
             if (e.target === document.body) {
                 e.preventDefault();
             }
         }, { passive: false });
         
+        // Refrescar iconos si hay cambios dinámicos
         window.addEventListener('load', () => {
             lucide.createIcons();
         });
         
+        // Manejar el botón de retroceso del navegador
         window.addEventListener('popstate', () => {
             history.pushState(null, '', window.location.href);
         });
         
+        // Empujar estado inicial para prevenir retroceso
         history.pushState(null, '', window.location.href);
-        
-        // Cerrar QR con tecla ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('qrModal');
-                if (modal.classList.contains('flex')) {
-                    cerrarQR();
-                }
-            }
-        });
         
         console.log('💳 Wallet ASARI - Lista');
     </script>
