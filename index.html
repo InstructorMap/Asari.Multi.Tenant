@@ -36,283 +36,356 @@
         }
         
         body {
-            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-            min-height: 100vh;
+            background: #f8fafc;
             color: #1e293b;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Fondo decorativo sutil */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.03) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        /* Contenedor principal */
-        .portal-container {
+        /* ============================================ */
+        /* HERO SECTION - IMPONENTE */
+        /* ============================================ */
+        .hero-section {
             position: relative;
-            z-index: 1;
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Header del Portal */
-        .portal-header {
-            text-align: center;
-            padding: 48px 0 40px;
-            animation: fadeInDown 0.6s ease-out;
-        }
-        
-        .portal-logo-container {
-            width: 88px;
-            height: 88px;
-            border-radius: 22px;
-            overflow: hidden;
-            margin: 0 auto 20px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            min-height: 480px;
+            background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.3s ease;
+            overflow: hidden;
         }
         
-        .portal-logo-container:hover {
+        /* Overlay oscuro con gradiente */
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.75) 0%,
+                rgba(15, 23, 42, 0.8) 60%,
+                rgba(15, 23, 42, 0.95) 100%
+            );
+            z-index: 1;
+        }
+        
+        /* Efecto de viñeta */
+        .hero-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
+        }
+        
+        /* Contenido del Hero */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 40px 20px;
+            animation: heroFadeIn 0.8s ease-out;
+        }
+        
+        @keyframes heroFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Logo con resplandor */
+        .hero-logo-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 28px;
+            overflow: hidden;
+            margin: 0 auto 24px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 0 40px rgba(124, 58, 237, 0.3),
+                0 0 80px rgba(124, 58, 237, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .hero-logo-container:hover {
+            box-shadow: 
+                0 0 60px rgba(124, 58, 237, 0.5),
+                0 0 120px rgba(124, 58, 237, 0.2);
             transform: scale(1.05);
         }
         
-        .portal-logo-container img {
+        .hero-logo-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
-        .portal-logo-placeholder {
+        .hero-logo-placeholder {
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 46px;
             background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
         }
         
-        .portal-label {
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.9);
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--color-primary);
-            margin-bottom: 8px;
+            margin-bottom: 20px;
         }
         
-        .portal-title {
-            font-size: 32px;
+        .hero-title {
+            font-size: 48px;
             font-weight: 900;
-            color: #0f172a;
-            letter-spacing: -0.8px;
-            line-height: 1.2;
+            color: white;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
         
-        .portal-subtitle {
-            font-size: 15px;
-            color: #64748b;
-            margin-top: 8px;
+        .hero-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.75);
             font-weight: 400;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 640px) {
+            .hero-section {
+                min-height: 400px;
+            }
+            
+            .hero-logo-container {
+                width: 80px;
+                height: 80px;
+                border-radius: 22px;
+            }
+            
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .hero-subtitle {
+                font-size: 15px;
+                padding: 0 10px;
+            }
+        }
+        
+        /* ============================================ */
+        /* CONTENEDOR FLOTANTE (OVERLAPPING) */
+        /* ============================================ */
+        .floating-container {
+            position: relative;
+            z-index: 10;
+            margin-top: -100px;
+            padding: 0 20px 60px;
+            animation: floatUp 0.8s ease-out 0.2s both;
+        }
+        
+        @keyframes floatUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .floating-container {
+                margin-top: -60px;
+                padding: 0 16px 40px;
+            }
         }
         
         /* Grid de Módulos */
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
             gap: 16px;
-            padding-bottom: 40px;
-            animation: fadeInUp 0.6s ease-out 0.1s both;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
-        @media (min-width: 640px) {
+        @media (min-width: 768px) {
             .modules-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
                 gap: 20px;
             }
         }
         
-        @media (min-width: 900px) {
-            .modules-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        
-        /* Tarjeta de Módulo */
+        /* ============================================ */
+        /* TARJETAS PREMIUM (HORIZONTALES) */
+        /* ============================================ */
         .module-card {
             background: white;
-            border: 2px solid #e2e8f0;
             border-radius: 20px;
-            padding: 28px 20px 24px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
+            padding: 20px 24px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            border: 2px solid transparent;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
         }
         
-        .module-card::before {
+        /* Brillo sutil en el borde superior */
+        .module-card::after {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--color-primary);
-            transform: scaleX(0);
-            transform-origin: center;
-            transition: transform 0.3s ease;
-            border-radius: 0 0 8px 8px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-primary-light), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
         .module-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
             border-color: var(--color-primary-light);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
-            transform: translateY(-4px);
         }
         
-        .module-card:hover::before {
-            transform: scaleX(1);
+        .module-card:hover::after {
+            opacity: 1;
         }
         
         .module-card:active {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
         
-        /* Variante destacada (primaria) */
-        .module-card.primary {
+        /* Variante Destacada (Primaria) */
+        .module-card.featured {
             background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
             border-color: transparent;
-            color: white;
+            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.25);
         }
         
-        .module-card.primary::before {
-            background: rgba(255, 255, 255, 0.4);
+        .module-card.featured::after {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
         }
         
-        .module-card.primary:hover {
-            box-shadow: 0 15px 40px rgba(124, 58, 237, 0.3);
+        .module-card.featured:hover {
+            box-shadow: 0 20px 50px rgba(124, 58, 237, 0.4);
             border-color: rgba(255, 255, 255, 0.3);
         }
         
-        .module-card.primary .module-title {
+        .module-card.featured .module-title,
+        .module-card.featured .module-desc {
             color: white;
         }
         
-        .module-card.primary .module-description {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .module-card.primary .module-icon-container {
+        .module-card.featured .module-badge {
             background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
-        /* Ícono del módulo */
-        .module-icon-container {
+        /* Ícono del Módulo */
+        .module-icon-box {
             width: 56px;
             height: 56px;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
             flex-shrink: 0;
+            transition: transform 0.3s ease;
         }
         
-        .module-card:hover .module-icon-container {
-            transform: scale(1.08);
+        .module-card:hover .module-icon-box {
+            transform: scale(1.1);
         }
         
-        .module-icon-purple {
-            background: #ede9fe;
-            color: #7c3aed;
+        .module-card.featured .module-icon-box {
+            background: rgba(255, 255, 255, 0.2) !important;
         }
         
-        .module-icon-blue {
-            background: #dbeafe;
-            color: #2563eb;
+        /* Colores de iconos */
+        .icon-purple { background: #ede9fe; color: #7c3aed; }
+        .icon-green { background: #d1fae5; color: #059669; }
+        .icon-blue { background: #dbeafe; color: #2563eb; }
+        .icon-amber { background: #fef3c7; color: #d97706; }
+        .icon-rose { background: #ffe4e6; color: #e11d48; }
+        .icon-cyan { background: #cffafe; color: #0891b2; }
+        .icon-indigo { background: #e0e7ff; color: #4f46e5; }
+        .icon-teal { background: #ccfbf1; color: #0d9488; }
+        
+        /* Contenido de texto */
+        .module-info {
+            flex: 1;
+            min-width: 0;
         }
         
-        .module-icon-green {
-            background: #d1fae5;
-            color: #059669;
-        }
-        
-        .module-icon-amber {
-            background: #fef3c7;
-            color: #d97706;
-        }
-        
-        .module-icon-rose {
-            background: #ffe4e6;
-            color: #e11d48;
-        }
-        
-        .module-icon-cyan {
-            background: #cffafe;
-            color: #0891b2;
-        }
-        
-        .module-icon-indigo {
-            background: #e0e7ff;
-            color: #4f46e5;
-        }
-        
-        .module-icon-teal {
-            background: #ccfbf1;
-            color: #0d9488;
-        }
-        
-        /* Textos de la tarjeta */
         .module-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
             color: #1e293b;
-            line-height: 1.2;
+            margin-bottom: 3px;
             transition: color 0.2s ease;
         }
         
-        .module-description {
-            font-size: 12px;
+        .module-desc {
+            font-size: 13px;
             color: #94a3b8;
             line-height: 1.4;
             transition: color 0.2s ease;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
         
-        /* Badge "Nuevo" o "Próximamente" */
+        /* Badge de estado */
         .module-badge {
             position: absolute;
-            top: 12px;
-            right: 12px;
+            top: 14px;
+            right: 14px;
             padding: 3px 10px;
             border-radius: 12px;
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            z-index: 1;
         }
         
-        .badge-new {
+        .badge-active {
             background: #d1fae5;
             color: #059669;
         }
@@ -322,12 +395,35 @@
             color: #d97706;
         }
         
-        /* Footer */
+        /* Flecha indicadora */
+        .module-arrow {
+            color: #cbd5e1;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .module-card:hover .module-arrow {
+            color: var(--color-primary);
+            transform: translateX(4px);
+        }
+        
+        .module-card.featured .module-arrow {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .module-card.featured:hover .module-arrow {
+            color: white;
+        }
+        
+        /* ============================================ */
+        /* FOOTER */
+        /* ============================================ */
         .portal-footer {
             text-align: center;
-            padding: 32px 0 40px;
+            padding: 40px 0;
             border-top: 1px solid #e2e8f0;
-            animation: fadeInUp 0.6s ease-out 0.2s both;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         .footer-text {
@@ -342,7 +438,7 @@
         
         .footer-link {
             display: inline-block;
-            margin-top: 12px;
+            margin-top: 10px;
             font-size: 11px;
             color: #cbd5e1;
             text-decoration: none;
@@ -353,56 +449,40 @@
             color: var(--color-primary-light);
         }
         
-        /* Animaciones */
-        @keyframes fadeInUp {
+        /* ============================================ */
+        /* TOAST PERSONALIZADO */
+        /* ============================================ */
+        @keyframes toastIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateX(-50%) translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(-50%) translateY(0);
             }
         }
         
-        @keyframes fadeInDown {
+        @keyframes toastOut {
             from {
-                opacity: 0;
-                transform: translateY(-15px);
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
             }
             to {
-                opacity: 1;
-                transform: translateY(0);
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
             }
         }
         
         /* Ajustes responsive */
         @media (max-width: 480px) {
-            .portal-header {
-                padding: 32px 0 28px;
-            }
-            
-            .portal-logo-container {
-                width: 68px;
-                height: 68px;
-                border-radius: 18px;
-            }
-            
-            .portal-title {
-                font-size: 26px;
-            }
-            
-            .modules-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            
             .module-card {
-                padding: 22px 16px 20px;
+                padding: 16px 18px;
+                gap: 14px;
                 border-radius: 16px;
             }
             
-            .module-icon-container {
+            .module-icon-box {
                 width: 48px;
                 height: 48px;
                 border-radius: 14px;
@@ -411,117 +491,158 @@
             .module-title {
                 font-size: 14px;
             }
+            
+            .module-desc {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="portal-container">
+    <!-- ============================================ -->
+    <!-- HERO SECTION -->
+    <!-- ============================================ -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
         
-        <!-- Header del Portal -->
-        <header class="portal-header">
-            <!-- Logo del Instituto -->
-            <div class="portal-logo-container">
-                <div class="portal-logo-placeholder" id="portalLogoPlaceholder">
+        <div class="hero-content">
+            <!-- Logo con resplandor -->
+            <div class="hero-logo-container">
+                <div class="hero-logo-placeholder" id="heroLogoPlaceholder">
                     <span>🎓</span>
                 </div>
                 <img 
                     data-tenant-logo="principal" 
                     src="" 
                     alt="Logo Instituto" 
-                    id="portalLogoImg"
+                    id="heroLogoImg"
                     style="display: none;"
-                    onerror="this.style.display='none'; document.getElementById('portalLogoPlaceholder').style.display='flex';"
-                    onload="this.style.display='block'; document.getElementById('portalLogoPlaceholder').style.display='none';"
+                    onerror="this.style.display='none'; document.getElementById('heroLogoPlaceholder').style.display='flex';"
+                    onload="this.style.display='block'; document.getElementById('heroLogoPlaceholder').style.display='none';"
                 >
             </div>
             
-            <p class="portal-label">Portal Institucional</p>
-            <h1 class="portal-title" id="portalInstituteName">Instituto</h1>
-            <p class="portal-subtitle">Selecciona el módulo al que deseas acceder</p>
-        </header>
-        
-        <!-- Grid de Módulos -->
-        <main class="modules-grid" id="modulesGrid">
+            <span class="hero-badge">🏛️ Portal Institucional</span>
             
-            <!-- Módulo 1: Mi Billetera (DESTACADO - PRIMARIO) -->
-            <a href="login.html" class="module-card primary" id="linkWallet">
-                <div class="module-icon-container">
+            <h1 class="hero-title" id="heroInstituteName">Instituto</h1>
+            
+            <p class="hero-subtitle">
+                Accede a todos los servicios digitales de tu institución desde un solo lugar.
+                Billetera digital, campus virtual, validación de credenciales y más.
+            </p>
+        </div>
+    </section>
+    
+    <!-- ============================================ -->
+    <!-- CONTENEDOR FLOTANTE (GRID DE MÓDULOS) -->
+    <!-- ============================================ -->
+    <div class="floating-container">
+        
+        <div class="modules-grid">
+            
+            <!-- Módulo 1: Mi Billetera Digital (DESTACADO) -->
+            <a href="login.html" class="module-card featured" id="linkWallet">
+                <div class="module-icon-box">
                     <i data-lucide="wallet" class="w-7 h-7"></i>
                 </div>
-                <h2 class="module-title">Mi Billetera</h2>
-                <p class="module-description">Credenciales digitales y certificados verificables</p>
-                <span class="module-badge badge-new">Activo</span>
+                <div class="module-info">
+                    <h3 class="module-title">Mi Billetera Digital</h3>
+                    <p class="module-desc">Credenciales verificables, certificados y matrícula digital</p>
+                </div>
+                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
+                <span class="module-badge badge-active">Activo</span>
             </a>
             
             <!-- Módulo 2: Validar Credencial -->
             <a href="validador.html" class="module-card" id="linkValidador">
-                <div class="module-icon-container module-icon-green">
+                <div class="module-icon-box icon-green">
                     <i data-lucide="shield-check" class="w-7 h-7"></i>
                 </div>
-                <h2 class="module-title">Validar Credencial</h2>
-                <p class="module-description">Verifica la autenticidad de un certificado</p>
+                <div class="module-info">
+                    <h3 class="module-title">Validar Credencial</h3>
+                    <p class="module-desc">Escanea y verifica la autenticidad de cualquier certificado</p>
+                </div>
+                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
             </a>
             
             <!-- Módulo 3: Campus Virtual -->
             <a href="campus.html" class="module-card" id="linkCampus">
-                <div class="module-icon-container module-icon-blue">
+                <div class="module-icon-box icon-blue">
                     <i data-lucide="graduation-cap" class="w-7 h-7"></i>
                 </div>
-                <h2 class="module-title">Campus Virtual</h2>
-                <p class="module-description">Aulas, cursos y material de estudio</p>
+                <div class="module-info">
+                    <h3 class="module-title">Campus Virtual</h3>
+                    <p class="module-desc">Aulas interactivas, videos, recursos y seguimiento de progreso</p>
+                </div>
+                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
             </a>
             
             <!-- Módulo 4: Catálogo de Cursos -->
             <div class="module-card" onclick="showComingSoon('Catálogo de Cursos')">
-                <div class="module-icon-container module-icon-amber">
+                <div class="module-icon-box icon-amber">
                     <i data-lucide="book-open" class="w-7 h-7"></i>
                 </div>
-                <h2 class="module-title">Catálogo de Cursos</h2>
-                <p class="module-description">Explora nuestra oferta académica completa</p>
+                <div class="module-info">
+                    <h3 class="module-title">Catálogo de Cursos</h3>
+                    <p class="module-desc">Explora nuestra oferta académica completa y planes de estudio</p>
+                </div>
+                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
                 <span class="module-badge badge-soon">Próximamente</span>
             </div>
             
             <!-- Módulo 5: Cartelera / Noticias -->
             <div class="module-card" onclick="showComingSoon('Cartelera / Noticias')">
-                <div class="module-icon-container module-icon-rose">
+                <div class="module-icon-box icon-rose">
                     <i data-lucide="bell" class="w-7 h-7"></i>
                 </div>
-                <h2 class="module-title">Cartelera</h2>
-                <p class="module-description">Noticias, anuncios y eventos del instituto</p>
-                <span class="module-badge badge-soon">Próximamente</span>
-            </div>
-            
-            <!-- Módulo 6: Contacto -->
-            <div class="module-card" onclick="showComingSoon('Contacto')">
-                <div class="module-icon-container module-icon-cyan">
-                    <i data-lucide="mail" class="w-7 h-7"></i>
+                <div class="module-info">
+                    <h3 class="module-title">Cartelera & Noticias</h3>
+                    <p class="module-desc">Mantente al día con anuncios, eventos y novedades institucionales</p>
                 </div>
-                <h2 class="module-title">Contacto</h2>
-                <p class="module-description">Información de contacto y ubicación</p>
+                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
                 <span class="module-badge badge-soon">Próximamente</span>
             </div>
             
-            <!-- Módulo 7: Biblioteca Digital -->
+            <!-- Módulo 6: Biblioteca Digital -->
             <div class="module-card" onclick="showComingSoon('Biblioteca Digital')">
-                <div class="module-icon-container module-icon-indigo">
+                <div class="module-icon-box icon-cyan">
                     <i data-lucide="library" class="w-7 h-7"></i>
                 </div>
-                <h2 class="module-title">Biblioteca</h2>
-                <p class="module-description">Recursos digitales y material de consulta</p>
+                <div class="module-info">
+                    <h3 class="module-title">Biblioteca Digital</h3>
+                    <p class="module-desc">Accede a libros, papers y material de consulta en formato digital</p>
+                </div>
+                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
                 <span class="module-badge badge-soon">Próximamente</span>
             </div>
             
-            <!-- Módulo 8: Calendario Académico -->
+            <!-- Módulo 7: Calendario Académico -->
             <div class="module-card" onclick="showComingSoon('Calendario Académico')">
-                <div class="module-icon-container module-icon-teal">
+                <div class="module-icon-box icon-indigo">
                     <i data-lucide="calendar" class="w-7 h-7"></i>
                 </div>
-                <h2 class="module-title">Calendario</h2>
-                <p class="module-description">Fechas importantes y cronograma académico</p>
+                <div class="module-info">
+                    <h3 class="module-title">Calendario Académico</h3>
+                    <p class="module-desc">Fechas de exámenes, inscripciones y eventos importantes</p>
+                </div>
+                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
                 <span class="module-badge badge-soon">Próximamente</span>
             </div>
             
-        </main>
+            <!-- Módulo 8: Contacto -->
+            <div class="module-card" onclick="showComingSoon('Contacto Institucional')">
+                <div class="module-icon-box icon-teal">
+                    <i data-lucide="mail" class="w-7 h-7"></i>
+                </div>
+                <div class="module-info">
+                    <h3 class="module-title">Contacto</h3>
+                    <p class="module-desc">Información de contacto, ubicación y horarios de atención</p>
+                </div>
+                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
+                <span class="module-badge badge-soon">Próximamente</span>
+            </div>
+            
+        </div>
         
         <!-- Footer -->
         <footer class="portal-footer">
@@ -542,7 +663,7 @@
     <script src="supabase-config.js?v=3"></script>
 
     <!-- ============================================ -->
-    <!-- LÓGICA DEL PORTAL HUB -->
+    <!-- LÓGICA DEL PORTAL HUB (MANTENIDA INTACTA) -->
     <!-- ============================================ -->
     <script>
         // ============================================
@@ -553,9 +674,9 @@
         // ============================================
         // REFERENCIAS AL DOM
         // ============================================
-        const portalInstituteName = document.getElementById('portalInstituteName');
-        const portalLogoImg = document.getElementById('portalLogoImg');
-        const portalLogoPlaceholder = document.getElementById('portalLogoPlaceholder');
+        const heroInstituteName = document.getElementById('heroInstituteName');
+        const heroLogoImg = document.getElementById('heroLogoImg');
+        const heroLogoPlaceholder = document.getElementById('heroLogoPlaceholder');
         const linkWallet = document.getElementById('linkWallet');
         const linkValidador = document.getElementById('linkValidador');
         const linkCampus = document.getElementById('linkCampus');
@@ -625,20 +746,20 @@
                     const { instituto, configuracion } = tenant;
                     
                     // Actualizar nombre del instituto
-                    portalInstituteName.textContent = instituto.nombre;
+                    heroInstituteName.textContent = instituto.nombre;
                     
                     // Actualizar título de la página
-                    document.title = `Portal - ${instituto.nombre}`;
+                    document.title = `${instituto.nombre} - Portal Institucional`;
                     
                     // Actualizar logo
                     if (configuracion?.branding?.logo_principal) {
-                        portalLogoImg.src = configuracion.branding.logo_principal;
-                        portalLogoImg.style.display = 'block';
-                        portalLogoPlaceholder.style.display = 'none';
+                        heroLogoImg.src = configuracion.branding.logo_principal;
+                        heroLogoImg.style.display = 'block';
+                        heroLogoPlaceholder.style.display = 'none';
                     } else {
-                        portalLogoImg.style.display = 'none';
-                        portalLogoPlaceholder.style.display = 'flex';
-                        portalLogoPlaceholder.style.background = 
+                        heroLogoImg.style.display = 'none';
+                        heroLogoPlaceholder.style.display = 'flex';
+                        heroLogoPlaceholder.style.background = 
                             `linear-gradient(135deg, var(--color-primary-light), var(--color-primary))`;
                     }
                     
@@ -647,19 +768,19 @@
                     
                     console.log('✅ Portal inicializado para:', instituto.nombre);
                 } else {
-                    portalInstituteName.textContent = 'Plataforma Educativa';
+                    heroInstituteName.textContent = 'Plataforma Educativa';
                 }
             } catch (error) {
                 console.error('Error inicializando tenant en portal:', error);
-                portalInstituteName.textContent = 'Plataforma Educativa';
+                heroInstituteName.textContent = 'Plataforma Educativa';
             }
         }
         
         // ============================================
-        // FUNCIÓN: Mostrar "Próximamente"
+        // FUNCIÓN: Mostrar "Próximamente" (Toast elegante)
         // ============================================
         function showComingSoon(moduleName) {
-            // Crear un toast elegante en lugar de un alert
+            // Crear un toast elegante
             const toast = document.createElement('div');
             toast.style.cssText = `
                 position: fixed;
@@ -667,48 +788,58 @@
                 left: 50%;
                 transform: translateX(-50%);
                 background: white;
-                border: 2px solid #e2e8f0;
+                border: 1px solid #e2e8f0;
                 border-radius: 16px;
-                padding: 16px 28px;
-                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+                padding: 16px 24px;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
                 z-index: 200;
                 display: flex;
                 align-items: center;
-                gap: 12px;
+                gap: 14px;
                 font-size: 14px;
-                font-weight: 600;
+                font-weight: 500;
                 color: #475569;
-                animation: toastIn 0.3s ease-out;
-                max-width: 90vw;
+                animation: toastIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                max-width: calc(100vw - 40px);
+                backdrop-filter: blur(20px);
             `;
             
             toast.innerHTML = `
-                <span style="font-size: 24px;">🚀</span>
+                <div style="
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 14px;
+                    background: #fef3c7;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 22px;
+                    flex-shrink: 0;
+                ">🚀</div>
                 <div>
-                    <p style="font-weight: 700; color: #1e293b;">${moduleName}</p>
-                    <p style="font-size: 12px; color: #94a3b8; font-weight: 400;">Estará disponible próximamente</p>
+                    <p style="font-weight: 700; color: #1e293b; font-size: 14px;">${moduleName}</p>
+                    <p style="font-size: 12px; color: #94a3b8; font-weight: 400; margin-top: 2px;">Estará disponible próximamente</p>
                 </div>
             `;
             
             document.body.appendChild(toast);
             
-            // Auto-eliminar después de 3 segundos
+            // Auto-eliminar después de 3.5 segundos
             setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.3s ease';
+                toast.style.animation = 'toastOut 0.3s ease forwards';
                 setTimeout(() => {
                     if (toast.parentNode) {
                         toast.parentNode.removeChild(toast);
                     }
                 }, 300);
-            }, 3000);
+            }, 3500);
         }
         
         // ============================================
         // INICIALIZACIÓN PRINCIPAL
         // ============================================
         async function inicializar() {
-            console.log('🏛️ Inicializando Portal Hub ASARI...');
+            console.log('🏛️ Inicializando Portal Hub Premium ASARI...');
             
             // 1. Inicializar tenant (branding, colores, logos)
             await inicializarTenant();
@@ -719,7 +850,7 @@
             // 3. Refrescar iconos de Lucide
             lucide.createIcons();
             
-            console.log('✅ Portal Hub inicializado correctamente');
+            console.log('✅ Portal Hub Premium inicializado correctamente');
         }
         
         // ============================================
@@ -745,7 +876,7 @@
             });
         }
         
-        console.log('🏛️ Portal Hub ASARI - Listo');
+        console.log('🏛️ Portal Hub Premium ASARI - Listo');
     </script>
 </body>
 </html>
