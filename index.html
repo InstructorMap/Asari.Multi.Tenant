@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-termino="portal_titulo">Portal Educativo</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+    <title>Portal Institucional</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,10 +19,13 @@
     <link rel="manifest" href="manifest.json">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         * {
             font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         :root {
@@ -33,59 +36,328 @@
         }
         
         body {
-            background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            color: #1e293b;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
-        .hero-gradient {
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+        /* Fondo decorativo sutil */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
         
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            border-radius: 20px;
+        /* Contenedor principal */
+        .portal-container {
+            position: relative;
+            z-index: 1;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
         
-        .btn-primary-custom {
-            background: var(--color-primary);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        /* Header del Portal */
+        .portal-header {
+            text-align: center;
+            padding: 48px 0 40px;
+            animation: fadeInDown 0.6s ease-out;
         }
         
-        .btn-primary-custom:hover {
-            background: var(--color-primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        .portal-logo-container {
+            width: 88px;
+            height: 88px;
+            border-radius: 22px;
+            overflow: hidden;
+            margin: 0 auto 20px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
         }
         
-        .btn-outline-custom {
-            border: 2px solid var(--color-primary);
+        .portal-logo-container:hover {
+            transform: scale(1.05);
+        }
+        
+        .portal-logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .portal-logo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+        }
+        
+        .portal-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             color: var(--color-primary);
-            transition: all 0.3s ease;
+            margin-bottom: 8px;
         }
         
-        .btn-outline-custom:hover {
+        .portal-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: #0f172a;
+            letter-spacing: -0.8px;
+            line-height: 1.2;
+        }
+        
+        .portal-subtitle {
+            font-size: 15px;
+            color: #64748b;
+            margin-top: 8px;
+            font-weight: 400;
+        }
+        
+        /* Grid de Módulos */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding-bottom: 40px;
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+        }
+        
+        @media (min-width: 640px) {
+            .modules-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+        }
+        
+        @media (min-width: 900px) {
+            .modules-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        /* Tarjeta de Módulo */
+        .module-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 28px 20px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
             background: var(--color-primary);
-            color: white;
-            transform: translateY(-2px);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.3s ease;
+            border-radius: 0 0 8px 8px;
         }
         
-        .feature-icon {
-            background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
-            width: 60px;
-            height: 60px;
+        .module-card:hover {
+            border-color: var(--color-primary-light);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
+        }
+        
+        .module-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .module-card:active {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Variante destacada (primaria) */
+        .module-card.primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            border-color: transparent;
+            color: white;
+        }
+        
+        .module-card.primary::before {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        .module-card.primary:hover {
+            box-shadow: 0 15px 40px rgba(124, 58, 237, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .module-card.primary .module-title {
+            color: white;
+        }
+        
+        .module-card.primary .module-description {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .module-card.primary .module-icon-container {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Ícono del módulo */
+        .module-icon-container {
+            width: 56px;
+            height: 56px;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
         }
         
+        .module-card:hover .module-icon-container {
+            transform: scale(1.08);
+        }
+        
+        .module-icon-purple {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+        
+        .module-icon-blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+        
+        .module-icon-green {
+            background: #d1fae5;
+            color: #059669;
+        }
+        
+        .module-icon-amber {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .module-icon-rose {
+            background: #ffe4e6;
+            color: #e11d48;
+        }
+        
+        .module-icon-cyan {
+            background: #cffafe;
+            color: #0891b2;
+        }
+        
+        .module-icon-indigo {
+            background: #e0e7ff;
+            color: #4f46e5;
+        }
+        
+        .module-icon-teal {
+            background: #ccfbf1;
+            color: #0d9488;
+        }
+        
+        /* Textos de la tarjeta */
+        .module-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.2;
+            transition: color 0.2s ease;
+        }
+        
+        .module-description {
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.4;
+            transition: color 0.2s ease;
+        }
+        
+        /* Badge "Nuevo" o "Próximamente" */
+        .module-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-new {
+            background: #d1fae5;
+            color: #059669;
+        }
+        
+        .badge-soon {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        /* Footer */
+        .portal-footer {
+            text-align: center;
+            padding: 32px 0 40px;
+            border-top: 1px solid #e2e8f0;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+        
+        .footer-text {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        
+        .footer-text strong {
+            color: #64748b;
+            font-weight: 700;
+        }
+        
+        .footer-link {
+            display: inline-block;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .footer-link:hover {
+            color: var(--color-primary-light);
+        }
+        
+        /* Animaciones */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -93,347 +365,387 @@
             }
         }
         
-        .animate-fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        .animate-delay-1 { animation-delay: 0.2s; }
-        .animate-delay-2 { animation-delay: 0.4s; }
-        .animate-delay-3 { animation-delay: 0.6s; }
+        /* Ajustes responsive */
+        @media (max-width: 480px) {
+            .portal-header {
+                padding: 32px 0 28px;
+            }
+            
+            .portal-logo-container {
+                width: 68px;
+                height: 68px;
+                border-radius: 18px;
+            }
+            
+            .portal-title {
+                font-size: 26px;
+            }
+            
+            .modules-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .module-card {
+                padding: 22px 16px 20px;
+                border-radius: 16px;
+            }
+            
+            .module-icon-container {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+            }
+            
+            .module-title {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header / Navbar -->
-    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <div class="flex items-center space-x-3">
-                    <img 
-                        data-tenant-logo="principal" 
-                        src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%237c3aed'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='20'>🎓</text></svg>"
-                        alt="Logo Instituto" 
-                        class="h-10 w-10 rounded-lg"
-                        onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%237c3aed%22/><text x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2220%22>🎓</text></svg>'"
-                    >
-                    <div>
-                        <h1 class="text-xl font-bold" style="color: var(--color-primary);" id="institutoNombre">
-                            Cargando...
-                        </h1>
-                        <p class="text-xs text-gray-500">Plataforma Educativa</p>
-                    </div>
+    <div class="portal-container">
+        
+        <!-- Header del Portal -->
+        <header class="portal-header">
+            <!-- Logo del Instituto -->
+            <div class="portal-logo-container">
+                <div class="portal-logo-placeholder" id="portalLogoPlaceholder">
+                    <span>🎓</span>
                 </div>
-                
-                <!-- Navigation Links -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#inicio" class="text-gray-600 hover:text-gray-900 transition font-medium">Inicio</a>
-                    <a href="#caracteristicas" class="text-gray-600 hover:text-gray-900 transition font-medium">Características</a>
-                    <a href="#modulos" class="text-gray-600 hover:text-gray-900 transition font-medium">Módulos</a>
-                    <a href="wallet.html" class="btn-primary-custom text-white px-6 py-2 rounded-lg font-medium">
-                        <i data-lucide="wallet" class="w-4 h-4 inline mr-2"></i>
-                        <span data-termino="wallet">Billetera Virtual</span>
-                    </a>
-                </div>
-                
-                <!-- Mobile Menu Button -->
-                <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition" onclick="toggleMobileMenu()">
-                    <i data-lucide="menu" class="w-6 h-6 text-gray-600"></i>
-                </button>
+                <img 
+                    data-tenant-logo="principal" 
+                    src="" 
+                    alt="Logo Instituto" 
+                    id="portalLogoImg"
+                    style="display: none;"
+                    onerror="this.style.display='none'; document.getElementById('portalLogoPlaceholder').style.display='flex';"
+                    onload="this.style.display='block'; document.getElementById('portalLogoPlaceholder').style.display='none';"
+                >
             </div>
             
-            <!-- Mobile Menu -->
-            <div id="mobileMenu" class="hidden md:hidden pb-4">
-                <div class="flex flex-col space-y-3 pt-2">
-                    <a href="#inicio" class="text-gray-600 hover:text-gray-900 transition px-4 py-2 rounded-lg hover:bg-gray-50">Inicio</a>
-                    <a href="#caracteristicas" class="text-gray-600 hover:text-gray-900 transition px-4 py-2 rounded-lg hover:bg-gray-50">Características</a>
-                    <a href="#modulos" class="text-gray-600 hover:text-gray-900 transition px-4 py-2 rounded-lg hover:bg-gray-50">Módulos</a>
-                    <a href="wallet.html" class="btn-primary-custom text-white px-4 py-2 rounded-lg font-medium text-center">
-                        <span data-termino="wallet">Billetera Virtual</span>
-                    </a>
+            <p class="portal-label">Portal Institucional</p>
+            <h1 class="portal-title" id="portalInstituteName">Instituto</h1>
+            <p class="portal-subtitle">Selecciona el módulo al que deseas acceder</p>
+        </header>
+        
+        <!-- Grid de Módulos -->
+        <main class="modules-grid" id="modulesGrid">
+            
+            <!-- Módulo 1: Mi Billetera (DESTACADO - PRIMARIO) -->
+            <a href="login.html" class="module-card primary" id="linkWallet">
+                <div class="module-icon-container">
+                    <i data-lucide="wallet" class="w-7 h-7"></i>
                 </div>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="inicio" class="hero-gradient text-white py-20 lg:py-32">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div class="space-y-8 animate-fade-in-up">
-                    <div>
-                        <span class="inline-block px-4 py-2 rounded-full bg-white/20 text-sm font-medium mb-4">
-                            🚀 Plataforma Educativa Digital
-                        </span>
-                        <h2 class="text-4xl lg:text-5xl font-extrabold leading-tight">
-                            Transforma tu 
-                            <span class="text-yellow-300">Educación</span> 
-                            al Siguiente Nivel
-                        </h2>
-                        <p class="text-lg text-white/80 mt-4">
-                            Accede a tu campus virtual, credenciales digitales verificables y mucho más. 
-                            Todo centralizado en una sola plataforma.
-                        </p>
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="wallet.html" class="btn-primary-custom bg-white text-gray-900 px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center space-x-2 hover:bg-gray-100">
-                            <i data-lucide="smartphone" class="w-5 h-5"></i>
-                            <span>Mi Billetera Digital</span>
-                        </a>
-                        <a href="campus.html" class="btn-outline-custom border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center space-x-2 hover:bg-white hover:text-gray-900">
-                            <i data-lucide="graduation-cap" class="w-5 h-5"></i>
-                            <span>Ir al Campus</span>
-                        </a>
-                    </div>
-                    
-                    <div class="flex items-center space-x-8 pt-4">
-                        <div class="flex items-center space-x-2">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
-                            <span class="text-sm">Credenciales Digitales</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
-                            <span class="text-sm">Verificación QR</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
-                            <span class="text-sm">Campus Virtual</span>
-                        </div>
-                    </div>
+                <h2 class="module-title">Mi Billetera</h2>
+                <p class="module-description">Credenciales digitales y certificados verificables</p>
+                <span class="module-badge badge-new">Activo</span>
+            </a>
+            
+            <!-- Módulo 2: Validar Credencial -->
+            <a href="validador.html" class="module-card" id="linkValidador">
+                <div class="module-icon-container module-icon-green">
+                    <i data-lucide="shield-check" class="w-7 h-7"></i>
                 </div>
-                
-                <div class="hidden lg:flex justify-center animate-fade-in-up animate-delay-2">
-                    <div class="relative">
-                        <div class="w-80 h-80 rounded-full bg-white/10 absolute -top-10 -right-10 blur-3xl"></div>
-                        <div class="relative glass-card p-8 w-96">
-                            <div class="text-center space-y-4">
-                                <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
-                                    <i data-lucide="shield-check" class="w-10 h-10 text-white"></i>
-                                </div>
-                                <h3 class="text-xl font-bold text-gray-900">Credencial Verificable</h3>
-                                <div class="bg-gray-100 rounded-lg p-4">
-                                    <div class="w-32 h-32 bg-white rounded-lg mx-auto flex items-center justify-center">
-                                        <i data-lucide="qr-code" class="w-24 h-24 text-gray-900"></i>
-                                    </div>
-                                </div>
-                                <p class="text-sm text-gray-600">Escanea para verificar autenticidad</p>
-                            </div>
-                        </div>
-                    </div>
+                <h2 class="module-title">Validar Credencial</h2>
+                <p class="module-description">Verifica la autenticidad de un certificado</p>
+            </a>
+            
+            <!-- Módulo 3: Campus Virtual -->
+            <a href="campus.html" class="module-card" id="linkCampus">
+                <div class="module-icon-container module-icon-blue">
+                    <i data-lucide="graduation-cap" class="w-7 h-7"></i>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="caracteristicas" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                    ¿Por qué elegir nuestra plataforma?
-                </h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Ofrecemos herramientas modernas para instituciones educativas que buscan innovar
-                </p>
+                <h2 class="module-title">Campus Virtual</h2>
+                <p class="module-description">Aulas, cursos y material de estudio</p>
+            </a>
+            
+            <!-- Módulo 4: Catálogo de Cursos -->
+            <div class="module-card" onclick="showComingSoon('Catálogo de Cursos')">
+                <div class="module-icon-container module-icon-amber">
+                    <i data-lucide="book-open" class="w-7 h-7"></i>
+                </div>
+                <h2 class="module-title">Catálogo de Cursos</h2>
+                <p class="module-description">Explora nuestra oferta académica completa</p>
+                <span class="module-badge badge-soon">Próximamente</span>
             </div>
             
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Feature 1 -->
-                <div class="glass-card p-8 text-center animate-fade-in-up">
-                    <div class="feature-icon mx-auto mb-6">
-                        <i data-lucide="smartphone" class="w-8 h-8 text-white"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Billetera Digital</h3>
-                    <p class="text-gray-600">
-                        Tus credenciales siempre contigo. Accede desde cualquier dispositivo móvil.
-                    </p>
+            <!-- Módulo 5: Cartelera / Noticias -->
+            <div class="module-card" onclick="showComingSoon('Cartelera / Noticias')">
+                <div class="module-icon-container module-icon-rose">
+                    <i data-lucide="bell" class="w-7 h-7"></i>
                 </div>
-                
-                <!-- Feature 2 -->
-                <div class="glass-card p-8 text-center animate-fade-in-up animate-delay-1">
-                    <div class="feature-icon mx-auto mb-6">
-                        <i data-lucide="qr-code" class="w-8 h-8 text-white"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Verificación QR</h3>
-                    <p class="text-gray-600">
-                        Validación instantánea de credenciales mediante código QR seguro.
-                    </p>
-                </div>
-                
-                <!-- Feature 3 -->
-                <div class="glass-card p-8 text-center animate-fade-in-up animate-delay-2">
-                    <div class="feature-icon mx-auto mb-6">
-                        <i data-lucide="play-circle" class="w-8 h-8 text-white"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Campus Virtual</h3>
-                    <p class="text-gray-600">
-                        Aprendizaje interactivo con videos, recursos y seguimiento de progreso.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modules Section -->
-    <section id="modulos" class="py-20" style="background: var(--color-primary-light); background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4">
-                    Módulos Disponibles
-                </h2>
-                <p class="text-lg text-white/80 max-w-2xl mx-auto">
-                    Explora todas las herramientas que tenemos para ti
-                </p>
+                <h2 class="module-title">Cartelera</h2>
+                <p class="module-description">Noticias, anuncios y eventos del instituto</p>
+                <span class="module-badge badge-soon">Próximamente</span>
             </div>
             
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <a href="wallet.html" class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition border border-white/20">
-                    <i data-lucide="wallet" class="w-12 h-12 text-white mx-auto mb-4"></i>
-                    <h3 class="text-xl font-bold text-white mb-2" data-termino="wallet">Billetera Virtual</h3>
-                    <p class="text-white/70 text-sm">Credenciales digitales</p>
-                </a>
-                
-                <a href="campus.html" class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition border border-white/20">
-                    <i data-lucide="graduation-cap" class="w-12 h-12 text-white mx-auto mb-4"></i>
-                    <h3 class="text-xl font-bold text-white mb-2">Campus Virtual</h3>
-                    <p class="text-white/70 text-sm">Aulas y recursos</p>
-                </a>
-                
-                <a href="validador.html" class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition border border-white/20">
-                    <i data-lucide="check-shield" class="w-12 h-12 text-white mx-auto mb-4"></i>
-                    <h3 class="text-xl font-bold text-white mb-2">Validador</h3>
-                    <p class="text-white/70 text-sm">Verificación QR</p>
-                </a>
-                
-                <a href="#" class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition border border-white/20">
-                    <i data-lucide="book-open" class="w-12 h-12 text-white mx-auto mb-4"></i>
-                    <h3 class="text-xl font-bold text-white mb-2">Biblioteca</h3>
-                    <p class="text-white/70 text-sm">Recursos digitales</p>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div>
-                    <div class="flex items-center space-x-3 mb-4">
-                        <img data-tenant-logo="principal" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='white'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%237c3aed' font-size='20'>🎓</text></svg>" alt="Logo" class="h-10 w-10 rounded-lg">
-                        <h3 class="text-lg font-bold" id="footerInstitutoNombre">Instituto</h3>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        Plataforma educativa de última generación con credenciales digitales verificables.
-                    </p>
+            <!-- Módulo 6: Contacto -->
+            <div class="module-card" onclick="showComingSoon('Contacto')">
+                <div class="module-icon-container module-icon-cyan">
+                    <i data-lucide="mail" class="w-7 h-7"></i>
                 </div>
-                
-                <div>
-                    <h4 class="font-semibold mb-4">Enlaces Rápidos</h4>
-                    <div class="space-y-2 text-gray-400">
-                        <a href="wallet.html" class="block hover:text-white transition">Billetera Digital</a>
-                        <a href="campus.html" class="block hover:text-white transition">Campus Virtual</a>
-                        <a href="validador.html" class="block hover:text-white transition">Validador QR</a>
-                    </div>
-                </div>
-                
-                <div>
-                    <h4 class="font-semibold mb-4">Contacto</h4>
-                    <div class="space-y-2 text-gray-400 text-sm">
-                        <p>📧 soporte@instituto.edu</p>
-                        <p>📱 +54 11 1234-5678</p>
-                        <p>📍 Dirección del Instituto</p>
-                    </div>
-                </div>
+                <h2 class="module-title">Contacto</h2>
+                <p class="module-description">Información de contacto y ubicación</p>
+                <span class="module-badge badge-soon">Próximamente</span>
             </div>
             
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-500">
-                <p>&copy; 2026 <span id="copyrightInstituto">Instituto</span>. Todos los derechos reservados. Powered by ASARI</p>
+            <!-- Módulo 7: Biblioteca Digital -->
+            <div class="module-card" onclick="showComingSoon('Biblioteca Digital')">
+                <div class="module-icon-container module-icon-indigo">
+                    <i data-lucide="library" class="w-7 h-7"></i>
+                </div>
+                <h2 class="module-title">Biblioteca</h2>
+                <p class="module-description">Recursos digitales y material de consulta</p>
+                <span class="module-badge badge-soon">Próximamente</span>
             </div>
-        </div>
-    </footer>
+            
+            <!-- Módulo 8: Calendario Académico -->
+            <div class="module-card" onclick="showComingSoon('Calendario Académico')">
+                <div class="module-icon-container module-icon-teal">
+                    <i data-lucide="calendar" class="w-7 h-7"></i>
+                </div>
+                <h2 class="module-title">Calendario</h2>
+                <p class="module-description">Fechas importantes y cronograma académico</p>
+                <span class="module-badge badge-soon">Próximamente</span>
+            </div>
+            
+        </main>
+        
+        <!-- Footer -->
+        <footer class="portal-footer">
+            <p class="footer-text">
+                Powered by <strong>ASARI</strong> &mdash; Plataforma Educativa Multi-Tenant
+            </p>
+            <a href="admin-login.html" class="footer-link">
+                <i data-lucide="shield" class="w-3 h-3 inline mr-1"></i>
+                Acceso Administrativo
+            </a>
+        </footer>
+        
+    </div>
 
-    <script src="supabase-config.js"></script>
+    <!-- ============================================ -->
+    <!-- CONFIGURACIÓN CENTRAL -->
+    <!-- ============================================ -->
+    <script src="supabase-config.js?v=3"></script>
+
+    <!-- ============================================ -->
+    <!-- LÓGICA DEL PORTAL HUB -->
+    <!-- ============================================ -->
     <script>
-        // Inicializar iconos de Lucide
+        // ============================================
+        // INICIALIZACIÓN DE ICONOS
+        // ============================================
         lucide.createIcons();
         
-        // Toggle menú móvil
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
+        // ============================================
+        // REFERENCIAS AL DOM
+        // ============================================
+        const portalInstituteName = document.getElementById('portalInstituteName');
+        const portalLogoImg = document.getElementById('portalLogoImg');
+        const portalLogoPlaceholder = document.getElementById('portalLogoPlaceholder');
+        const linkWallet = document.getElementById('linkWallet');
+        const linkValidador = document.getElementById('linkValidador');
+        const linkCampus = document.getElementById('linkCampus');
+        
+        // ============================================
+        // OBTENER SLUG DEL TENANT ACTUAL
+        // ============================================
+        function getCurrentTenantSlug() {
+            if (typeof window.getTenantSlug === 'function') {
+                return window.getTenantSlug();
+            }
+            
+            // Fallback: leer de URL o localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('instituto');
+            
+            if (slug) return slug;
+            
+            const storedSlug = localStorage.getItem('asari_tenant_slug');
+            if (storedSlug) return storedSlug;
+            
+            return 'default';
         }
         
-        // Aplicar configuración del tenant
-        async function inicializarPortal() {
+        // ============================================
+        // CONSTRUIR URL CON PARÁMETRO DE TENANT
+        // ============================================
+        function buildTenantUrl(basePath) {
+            const tenantSlug = getCurrentTenantSlug();
+            
+            // Verificar si ya tiene query string
+            const separator = basePath.includes('?') ? '&' : '?';
+            
+            return `${basePath}${separator}instituto=${encodeURIComponent(tenantSlug)}`;
+        }
+        
+        // ============================================
+        // ACTUALIZAR LINKS CON EL TENANT ACTUAL
+        // ============================================
+        function actualizarLinksConTenant() {
+            const tenantSlug = getCurrentTenantSlug();
+            
+            if (tenantSlug && tenantSlug !== 'default') {
+                // Actualizar href de los enlaces principales
+                linkWallet.href = buildTenantUrl('login.html');
+                linkValidador.href = buildTenantUrl('validador.html');
+                linkCampus.href = buildTenantUrl('campus.html');
+                
+                console.log('🔗 Links actualizados con tenant:', tenantSlug);
+            }
+        }
+        
+        // ============================================
+        // INICIALIZACIÓN DEL TENANT (BRANDING)
+        // ============================================
+        async function inicializarTenant() {
             try {
-                const tenant = await fetchTenantConfig();
+                if (typeof window.fetchTenantConfig !== 'function') {
+                    console.warn('fetchTenantConfig no disponible aún, reintentando...');
+                    setTimeout(inicializarTenant, 100);
+                    return;
+                }
+                
+                const tenant = await window.fetchTenantConfig();
                 
                 if (tenant) {
                     const { instituto, configuracion } = tenant;
                     
-                    // Actualizar nombre del instituto en el DOM
-                    document.getElementById('institutoNombre').textContent = instituto.nombre;
-                    document.getElementById('footerInstitutoNombre').textContent = instituto.nombre;
-                    document.getElementById('copyrightInstituto').textContent = instituto.nombre;
+                    // Actualizar nombre del instituto
+                    portalInstituteName.textContent = instituto.nombre;
                     
                     // Actualizar título de la página
-                    document.title = `${instituto.nombre} - Portal Educativo`;
+                    document.title = `Portal - ${instituto.nombre}`;
                     
-                    // Aplicar terminología
-                    if (configuracion.terminologia) {
-                        document.querySelectorAll('[data-termino]').forEach(el => {
-                            const key = el.getAttribute('data-termino');
-                            if (configuracion.terminologia[key]) {
-                                el.textContent = configuracion.terminologia[key];
-                            }
-                        });
+                    // Actualizar logo
+                    if (configuracion?.branding?.logo_principal) {
+                        portalLogoImg.src = configuracion.branding.logo_principal;
+                        portalLogoImg.style.display = 'block';
+                        portalLogoPlaceholder.style.display = 'none';
+                    } else {
+                        portalLogoImg.style.display = 'none';
+                        portalLogoPlaceholder.style.display = 'flex';
+                        portalLogoPlaceholder.style.background = 
+                            `linear-gradient(135deg, var(--color-primary-light), var(--color-primary))`;
                     }
+                    
+                    // Guardar en window para uso global
+                    window.__TENANT_CONFIG__ = tenant;
                     
                     console.log('✅ Portal inicializado para:', instituto.nombre);
                 } else {
-                    // Configuración por defecto si no hay tenant
-                    document.getElementById('institutoNombre').textContent = 'ASARI';
-                    document.getElementById('footerInstitutoNombre').textContent = 'ASARI';
-                    document.getElementById('copyrightInstituto').textContent = 'ASARI';
+                    portalInstituteName.textContent = 'Plataforma Educativa';
                 }
             } catch (error) {
-                console.error('Error inicializando portal:', error);
-                document.getElementById('institutoNombre').textContent = 'Plataforma Educativa';
+                console.error('Error inicializando tenant en portal:', error);
+                portalInstituteName.textContent = 'Plataforma Educativa';
             }
         }
         
-        // Smooth scroll para links internos
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
+        // ============================================
+        // FUNCIÓN: Mostrar "Próximamente"
+        // ============================================
+        function showComingSoon(moduleName) {
+            // Crear un toast elegante en lugar de un alert
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: white;
+                border: 2px solid #e2e8f0;
+                border-radius: 16px;
+                padding: 16px 28px;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+                z-index: 200;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 14px;
+                font-weight: 600;
+                color: #475569;
+                animation: toastIn 0.3s ease-out;
+                max-width: 90vw;
+            `;
+            
+            toast.innerHTML = `
+                <span style="font-size: 24px;">🚀</span>
+                <div>
+                    <p style="font-weight: 700; color: #1e293b;">${moduleName}</p>
+                    <p style="font-size: 12px; color: #94a3b8; font-weight: 400;">Estará disponible próximamente</p>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Auto-eliminar después de 3 segundos
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // ============================================
+        // INICIALIZACIÓN PRINCIPAL
+        // ============================================
+        async function inicializar() {
+            console.log('🏛️ Inicializando Portal Hub ASARI...');
+            
+            // 1. Inicializar tenant (branding, colores, logos)
+            await inicializarTenant();
+            
+            // 2. Actualizar links con el tenant actual
+            actualizarLinksConTenant();
+            
+            // 3. Refrescar iconos de Lucide
+            lucide.createIcons();
+            
+            console.log('✅ Portal Hub inicializado correctamente');
+        }
+        
+        // ============================================
+        // EVENTOS DEL DOM
+        // ============================================
+        window.addEventListener('DOMContentLoaded', inicializar);
+        
+        // Refrescar iconos cuando la página termine de cargar
+        window.addEventListener('load', () => {
+            lucide.createIcons();
         });
         
-        // Inicializar al cargar
-        window.addEventListener('DOMContentLoaded', inicializarPortal);
-    </script>
-    
-    <!-- Registrar Service Worker -->
-    <script>
+        // Registrar Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then(registration => {
-                        console.log('✅ Service Worker registrado:', registration.scope);
+                        console.log('✅ SW registrado en portal:', registration.scope);
                     })
                     .catch(error => {
-                        console.log('❌ Error registrando Service Worker:', error);
+                        console.log('⚠️ Error registrando SW:', error);
                     });
             });
         }
+        
+        console.log('🏛️ Portal Hub ASARI - Listo');
     </script>
 </body>
 </html>
