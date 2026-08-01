@@ -18,6 +18,9 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
+    <!-- QRCode.js para generar códigos QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     
@@ -392,6 +395,80 @@
             color: rgba(255, 255, 255, 0.4);
         }
         
+        /* Modal del QR */
+        #qrModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: opacity 0.3s ease;
+        }
+        
+        #qrModal.flex {
+            display: flex;
+        }
+        
+        #qrModal .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        #qrModal .modal-content.scale-in {
+            transform: scale(1);
+        }
+        
+        .btn-close-qr {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            transition: all 0.15s ease;
+            font-size: 18px;
+        }
+        
+        .btn-close-qr:hover {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        
+        .qr-container {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px solid #f1f5f9;
+            display: inline-block;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .qr-container canvas,
+        .qr-container img {
+            display: block !important;
+            margin: 0 auto !important;
+        }
+        
         /* Tab Bar inferior */
         .tab-bar {
             position: fixed;
@@ -571,11 +648,11 @@
                         <span class="card-type">Matrícula Activa</span>
                         <span class="card-badge active">ACTIVO</span>
                     </div>
-                    <h2 class="card-name" id="cardStudentName">María García</h2>
-                    <p class="card-detail" id="cardStudentRole">Alumna Regular</p>
+                    <h2 class="card-name" id="cardStudentName">Cargando...</h2>
+                    <p class="card-detail" id="cardStudentRole">Alumno</p>
                     <div class="card-footer">
                         <div>
-                            <span class="card-number" id="cardMatricula">Nº 2024-00123</span>
+                            <span class="card-number" id="cardMatricula">Nº ---</span>
                         </div>
                         <div class="card-chip">
                             <i data-lucide="shield-check" class="w-4 h-4 text-yellow-300"></i>
@@ -657,6 +734,30 @@
             
         </main>
         
+        <!-- Modal del Código QR -->
+        <div id="qrModal">
+            <div class="modal-content" id="qrModalContent">
+                <button class="btn-close-qr" onclick="cerrarQR()">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
+                    Código de Verificación
+                </h3>
+                <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">
+                    Escanea para validar esta credencial
+                </p>
+                
+                <!-- Contenedor del QR -->
+                <div class="qr-container">
+                    <div id="qrcode"></div>
+                </div>
+                
+                <p style="font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;" id="qrStudentId">
+                    ID: Cargando...
+                </p>
+            </div>
+        </div>
+        
         <!-- Tab Bar inferior -->
         <nav class="tab-bar">
             <a href="#" class="tab-item active">
@@ -730,7 +831,8 @@
                 window.__CURRENT_USER__ = {
                     id: session.user.id,
                     email: session.user.email,
-                    lastSignIn: session.user.last_sign_in_at
+                    lastSignIn: session.user.last_sign_in_at,
+                    id_padron: null // Se llenará después
                 };
                 
                 return true;
@@ -748,7 +850,6 @@
             
             console.log('🔒 Redirigiendo a login:', loginUrl);
             
-            // Pequeño retraso para que el loader sea visible
             setTimeout(() => {
                 window.location.href = loginUrl;
             }, 500);
@@ -758,16 +859,13 @@
         // CERRAR SESIÓN
         // ============================================
         async function handleLogout() {
-            // Confirmación visual
             const confirmed = confirm('¿Estás seguro de que deseas cerrar sesión?');
             
             if (!confirmed) return;
             
             try {
-                // Mostrar loader
                 loader.classList.remove('hidden');
                 
-                // Cerrar sesión en Supabase
                 const { error } = await window.supabase.auth.signOut();
                 
                 if (error) {
@@ -775,12 +873,10 @@
                     throw error;
                 }
                 
-                // Limpiar datos locales
                 localStorage.removeItem('asari_user_session');
                 
                 console.log('👋 Sesión cerrada exitosamente');
                 
-                // Redirigir al login
                 redirectToLogin();
                 
             } catch (error) {
@@ -795,11 +891,10 @@
         // ============================================
         async function inicializarTenant() {
             try {
-                // Esperar a que fetchTenantConfig esté disponible
                 if (typeof window.fetchTenantConfig !== 'function') {
                     console.warn('fetchTenantConfig no disponible aún, reintentando...');
                     setTimeout(inicializarTenant, 100);
-                    return;
+                    return null;
                 }
                 
                 const tenant = await window.fetchTenantConfig();
@@ -807,13 +902,9 @@
                 if (tenant) {
                     const { instituto, configuracion } = tenant;
                     
-                    // Actualizar nombre del instituto en el header
                     headerInstituteName.textContent = instituto.nombre;
-                    
-                    // Actualizar título de la página
                     document.title = `Mi Billetera - ${instituto.nombre}`;
                     
-                    // Actualizar logo si existe en branding
                     if (configuracion?.branding?.logo_principal) {
                         headerLogoImg.src = configuracion.branding.logo_principal;
                         headerLogoImg.style.display = 'block';
@@ -825,19 +916,9 @@
                             `linear-gradient(135deg, var(--color-primary-light), var(--color-primary))`;
                     }
                     
-                    // Aplicar terminología si existe
                     if (configuracion?.terminologia) {
                         const term = configuracion.terminologia;
                         
-                        // Actualizar textos con terminología personalizada
-                        if (term.alumno) {
-                            cardStudentRole.textContent = term.alumno + ' Regular';
-                        }
-                        if (term.matricula) {
-                            cardMatricula.textContent = term.matricula + ' 2024-00123';
-                        }
-                        
-                        // Actualizar data-termino elements
                         document.querySelectorAll('[data-termino]').forEach(el => {
                             const key = el.getAttribute('data-termino');
                             if (term[key]) {
@@ -847,13 +928,19 @@
                     }
                     
                     console.log('✅ Wallet inicializada para:', instituto.nombre);
+                    
+                    // Guardar en window para uso global
+                    window.__TENANT_CONFIG__ = tenant;
+                    
+                    return tenant;
                 } else {
-                    // Fallback
                     headerInstituteName.textContent = 'Instituto';
+                    return null;
                 }
             } catch (error) {
                 console.error('Error inicializando tenant en wallet:', error);
                 headerInstituteName.textContent = 'Instituto';
+                return null;
             }
         }
         
@@ -862,18 +949,16 @@
         // ============================================
         async function cargarDatosEstudiante() {
             try {
-                // 1. Obtener el email del usuario logueado
                 const userEmail = window.__CURRENT_USER__?.email;
-                
-                // 2. Obtener el ID del instituto actual
-                const tenantConfig = await window.fetchTenantConfig();
+                const tenantConfig = window.__TENANT_CONFIG__ || await window.fetchTenantConfig();
                 const institutoId = tenantConfig?.instituto?.id;
                 
                 if (!userEmail || !institutoId) {
                     throw new Error('Faltan datos de sesión o instituto');
                 }
                 
-                // 3. Buscar al alumno en el Padrón Global
+                console.log('🔍 Buscando alumno con email:', userEmail, 'en instituto:', institutoId);
+                
                 const { data, error } = await window.supabase
                     .from('padron_global')
                     .select('*')
@@ -889,21 +974,20 @@
                 }
                 
                 if (data) {
-                    // 4. Inyectar los datos reales en el HTML (La Tarjeta)
-                    const nombrePila = data.nombre_completo.split(' ')[0]; // Para el saludo
+                    // ⚠️ GUARDAR EL ID DEL PADRÓN PARA EL QR
+                    window.__CURRENT_USER__.id_padron = data.id;
+                    
+                    const nombrePila = data.nombre_completo.split(' ')[0];
                     
                     studentName.textContent = nombrePila;
                     cardStudentName.textContent = data.nombre_completo;
                     cardStudentRole.textContent = data.rol || 'Alumno Regular';
                     
-                    // Manejar la matrícula dinámica
                     const matriculaReal = data.datos_dinamicos?.matricula || 'Sin Matrícula asignada';
-                    
-                    // Si hay terminología personalizada, se aplica
                     const prefijoMatricula = tenantConfig?.configuracion?.terminologia?.matricula || 'Nº';
                     cardMatricula.textContent = `${prefijoMatricula}: ${matriculaReal}`;
                     
-                    console.log('✅ Datos del estudiante cargados:', data.nombre_completo);
+                    console.log('✅ Datos del estudiante cargados:', data.nombre_completo, '| ID:', data.id);
                 }
                 
             } catch (error) {
@@ -918,9 +1002,7 @@
         // FUNCIONES DE UI
         // ============================================
         
-        // Expandir tarjeta (efecto visual)
         function expandCard(card) {
-            // Pequeño efecto de escala
             card.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             card.style.transform = 'scale(1.02)';
             
@@ -928,20 +1010,90 @@
                 card.style.transform = 'scale(1)';
             }, 300);
             
-            // Mostrar detalle (en el futuro abrirá un modal con QR)
             const cardName = card.querySelector('.card-name')?.textContent || 'Credencial';
             console.log('📇 Tarjeta seleccionada:', cardName);
         }
         
-        // Mostrar QR Code
+        // ============================================
+        // GENERAR Y MOSTRAR CÓDIGO QR
+        // ============================================
+        let qrCodeInstancia = null;
+
         function showQRCode() {
-            // Simulación de QR - en el futuro generará QR real
-            alert(
-                '📱 Código QR de Verificación\n\n' +
-                'Escanea este código para validar tu credencial.\n\n' +
-                'Próximamente: QR dinámico con datos reales.'
-            );
+            // 1. Validar que tengamos los datos
+            const alumnoId = window.__CURRENT_USER__?.id_padron;
+            const tenantSlug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+            
+            if (!alumnoId) {
+                alert("Aún estamos cargando tu credencial. Intenta en un segundo.");
+                return;
+            }
+
+            // 2. Armar la URL mágica del validador
+            const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+            const urlValidador = `${baseUrl}/validador.html?instituto=${tenantSlug}&id=${alumnoId}`;
+            
+            console.log("🔗 URL del QR generada:", urlValidador);
+
+            // 3. Preparar el modal
+            const modal = document.getElementById('qrModal');
+            const qrContainer = document.getElementById('qrcode');
+            const modalContent = document.getElementById('qrModalContent');
+            
+            document.getElementById('qrStudentId').textContent = `ID: ${alumnoId.substring(0, 8)}...`;
+
+            // 4. Limpiar QR anterior si existe
+            qrContainer.innerHTML = '';
+            
+            // 5. Dibujar el nuevo QR
+            qrCodeInstancia = new QRCode(qrContainer, {
+                text: urlValidador,
+                width: 220,
+                height: 220,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // 6. Mostrar el Modal con animación
+            modal.classList.add('flex');
+            modal.style.opacity = '0';
+            
+            requestAnimationFrame(() => {
+                modal.style.opacity = '1';
+                setTimeout(() => {
+                    modalContent.classList.add('scale-in');
+                }, 50);
+            });
+            
+            lucide.createIcons();
         }
+
+        function cerrarQR() {
+            const modal = document.getElementById('qrModal');
+            const modalContent = document.getElementById('qrModalContent');
+            
+            modalContent.classList.remove('scale-in');
+            modal.style.opacity = '0';
+            
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.style.opacity = '';
+                
+                // Limpiar QR para liberar memoria
+                const qrContainer = document.getElementById('qrcode');
+                qrContainer.innerHTML = '';
+                qrCodeInstancia = null;
+            }, 300);
+        }
+        
+        // Cerrar modal al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('qrModal');
+            if (e.target === modal) {
+                cerrarQR();
+            }
+        });
         
         // ============================================
         // INICIALIZACIÓN PRINCIPAL
@@ -953,13 +1105,13 @@
             const isAuthenticated = await checkAuth();
             
             if (!isAuthenticated) {
-                return; // Ya se redirigió al login
+                return;
             }
             
             // 2. Inicializar tenant (branding, colores, logos)
             await inicializarTenant();
             
-            // 3. Cargar datos del estudiante
+            // 3. Cargar datos del estudiante desde el padrón
             await cargarDatosEstudiante();
             
             // 4. Ocultar loader
@@ -975,26 +1127,31 @@
         // ============================================
         window.addEventListener('DOMContentLoaded', inicializar);
         
-        // Prevenir scroll no deseado en iOS cuando se arrastra hacia abajo
         document.addEventListener('touchmove', function(e) {
             if (e.target === document.body) {
                 e.preventDefault();
             }
         }, { passive: false });
         
-        // Refrescar iconos si hay cambios dinámicos
-        window.addEventListener('load', () => { 
+        window.addEventListener('load', () => {
             lucide.createIcons();
         });
         
-        // Manejar el botón de retroceso del navegador
         window.addEventListener('popstate', () => {
-            // Prevenir que el usuario navegue hacia atrás al login
             history.pushState(null, '', window.location.href);
         });
         
-        // Empujar estado inicial para prevenir retroceso
         history.pushState(null, '', window.location.href);
+        
+        // Cerrar QR con tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('qrModal');
+                if (modal.classList.contains('flex')) {
+                    cerrarQR();
+                }
+            }
+        });
         
         console.log('💳 Wallet ASARI - Lista');
     </script>
