@@ -5,26 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title data-termino="campus_titulo">Campus Virtual</title>
+    <meta name="theme-color" content="#0f172a">
+    <title>Campus Virtual - Plataforma Educativa</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         * {
             font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
@@ -34,220 +31,297 @@
             --color-secondary: #ffffff;
             --color-primary-light: #a78bfa;
             --color-primary-dark: #5b21b6;
-            --sidebar-width: 280px;
             --safe-area-bottom: env(safe-area-inset-bottom, 0px);
         }
         
         body {
-            background: #f8fafc;
-            margin: 0;
-            padding: 0;
+            background: #0f172a;
+            color: #e2e8f0;
             min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
         
-        /* Loader */
-        .loader-overlay {
+        body::before {
+            content: '';
             position: fixed;
             inset: 0;
-            background: #f8fafc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            transition: opacity 0.3s ease;
-        }
-        
-        .loader-overlay.hidden {
-            opacity: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(99, 102, 241, 0.03) 0%, transparent 50%);
             pointer-events: none;
+            z-index: 0;
         }
         
-        .loader-spinner {
-            width: 48px;
-            height: 48px;
-            border: 3px solid rgba(124, 58, 237, 0.1);
-            border-top-color: var(--color-primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: var(--sidebar-width);
-            background: white;
-            border-right: 1px solid #e2e8f0;
-            z-index: 40;
-            transition: transform 0.3s ease;
-            overflow-y: auto;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-            padding-bottom: calc(80px + var(--safe-area-bottom));
-        }
-        
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 39;
-        }
-        
-        .sidebar-overlay.active {
-            display: block;
-        }
-        
-        @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            
-            .sidebar-overlay.active {
-                display: block;
-            }
-        }
-        
-        /* Main Content */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            min-height: 100vh;
-            transition: margin-left 0.3s ease;
-            padding-bottom: calc(80px + var(--safe-area-bottom)); /* Espacio para el Tab Bar */
-        }
-        
-        @media (max-width: 1024px) {
-            .main-content {
-                margin-left: 0;
-            }
-        }
-        
-        /* Video Player */
-        .video-container {
-            background: #000;
-            border-radius: 16px;
-            overflow: hidden;
-            aspect-ratio: 16/9;
+        .app-container {
             position: relative;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
         }
         
-        .video-placeholder {
-            position: absolute;
-            inset: 0;
+        .app-header {
+            padding: 16px 20px;
+            padding-top: max(16px, env(safe-area-inset-top));
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            cursor: pointer;
-            transition: all 0.3s ease;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        .video-placeholder:hover {
-            transform: scale(1.02);
-        }
-        
-        .play-button {
-            width: 80px;
-            height: 80px;
-            background: var(--color-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.4);
-            transition: all 0.3s ease;
-        }
-        
-        .play-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 40px rgba(124, 58, 237, 0.6);
-        }
-        
-        /* Module Cards */
-        .module-item {
-            background: white;
-            border: 1px solid #e2e8f0;
+        .header-logo {
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
-            padding: 16px;
-            transition: all 0.2s ease;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+        
+        .header-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .header-logo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+        }
+        
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            margin-bottom: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
         }
         
-        .module-item:hover {
-            border-color: var(--color-primary-light);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transform: translateX(4px);
-        }
-        
-        .module-item.active {
-            background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
-            border-color: var(--color-primary);
+        .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
             color: white;
         }
         
-        .module-item.active .module-icon {
-            background: rgba(255, 255, 255, 0.3);
+        .app-content {
+            flex: 1;
+            padding: 20px;
+            padding-bottom: calc(100px + var(--safe-area-bottom));
+            overflow-y: auto;
         }
         
-        .module-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: #f1f5f9;
+        .greeting h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        
+        .greeting p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        
+        .progress-section {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 16px;
+        }
+        
+        .progress-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
+            margin-bottom: 10px;
         }
         
-        /* Progress Bar */
+        .progress-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .progress-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-primary-light);
+        }
+        
         .progress-bar {
             height: 6px;
-            background: #e2e8f0;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             overflow: hidden;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary));
+            background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
             border-radius: 10px;
             transition: width 0.6s ease;
         }
-
-        /* Tab Bar inferior (Estilo PWA Mobile) */
+        
+        .video-section {
+            margin-top: 24px;
+        }
+        
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 12px;
+            padding-left: 4px;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            margin-bottom: 8px;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .video-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+        
+        .video-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .modules-section {
+            margin-top: 24px;
+        }
+        
+        .module-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        
+        .module-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+        
+        .module-item.active {
+            background: rgba(124, 58, 237, 0.15);
+            border-color: var(--color-primary);
+        }
+        
+        .module-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .module-icon-box.completed {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        
+        .module-icon-box.pending {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .module-icon-box.current {
+            background: rgba(124, 58, 237, 0.3);
+            color: #a78bfa;
+        }
+        
+        .module-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .module-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 2px;
+        }
+        
+        .module-duration {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .module-status {
+            flex-shrink: 0;
+        }
+        
         .tab-bar {
             position: fixed;
             bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid #e2e8f0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(30px);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
             padding: 8px 20px;
             padding-bottom: calc(8px + var(--safe-area-bottom));
             display: flex;
             align-items: center;
             justify-content: space-around;
-            z-index: 50;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
-        }
-        
-        /* Ocultar Tab Bar en Desktop (se usa el sidebar) */
-        @media (min-width: 1024px) {
-            .tab-bar {
-                display: none;
-            }
+            z-index: 20;
         }
         
         .tab-item {
@@ -259,13 +333,13 @@
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
-            color: #94a3b8;
+            color: rgba(255, 255, 255, 0.4);
             text-decoration: none;
             position: relative;
         }
         
         .tab-item.active {
-            color: var(--color-primary);
+            color: var(--color-primary-light);
         }
         
         .tab-item.active::before {
@@ -284,228 +358,246 @@
             font-size: 10px;
             font-weight: 600;
         }
-
-        /* Animaciones */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 200;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            animation: toastIn 0.3s ease-out;
+            white-space: nowrap;
+            max-width: 90vw;
+            text-align: center;
         }
         
-        .animate-fade-in {
-            animation: fadeIn 0.4s ease-out;
+        .toast.success {
+            background: #059669;
+            color: white;
+        }
+        
+        .toast.info {
+            background: #2563eb;
+            color: white;
+        }
+        
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(-50%) translateY(0); }
+            to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        }
+        
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.3s ease;
+        }
+        
+        .loader-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (min-width: 481px) {
+            .app-container {
+                border-left: 1px solid rgba(255, 255, 255, 0.05);
+                border-right: 1px solid rgba(255, 255, 255, 0.05);
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Loader inicial -->
     <div class="loader-overlay" id="loader">
         <div class="loader-spinner"></div>
     </div>
-
-    <!-- Sidebar Overlay (mobile) -->
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <!-- Institute Header -->
-        <div class="p-6 border-b border-gray-100">
-            <div class="flex items-center space-x-3 mb-6">
+    <div class="app-container">
+        
+        <header class="app-header">
+            <div class="header-logo" id="headerLogoContainer">
+                <div class="header-logo-placeholder" id="headerLogoPlaceholder">
+                    <span>🎓</span>
+                </div>
                 <img 
                     data-tenant-logo="principal" 
-                    src=""
+                    src="" 
                     alt="Logo" 
-                    id="sidebarLogoImg"
-                    class="w-12 h-12 object-contain hidden"
+                    id="headerLogoImg"
+                    style="display: none;"
+                    onerror="this.style.display='none'; document.getElementById('headerLogoPlaceholder').style.display='flex';"
+                    onload="this.style.display='block'; document.getElementById('headerLogoPlaceholder').style.display='none';"
                 >
-                <div id="sidebarLogoPlaceholder" class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-2xl hidden">🎓</div>
-                
-                <div>
-                    <h2 class="font-bold text-gray-900 text-sm" id="institutoNombre">Campus</h2>
-                    <p class="text-xs text-gray-500">Virtual</p>
+            </div>
+            
+            <div>
+                <span class="text-sm font-semibold text-white" id="headerInstituteName">Instituto</span>
+            </div>
+            
+            <a href="wallet.html" class="btn-icon" title="Volver a la Billetera">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </a>
+        </header>
+        
+        <main class="app-content">
+            
+            <div class="greeting">
+                <h1>Bienvenido al campus, <span id="studentName">Estudiante</span> 👋</h1>
+                <p>Continúa tu aprendizaje donde lo dejaste</p>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-label">Progreso del curso</span>
+                    <span class="progress-value" id="progressPercentage">45%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 45%;"></div>
                 </div>
             </div>
             
-            <!-- Student Info (Dinámico) -->
-            <div class="bg-gray-50 rounded-xl p-4">
-                <div class="flex items-center space-x-3">
-                    <div id="campusStudentInitials" class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md" style="background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));">
-                        --
-                    </div>
-                    <div>
-                        <p class="font-semibold text-gray-900 text-sm" id="campusStudentName">Cargando...</p>
-                        <p class="text-xs text-gray-500" id="campusStudentRole">Alumno</p>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <div class="flex justify-between text-xs text-gray-500 mb-1">
-                        <span>Progreso General</span>
-                        <span>0%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 5%;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Modules List -->
-        <div class="p-4">
-            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">
-                Módulos del Curso
-            </h3>
-            <div id="modulesList">
-                <div class="module-item active" onclick="selectModule(this, 1)" data-module="1">
-                    <div class="flex items-center space-x-3">
-                        <div class="module-icon">
-                            <i data-lucide="play-circle" class="w-5 h-5"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-medium text-sm">Módulo 1: Introducción</p>
-                            <p class="text-xs opacity-70">En curso</p>
-                        </div>
-                    </div>
+            <div class="video-section">
+                <p class="section-title">Clase actual</p>
+                
+                <div class="video-container">
+                    <iframe 
+                        id="mainVideo"
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                        title="Video de la clase"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
                 </div>
                 
-                <div class="module-item" onclick="selectModule(this, 2)" data-module="2">
-                    <div class="flex items-center space-x-3">
-                        <div class="module-icon">
-                            <i data-lucide="lock" class="w-5 h-5 text-gray-400"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-medium text-sm text-gray-400">Módulo 2: Fundamentos</p>
-                            <p class="text-xs opacity-70 text-gray-400">Bloqueado</p>
-                        </div>
-                    </div>
-                </div>
+                <h3 class="video-title" id="currentVideoTitle">1.1 Introducción al Curso</h3>
+                <p class="video-subtitle" id="currentVideoSubtitle">Duración: 12:30 • Módulo 1</p>
             </div>
-        </div>
-    </aside>
-    
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Top Bar -->
-        <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
-            <div class="flex items-center justify-between px-4 lg:px-6 py-4">
-                <div class="flex items-center space-x-4">
-                    <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition">
-                        <i data-lucide="menu" class="w-6 h-6 text-gray-600"></i>
-                    </button>
-                    <div>
-                        <h1 class="text-lg lg:text-xl font-bold text-gray-900" id="moduleTitle">Módulo 1: Introducción</h1>
-                        <p class="text-xs lg:text-sm text-gray-500">Material de Estudio</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <button class="p-2 rounded-lg hover:bg-gray-100 transition relative hidden sm:block">
-                        <i data-lucide="bell" class="w-5 h-5 text-gray-600"></i>
-                    </button>
-                    <button onclick="handleLogout()" class="p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-gray-600 transition" title="Cerrar Sesión">
-                        <i data-lucide="log-out" class="w-5 h-5"></i>
-                    </button>
-                </div>
-            </div>
-        </header>
-        
-        <!-- Content Area -->
-        <div class="p-4 lg:p-8">
-            <div class="grid lg:grid-cols-3 gap-8">
-                <!-- Main Video & Content (2/3) -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Video Player -->
-                    <div class="video-container animate-fade-in">
-                        <div class="video-placeholder" id="videoPlaceholder" onclick="playVideo()">
-                            <div class="text-center">
-                                <div class="play-button mx-auto mb-4">
-                                    <i data-lucide="play" class="w-10 h-10 text-white fill-current"></i>
-                                </div>
-                                <p class="text-white text-lg font-semibold">Reproducir Clase</p>
-                            </div>
-                        </div>
-                        <video id="mainVideo" class="hidden w-full h-full object-cover" controls>
-                            <source src="#" type="video/mp4">
-                        </video>
-                    </div>
-                    
-                    <!-- Video Info -->
-                    <div class="bg-white rounded-2xl p-6 border border-gray-200 animate-fade-in">
-                        <div class="flex items-start justify-between mb-4">
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900">Lección 1: Bienvenida</h3>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 text-sm leading-relaxed">
-                            Bienvenido al campus virtual. Selecciona los recursos o el video para comenzar tu aprendizaje.
-                        </p>
-                    </div>
-                </div>
+            
+            <div class="modules-section">
+                <p class="section-title">Módulos del curso</p>
                 
-                <!-- Right Sidebar (1/3) - Resources -->
-                <div class="space-y-6">
-                    <div class="bg-white rounded-2xl p-6 border border-gray-200 animate-fade-in">
-                        <h3 class="font-bold text-gray-900 mb-4">Material de Estudio</h3>
-                        
-                        <div class="space-y-3">
-                            <div class="flex items-center space-x-3 p-3 border border-gray-100 rounded-xl hover:border-blue-200 cursor-pointer transition">
-                                <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                                    <i data-lucide="file-text" class="w-5 h-5 text-blue-600"></i>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-sm text-gray-900">Guía de Estudio PDF</p>
-                                    <p class="text-xs text-gray-500">Descargar</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center space-x-3 p-3 border border-gray-100 rounded-xl hover:border-purple-200 cursor-pointer transition">
-                                <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
-                                    <i data-lucide="message-circle" class="w-5 h-5 text-purple-600"></i>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-sm text-gray-900">Foro de Consultas</p>
-                                    <p class="text-xs text-gray-500">Participar</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div id="modulesList">
+                    <!-- Renderizado dinámico -->
                 </div>
             </div>
-        </div>
-    </main>
+            
+        </main>
+        
+        <nav class="tab-bar">
+            <a href="wallet.html" class="tab-item">
+                <i data-lucide="wallet" class="w-5 h-5"></i>
+                <span>Billetera</span>
+            </a>
+            <a href="#" class="tab-item active">
+                <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                <span>Campus</span>
+            </a>
+            <a href="wallet.html" class="tab-item" onclick="sessionStorage.setItem('openQR','true')">
+                <i data-lucide="qr-code" class="w-5 h-5"></i>
+                <span>Mi QR</span>
+            </a>
+            <a href="#" class="tab-item" onclick="showToast('Perfil disponible próximamente', 'info')">
+                <i data-lucide="user" class="w-5 h-5"></i>
+                <span>Perfil</span>
+            </a>
+        </nav>
+        
+    </div>
 
-    <!-- Tab Bar inferior (Móvil) -->
-    <nav class="tab-bar">
-        <a href="#" id="linkWallet" class="tab-item">
-            <i data-lucide="wallet" class="w-5 h-5"></i>
-            <span>Billetera</span>
-        </a>
-        <a href="#" class="tab-item active">
-            <i data-lucide="graduation-cap" class="w-5 h-5"></i>
-            <span>Campus</span>
-        </a>
-        <a href="#" class="tab-item" onclick="alert('👤 Perfil - Próximamente')">
-            <i data-lucide="user" class="w-5 h-5"></i>
-            <span>Perfil</span>
-        </a>
-    </nav>
+    <div id="toast" class="toast hidden"></div>
 
-    <!-- Scripts -->
     <script src="supabase-config.js?v=3"></script>
+
     <script>
         lucide.createIcons();
         
         const loader = document.getElementById('loader');
-
+        const studentName = document.getElementById('studentName');
+        const headerLogoImg = document.getElementById('headerLogoImg');
+        const headerLogoPlaceholder = document.getElementById('headerLogoPlaceholder');
+        const headerInstituteName = document.getElementById('headerInstituteName');
+        const progressPercentage = document.getElementById('progressPercentage');
+        const progressFill = document.getElementById('progressFill');
+        const mainVideo = document.getElementById('mainVideo');
+        const currentVideoTitle = document.getElementById('currentVideoTitle');
+        const currentVideoSubtitle = document.getElementById('currentVideoSubtitle');
+        const modulesList = document.getElementById('modulesList');
+        const toast = document.getElementById('toast');
+        
         // ============================================
-        // VERIFICACIÓN DE SESIÓN (PROTECCIÓN DE RUTA)
+        // DATOS MOCKEADOS DE MÓDULOS Y CLASES
+        // ============================================
+        const courseModules = [
+            {
+                id: 1,
+                name: 'Módulo 1: Fundamentos',
+                classes: [
+                    { id: 1, title: '1.1 Introducción al Curso', duration: '12:30', videoId: 'dQw4w9WgXcQ', completed: true },
+                    { id: 2, title: '1.2 Conceptos Básicos', duration: '18:45', videoId: 'dQw4w9WgXcQ', completed: true },
+                    { id: 3, title: '1.3 Primeros Pasos', duration: '15:20', videoId: 'dQw4w9WgXcQ', completed: false }
+                ]
+            },
+            {
+                id: 2,
+                name: 'Módulo 2: Práctica Intermedia',
+                classes: [
+                    { id: 4, title: '2.1 Herramientas Avanzadas', duration: '22:10', videoId: 'dQw4w9WgXcQ', completed: false },
+                    { id: 5, title: '2.2 Ejercicios Guiados', duration: '30:00', videoId: 'dQw4w9WgXcQ', completed: false },
+                    { id: 6, title: '2.3 Proyecto Parcial', duration: '25:45', videoId: 'dQw4w9WgXcQ', completed: false }
+                ]
+            },
+            {
+                id: 3,
+                name: 'Módulo 3: Evaluación Final',
+                classes: [
+                    { id: 7, title: '3.1 Repaso General', duration: '20:00', videoId: 'dQw4w9WgXcQ', completed: false },
+                    { id: 8, title: '3.2 Examen Final', duration: '45:00', videoId: 'dQw4w9WgXcQ', completed: false }
+                ]
+            }
+        ];
+        
+        let currentClassId = 1;
+        let completedClasses = [1, 2]; // IDs de clases completadas
+        
+        // ============================================
+        // VERIFICACIÓN DE SESIÓN
         // ============================================
         async function checkAuth() {
             try {
                 const { data: { session }, error } = await window.supabase.auth.getSession();
                 
                 if (error || !session?.user) {
-                    console.warn('⚠️ No hay sesión activa. Redirigiendo...');
                     redirectToLogin();
                     return false;
                 }
+                
+                console.log('✅ Sesión verificada:', session.user.email);
                 
                 window.__CURRENT_USER__ = {
                     id: session.user.id,
@@ -514,37 +606,19 @@
                 
                 return true;
             } catch (error) {
-                console.error('Error crítico verificando sesión:', error);
+                console.error('Error verificando sesión:', error);
                 redirectToLogin();
                 return false;
             }
         }
-
+        
         function redirectToLogin() {
             const tenantSlug = window.getTenantSlug ? window.getTenantSlug() : 'default';
             window.location.href = `login.html?instituto=${encodeURIComponent(tenantSlug)}`;
         }
-
+        
         // ============================================
-        // CERRAR SESIÓN
-        // ============================================
-        async function handleLogout() {
-            const confirmed = confirm('¿Deseas salir del Campus Virtual?');
-            if (!confirmed) return;
-            
-            try {
-                loader.classList.remove('hidden');
-                await window.supabase.auth.signOut();
-                localStorage.removeItem('asari_user_session');
-                redirectToLogin();
-            } catch (error) {
-                console.error('Error en logout:', error);
-                loader.classList.add('hidden');
-            }
-        }
-
-        // ============================================
-        // INICIALIZACIÓN DEL TENANT (BRANDING)
+        // INICIALIZACIÓN DEL TENANT
         // ============================================
         async function inicializarTenant() {
             try {
@@ -558,36 +632,37 @@
                 if (tenant) {
                     const { instituto, configuracion } = tenant;
                     
-                    document.getElementById('institutoNombre').textContent = instituto.nombre;
-                    document.title = `Campus - ${instituto.nombre}`;
-                    
-                    // Configurar Logo Sidebar
-                    const logoImg = document.getElementById('sidebarLogoImg');
-                    const logoPlaceholder = document.getElementById('sidebarLogoPlaceholder');
+                    headerInstituteName.textContent = instituto.nombre;
+                    document.title = `Campus Virtual - ${instituto.nombre}`;
                     
                     if (configuracion?.branding?.logo_principal) {
-                        logoImg.src = configuracion.branding.logo_principal;
-                        logoImg.classList.remove('hidden');
+                        headerLogoImg.src = configuracion.branding.logo_principal;
+                        headerLogoImg.style.display = 'block';
+                        headerLogoPlaceholder.style.display = 'none';
                     } else {
-                        logoPlaceholder.classList.remove('hidden');
+                        headerLogoImg.style.display = 'none';
+                        headerLogoPlaceholder.style.display = 'flex';
+                        headerLogoPlaceholder.style.background = 
+                            `linear-gradient(135deg, var(--color-primary-light), var(--color-primary))`;
                     }
-
-                    // Actualizar link de Wallet en Tab Bar
-                    const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
-                    document.getElementById('linkWallet').href = `wallet.html?instituto=${encodeURIComponent(slug)}`;
                     
                     window.__TENANT_CONFIG__ = tenant;
+                    
+                    console.log('✅ Campus inicializado para:', instituto.nombre);
                     return tenant;
                 }
+                
+                return null;
             } catch (error) {
                 console.error('Error inicializando tenant:', error);
+                return null;
             }
         }
-
+        
         // ============================================
-        // CARGAR DATOS DEL ESTUDIANTE
+        // CARGAR NOMBRE DEL ESTUDIANTE
         // ============================================
-        async function cargarDatosEstudiante() {
+        async function cargarNombreEstudiante() {
             try {
                 const userEmail = window.__CURRENT_USER__?.email;
                 const tenantConfig = window.__TENANT_CONFIG__;
@@ -597,76 +672,190 @@
                 
                 const { data, error } = await window.supabase
                     .from('padron_global')
-                    .select('*')
+                    .select('nombre_completo')
                     .eq('email', userEmail)
                     .eq('instituto_id', institutoId)
-                    .single();
-                
-                if (data) {
-                    document.getElementById('campusStudentName').textContent = data.nombre_completo;
-                    document.getElementById('campusStudentRole').textContent = data.rol || 'Alumno';
+                    .maybeSingle();
                     
-                    // Generar iniciales (ej: "Juan Perez" -> "JP")
-                    const partesNombre = data.nombre_completo.split(' ');
-                    let iniciales = partesNombre[0].charAt(0);
-                    if (partesNombre.length > 1) {
-                        iniciales += partesNombre[1].charAt(0);
-                    }
-                    document.getElementById('campusStudentInitials').textContent = iniciales.toUpperCase();
+                if (error) throw error;
+                
+                if (data?.nombre_completo) {
+                    const nombrePila = data.nombre_completo.split(' ')[0];
+                    studentName.textContent = nombrePila;
                 }
             } catch (error) {
-                console.error('Error cargando datos del estudiante:', error);
+                console.warn('No se pudo cargar el nombre del estudiante:', error.message);
             }
         }
-
+        
         // ============================================
-        // UI & INTERACCIÓN
+        // RENDERIZAR LISTA DE MÓDULOS
         // ============================================
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebarOverlay').classList.toggle('active');
+        function renderModules() {
+            modulesList.innerHTML = courseModules.map(module => {
+                const moduleClasses = module.classes.map(cls => {
+                    const isActive = cls.id === currentClassId;
+                    const isCompleted = completedClasses.includes(cls.id);
+                    
+                    let iconClass = 'pending';
+                    let iconName = 'play';
+                    
+                    if (isCompleted) {
+                        iconClass = 'completed';
+                        iconName = 'check-circle';
+                    } else if (isActive) {
+                        iconClass = 'current';
+                        iconName = 'play';
+                    }
+                    
+                    return `
+                        <div class="module-item ${isActive ? 'active' : ''}" onclick="selectClass(${cls.id})">
+                            <div class="module-icon-box ${iconClass}">
+                                <i data-lucide="${iconName}" class="w-5 h-5"></i>
+                            </div>
+                            <div class="module-info">
+                                <p class="module-name">${cls.title}</p>
+                                <p class="module-duration">${cls.duration}</p>
+                            </div>
+                            <div class="module-status">
+                                ${isCompleted 
+                                    ? '<i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>'
+                                    : (isActive 
+                                        ? '<span style="font-size: 10px; background: rgba(124,58,237,0.3); color: #a78bfa; padding: 4px 10px; border-radius: 10px; font-weight: 600;">AHORA</span>'
+                                        : '<i data-lucide="lock" class="w-4 h-4 text-gray-600"></i>')
+                                }
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                return `
+                    <div style="margin-bottom: 16px;">
+                        <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.3); margin-bottom: 8px; padding-left: 4px;">
+                            ${module.name}
+                        </p>
+                        ${moduleClasses}
+                    </div>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
         }
         
-        function selectModule(element, moduleNumber) {
-            document.querySelectorAll('.module-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            element.classList.add('active');
+        // ============================================
+        // SELECCIONAR CLASE
+        // ============================================
+        function selectClass(classId) {
+            currentClassId = classId;
             
-            const titles = {
-                1: 'Módulo 1: Introducción',
-                2: 'Módulo 2: Fundamentos'
-            };
+            // Buscar la clase en los datos mockeados
+            let selectedClass = null;
+            let moduleIndex = 0;
             
-            document.getElementById('moduleTitle').textContent = titles[moduleNumber] || 'Módulo';
+            for (const module of courseModules) {
+                const found = module.classes.find(c => c.id === classId);
+                if (found) {
+                    selectedClass = found;
+                    break;
+                }
+                moduleIndex++;
+            }
             
-            if (window.innerWidth < 1024) toggleSidebar();
+            if (!selectedClass) return;
+            
+            // Actualizar video
+            mainVideo.src = `https://www.youtube.com/embed/${selectedClass.videoId}`;
+            currentVideoTitle.textContent = selectedClass.title;
+            currentVideoSubtitle.textContent = `Duración: ${selectedClass.duration} • Módulo ${moduleIndex + 1}`;
+            
+            // Marcar como completada si no lo estaba
+            if (!completedClasses.includes(classId)) {
+                completedClasses.push(classId);
+                updateProgress();
+            }
+            
+            // Re-renderizar lista para actualizar estados visuales
+            renderModules();
+            
+            // Scroll suave al video
+            document.querySelector('.video-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            showToast(`Reproduciendo: ${selectedClass.title}`, 'info');
         }
         
-        function playVideo() {
-            document.getElementById('videoPlaceholder').classList.add('hidden');
-            const video = document.getElementById('mainVideo');
-            video.classList.remove('hidden');
-            // En prod se cambiaría el src real.
-            video.play().catch(e => console.log('Reproducción simulada'));
+        // ============================================
+        // ACTUALIZAR PROGRESO
+        // ============================================
+        function updateProgress() {
+            const totalClasses = courseModules.reduce((sum, m) => sum + m.classes.length, 0);
+            const completedCount = completedClasses.length;
+            const percentage = Math.round((completedCount / totalClasses) * 100);
+            
+            progressPercentage.textContent = `${percentage}%`;
+            progressFill.style.width = `${percentage}%`;
+            
+            // Cambiar color si está completo
+            if (percentage === 100) {
+                progressFill.style.background = 'linear-gradient(90deg, #10b981, #34d399)';
+                showToast('🎉 ¡Curso completado! Felicitaciones', 'success');
+            }
         }
-
+        
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
+        function showToast(message, type = 'info') {
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.style.animation = 'none';
+            toast.offsetHeight;
+            toast.style.animation = 'toastIn 0.3s ease-out';
+            
+            clearTimeout(window._toastTimeout);
+            window._toastTimeout = setTimeout(() => {
+                toast.style.animation = 'toastOut 0.3s ease forwards';
+                setTimeout(() => {
+                    toast.className = 'toast hidden';
+                    toast.style.animation = '';
+                }, 300);
+            }, 2500);
+        }
+        
         // ============================================
         // INICIALIZACIÓN PRINCIPAL
         // ============================================
         async function inicializar() {
+            console.log('📚 Inicializando Campus Virtual...');
+            
             const isAuthenticated = await checkAuth();
             if (!isAuthenticated) return;
             
             await inicializarTenant();
-            await cargarDatosEstudiante();
+            await cargarNombreEstudiante();
+            
+            renderModules();
+            updateProgress();
             
             setTimeout(() => {
                 loader.classList.add('hidden');
             }, 300);
+            
+            console.log('✅ Campus Virtual inicializado correctamente');
         }
-
+        
         window.addEventListener('DOMContentLoaded', inicializar);
+        
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+        });
+        
+        window.addEventListener('popstate', () => {
+            history.pushState(null, '', window.location.href);
+        });
+        
+        history.pushState(null, '', window.location.href);
+        
+        console.log('📚 Campus ASARI - Listo');
     </script>
 </body>
 </html>
