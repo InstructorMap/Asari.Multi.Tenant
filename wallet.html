@@ -384,25 +384,10 @@
             font-size: 22px;
         }
         
-        .action-icon.purple {
-            background: rgba(124, 58, 237, 0.2);
-            color: #a78bfa;
-        }
-        
-        .action-icon.blue {
-            background: rgba(59, 130, 246, 0.2);
-            color: #93c5fd;
-        }
-        
-        .action-icon.green {
-            background: rgba(16, 185, 129, 0.2);
-            color: #6ee7b7;
-        }
-        
-        .action-icon.orange {
-            background: rgba(249, 115, 22, 0.2);
-            color: #fdba74;
-        }
+        .action-icon.purple { background: rgba(124, 58, 237, 0.2); color: #a78bfa; }
+        .action-icon.blue { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+        .action-icon.green { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+        .action-icon.orange { background: rgba(249, 115, 22, 0.2); color: #fdba74; }
         
         .action-label {
             font-size: 13px;
@@ -461,10 +446,7 @@
             transition: all 0.15s ease;
         }
         
-        .btn-close-qr:hover {
-            background: #e2e8f0;
-            color: #334155;
-        }
+        .btn-close-qr:hover { background: #e2e8f0; color: #334155; }
         
         .qr-container {
             background: white;
@@ -476,14 +458,8 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
         
-        .qr-container canvas {
-            display: none !important;
-        }
-        
-        .qr-container img {
-            display: block !important;
-            margin: 0 auto !important;
-        }
+        .qr-container canvas { display: none !important; }
+        .qr-container img { display: block !important; margin: 0 auto !important; }
         
         .tab-bar {
             position: fixed;
@@ -517,10 +493,7 @@
             position: relative;
         }
         
-        .tab-item.active {
-            color: var(--color-primary-light);
-        }
-        
+        .tab-item.active { color: var(--color-primary-light); }
         .tab-item.active::before {
             content: '';
             position: absolute;
@@ -548,9 +521,7 @@
             50% { box-shadow: 0 0 20px 4px rgba(124, 58, 237, 0.2); }
         }
         
-        .pulse-glow {
-            animation: pulse-glow 3s ease-in-out infinite;
-        }
+        .pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
         
         .loader-overlay {
             position: fixed;
@@ -577,16 +548,13 @@
             animation: spin 0.8s linear infinite;
         }
         
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         @media (min-width: 481px) {
             .app-container {
                 border-left: 1px solid rgba(255, 255, 255, 0.05);
                 border-right: 1px solid rgba(255, 255, 255, 0.05);
             }
-            
             .credential-card:hover {
                 transform: translateY(-4px);
                 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
@@ -600,7 +568,6 @@
         <div class="loader-spinner"></div>
     </div>
     
-    <!-- Contenedor principal -->
     <div class="app-container">
         
         <!-- Header -->
@@ -629,7 +596,6 @@
             </button>
         </header>
         
-        <!-- Contenido principal -->
         <main class="app-content">
             
             <div class="greeting">
@@ -645,16 +611,16 @@
                 
                 <div class="credential-card primary pulse-glow" onclick="expandCard(this)">
                     <div class="card-header">
-                        <span class="card-type">Matrícula Activa</span>
-                        <span class="card-badge active" id="alumnoEstado">ACTIVO</span>
+                        <span class="card-type">Matrícula</span>
+                        <span class="card-badge" id="alumnoEstado">CARGANDO...</span>
                     </div>
-                    <h2 class="card-name" id="alumnoNombre">Cargando...</h2>
-                    <p class="card-detail" id="alumnoRol">Alumno</p>
+                    <h2 class="card-name" id="alumnoNombre">Cargando datos...</h2>
+                    <p class="card-detail" id="alumnoRol">Estudiante</p>
                     
                     <div class="card-data-grid">
                         <div class="card-data-item">
-                            <div class="card-data-label">Documento</div>
-                            <div class="card-data-value" id="alumnoDni">---</div>
+                            <div class="card-data-label">Documento / Email</div>
+                            <div class="card-data-value" id="alumnoDni" style="font-size:11px; word-break: break-all;">---</div>
                         </div>
                         <div class="card-data-item">
                             <div class="card-data-label">Matrícula</div>
@@ -664,7 +630,7 @@
                     
                     <div class="card-footer" style="margin-top: 16px;">
                         <div>
-                            <span class="card-number" id="cardMatricula">Nº ---</span>
+                            <span class="card-number" id="cardMatricula">Validando registro...</span>
                         </div>
                         <div class="card-chip">
                             <i data-lucide="shield-check" class="w-4 h-4 text-yellow-300"></i>
@@ -685,23 +651,6 @@
                         </div>
                         <div class="card-chip">
                             <i data-lucide="graduation-cap" class="w-4 h-4 text-white/60"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="credential-card tertiary" onclick="expandCard(this)">
-                    <div class="card-header">
-                        <span class="card-type">Taller Complementario</span>
-                        <span class="card-badge" style="background: rgba(16, 185, 129, 0.3); border: 1px solid rgba(16, 185, 129, 0.4);">COMPLETADO</span>
-                    </div>
-                    <h2 class="card-name">Habilidades Digitales</h2>
-                    <p class="card-detail">Finalizado: Diciembre 2025</p>
-                    <div class="card-footer">
-                        <div>
-                            <span class="card-number">Certificado Nº 2025-089</span>
-                        </div>
-                        <div class="card-chip">
-                            <i data-lucide="award" class="w-4 h-4 text-white/60"></i>
                         </div>
                     </div>
                 </div>
@@ -797,40 +746,21 @@
     <!-- LÓGICA DE LA BILLETERA -->
     <!-- ============================================ -->
     <script>
-        // ============================================
-        // INICIALIZACIÓN DE ICONOS
-        // ============================================
         lucide.createIcons();
         
-        // ============================================
-        // REFERENCIAS AL DOM
-        // ============================================
         const loader = document.getElementById('loader');
         const studentName = document.getElementById('studentName');
         const headerLogoImg = document.getElementById('headerLogoImg');
         const headerLogoPlaceholder = document.getElementById('headerLogoPlaceholder');
         const headerInstituteName = document.getElementById('headerInstituteName');
         
-        // ============================================
-        // VERIFICACIÓN DE SESIÓN (PROTECCIÓN DE RUTA)
-        // ============================================
         async function checkAuth() {
             try {
                 const { data: { session }, error } = await window.supabase.auth.getSession();
-                
-                if (error) {
-                    console.error('Error verificando sesión:', error);
+                if (error || !session?.user) {
                     redirectToLogin();
                     return false;
                 }
-                
-                if (!session?.user) {
-                    console.warn('⚠️ No hay sesión activa');
-                    redirectToLogin();
-                    return false;
-                }
-                
-                console.log('✅ Sesión verificada:', session.user.email);
                 
                 window.__CURRENT_USER__ = {
                     id: session.user.id,
@@ -840,9 +770,7 @@
                 };
                 
                 return true;
-                
             } catch (error) {
-                console.error('Error crítico verificando sesión:', error);
                 redirectToLogin();
                 return false;
             }
@@ -850,113 +778,68 @@
         
         function redirectToLogin() {
             const tenantSlug = window.getTenantSlug ? window.getTenantSlug() : 'default';
-            const loginUrl = `login.html?instituto=${encodeURIComponent(tenantSlug)}`;
-            
-            console.log('🔒 Redirigiendo a login:', loginUrl);
-            
-            setTimeout(() => {
-                window.location.href = loginUrl;
-            }, 500);
+            window.location.href = `login.html?instituto=${encodeURIComponent(tenantSlug)}`;
         }
         
-        // ============================================
-        // CERRAR SESIÓN
-        // ============================================
         async function handleLogout() {
-            const confirmed = confirm('¿Estás seguro de que deseas cerrar sesión?');
-            
-            if (!confirmed) return;
-            
+            if (!confirm('¿Estás seguro de que deseas cerrar sesión?')) return;
             try {
                 loader.classList.remove('hidden');
-                
-                const { error } = await window.supabase.auth.signOut();
-                
-                if (error) {
-                    console.error('Error al cerrar sesión:', error);
-                    throw error;
-                }
-                
+                await window.supabase.auth.signOut();
                 localStorage.removeItem('asari_user_session');
-                
-                console.log('👋 Sesión cerrada exitosamente');
-                
                 redirectToLogin();
-                
             } catch (error) {
-                console.error('Error en logout:', error);
                 alert('Hubo un error al cerrar sesión. Intenta de nuevo.');
                 loader.classList.add('hidden');
             }
         }
         
-        // ============================================
-        // INICIALIZACIÓN DEL TENANT (BRANDING)
-        // ============================================
         async function inicializarTenant() {
             try {
-                if (typeof window.fetchTenantConfig !== 'function') {
-                    console.warn('fetchTenantConfig no disponible aún, reintentando...');
-                    setTimeout(inicializarTenant, 100);
-                    return null;
-                }
-                
+                if (typeof window.fetchTenantConfig !== 'function') return null;
                 const tenant = await window.fetchTenantConfig();
                 
                 if (tenant) {
-                    const { instituto, configuracion } = tenant;
+                    headerInstituteName.textContent = tenant.instituto.nombre;
+                    document.title = `Mi Billetera - ${tenant.instituto.nombre}`;
                     
-                    headerInstituteName.textContent = instituto.nombre;
-                    document.title = `Mi Billetera - ${instituto.nombre}`;
-                    
-                    if (configuracion?.branding?.logo_principal) {
-                        headerLogoImg.src = configuracion.branding.logo_principal;
+                    if (tenant.configuracion?.branding?.logo_principal) {
+                        headerLogoImg.src = tenant.configuracion.branding.logo_principal;
                         headerLogoImg.style.display = 'block';
                         headerLogoPlaceholder.style.display = 'none';
-                    } else {
-                        headerLogoImg.style.display = 'none';
-                        headerLogoPlaceholder.style.display = 'flex';
-                        headerLogoPlaceholder.style.background = 
-                            `linear-gradient(135deg, var(--color-primary-light), var(--color-primary))`;
                     }
-                    
-                    if (configuracion?.terminologia) {
-                        const term = configuracion.terminologia;
-                        
-                        document.querySelectorAll('[data-termino]').forEach(el => {
-                            const key = el.getAttribute('data-termino');
-                            if (term[key]) {
-                                el.textContent = term[key];
-                            }
-                        });
-                    }
-                    
-                    console.log('✅ Wallet inicializada para:', instituto.nombre);
-                    
                     window.__TENANT_CONFIG__ = tenant;
-                    
                     return tenant;
-                } else {
-                    headerInstituteName.textContent = 'Instituto';
-                    return null;
                 }
+                return null;
             } catch (error) {
-                console.error('Error inicializando tenant en wallet:', error);
-                headerInstituteName.textContent = 'Instituto';
+                console.error('Error inicializando tenant:', error);
                 return null;
             }
         }
         
         // ============================================
-        // CARGAR DATOS DEL ESTUDIANTE EN LA BILLETERA
+        // CARGA DE DATOS ESTRICTA Y QUIRÚRGICA
         // ============================================
         async function cargarDatosEstudiante() {
+            const elNombre = document.getElementById('alumnoNombre');
+            const elRol = document.getElementById('alumnoRol');
+            const elDni = document.getElementById('alumnoDni');
+            const elMatricula = document.getElementById('alumnoMatricula');
+            const elEstado = document.getElementById('alumnoEstado');
+            const elCardMatricula = document.getElementById('cardMatricula');
+            const elStudentName = document.getElementById('studentName');
+            
             try {
                 const userEmail = window.__CURRENT_USER__?.email;
                 const tenantConfig = window.__TENANT_CONFIG__;
                 const institutoId = tenantConfig?.instituto?.id;
                 
-                if (!userEmail || !institutoId) return;
+                if (!userEmail || !institutoId) {
+                    elNombre.textContent = "Error de configuración";
+                    elCardMatricula.textContent = "Instituto no encontrado";
+                    return;
+                }
                 
                 const { data, error } = await window.supabase
                     .from('padron_global')
@@ -968,90 +851,73 @@
                 if (error) throw error;
                 
                 if (data) {
-                    console.log("✅ Datos del alumno recuperados:", data);
-
+                    // EL USUARIO EXISTE EN EL PADRÓN
                     window.__CURRENT_USER__.id_padron = data.id;
-
-                    const elNombre = document.getElementById('alumnoNombre');
-                    const elRol = document.getElementById('alumnoRol');
-                    const elDni = document.getElementById('alumnoDni');
-                    const elMatricula = document.getElementById('alumnoMatricula');
-                    const elEstado = document.getElementById('alumnoEstado');
-                    const elCardMatricula = document.getElementById('cardMatricula');
-                    const elStudentName = document.getElementById('studentName');
                     
                     const nombrePila = data.nombre_completo?.split(' ')[0] || 'Estudiante';
-                    
-                    if (elStudentName) elStudentName.textContent = nombrePila;
-                    if (elNombre) elNombre.textContent = data.nombre_completo || 'Sin nombre';
-                    if (elRol) elRol.textContent = data.rol ? data.rol.toUpperCase() : 'ALUMNO';
-                    if (elDni) elDni.textContent = data.documento || '---';
+                    elStudentName.textContent = nombrePila;
+                    elNombre.textContent = data.nombre_completo || 'Sin nombre';
+                    elRol.textContent = data.rol ? data.rol.toUpperCase() : 'ALUMNO';
+                    elDni.textContent = data.documento || userEmail;
                     
                     const matriculaReal = data.datos_dinamicos?.matricula || 'Sin Matrícula';
                     const prefijoMatricula = tenantConfig?.configuracion?.terminologia?.matricula || 'Nº';
                     
-                    if (elMatricula) elMatricula.textContent = matriculaReal;
-                    if (elCardMatricula) elCardMatricula.textContent = `${prefijoMatricula}: ${matriculaReal}`;
+                    elMatricula.textContent = matriculaReal;
+                    elCardMatricula.textContent = `${prefijoMatricula}: ${matriculaReal}`;
                     
-                    if (elEstado) {
-                        const esActivo = data.estado_credencial === 'activo';
-                        elEstado.textContent = esActivo ? 'ACTIVO' : 'SUSPENDIDO';
-                        
-                        if (esActivo) {
-                            elEstado.className = 'card-badge active';
-                        } else {
-                            elEstado.className = 'card-badge';
-                            elEstado.style.background = 'rgba(239, 68, 68, 0.3)';
-                            elEstado.style.border = '1px solid rgba(239, 68, 68, 0.4)';
-                        }
+                    const esActivo = data.estado_credencial === 'activo';
+                    elEstado.textContent = esActivo ? 'ACTIVO' : 'SUSPENDIDO';
+                    
+                    if (esActivo) {
+                        elEstado.className = 'card-badge active';
+                        elEstado.style.background = 'rgba(16, 185, 129, 0.3)';
+                        elEstado.style.border = '1px solid rgba(16, 185, 129, 0.4)';
+                    } else {
+                        elEstado.className = 'card-badge';
+                        elEstado.style.background = 'rgba(239, 68, 68, 0.3)';
+                        elEstado.style.border = '1px solid rgba(239, 68, 68, 0.4)';
                     }
+                } else {
+                    // EL USUARIO ESTÁ LOGUEADO PERO NO ESTÁ EN EL PADRÓN
+                    console.warn("⚠️ Usuario sin registro en padron_global.");
+                    elStudentName.textContent = "Usuario";
+                    elNombre.textContent = "Usuario sin asignar";
+                    elDni.textContent = userEmail;
+                    elRol.textContent = "PENDIENTE";
+                    elMatricula.textContent = "---";
+                    elCardMatricula.textContent = "FALTA INSCRIPCIÓN EN CRM";
                     
-                    console.log('✅ Datos del estudiante pintados en la tarjeta');
+                    elEstado.textContent = 'NO ENROLADO';
+                    elEstado.className = 'card-badge';
+                    elEstado.style.background = 'rgba(249, 115, 22, 0.3)';
+                    elEstado.style.border = '1px solid rgba(249, 115, 22, 0.4)';
                 }
                 
             } catch (error) {
-                console.error('❌ Error cargando datos del estudiante:', error.message);
-                
-                const elNombre = document.getElementById('alumnoNombre');
-                const elCardMatricula = document.getElementById('cardMatricula');
-                
-                if (elNombre) elNombre.textContent = 'Datos no encontrados';
-                if (elCardMatricula) elCardMatricula.textContent = error.message;
+                console.error('❌ Error de red:', error.message);
+                elNombre.textContent = 'Error de conexión';
+                elCardMatricula.textContent = error.message;
             }
         }
         
-        // ============================================
-        // FUNCIONES DE UI
-        // ============================================
         function expandCard(card) {
             card.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             card.style.transform = 'scale(1.02)';
-            
-            setTimeout(() => {
-                card.style.transform = 'scale(1)';
-            }, 300);
-            
-            const cardName = card.querySelector('.card-name')?.textContent || 'Credencial';
-            console.log('📇 Tarjeta seleccionada:', cardName);
+            setTimeout(() => { card.style.transform = 'scale(1)'; }, 300);
         }
         
-        // ============================================
-        // GENERAR Y MOSTRAR CÓDIGO QR
-        // ============================================
         let qrCodeInstancia = null;
         let qrModalAbierto = false;
 
         function showQRCode() {
-            if (qrModalAbierto) {
-                console.log('⚠️ QR Modal ya está abierto, ignorando...');
-                return;
-            }
+            if (qrModalAbierto) return;
             
             const alumnoId = window.__CURRENT_USER__?.id_padron;
             const tenantSlug = window.getTenantSlug ? window.getTenantSlug() : 'default';
             
             if (!alumnoId) {
-                alert("Aún estamos cargando tu credencial. Intenta en un segundo.");
+                alert("Atención: No podemos generar tu código QR porque aún no te han asignado al padrón de este instituto. Pide a administración que complete tu registro en el CRM.");
                 return;
             }
 
@@ -1060,8 +926,6 @@
             const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
             const urlValidador = `${baseUrl}/validador.html?instituto=${tenantSlug}&id=${alumnoId}`;
             
-            console.log("🔗 URL del QR generada:", urlValidador);
-
             const modal = document.getElementById('qrModal');
             const qrContainer = document.getElementById('qrcode');
             const modalContent = document.getElementById('qrModalContent');
@@ -1069,8 +933,6 @@
             document.getElementById('qrStudentId').textContent = `ID: ${alumnoId.substring(0, 8)}...`;
 
             qrContainer.innerHTML = '';
-            qrCodeInstancia = null;
-            
             qrCodeInstancia = new QRCode(qrContainer, {
                 text: urlValidador,
                 width: 220,
@@ -1089,8 +951,6 @@
                     modalContent.classList.add('scale-in');
                 });
             });
-            
-            lucide.createIcons();
         }
 
         function cerrarQR() {
@@ -1098,79 +958,46 @@
             const modalContent = document.getElementById('qrModalContent');
             
             qrModalAbierto = false;
-            
             modalContent.classList.remove('scale-in');
             modal.style.opacity = '0';
             
             setTimeout(() => {
                 modal.style.display = 'none';
                 modal.style.opacity = '';
-                
                 const qrContainer = document.getElementById('qrcode');
-                if (qrContainer) {
-                    qrContainer.innerHTML = '';
-                }
-                qrCodeInstancia = null;
+                if (qrContainer) qrContainer.innerHTML = '';
             }, 300);
         }
         
         document.getElementById('qrModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                cerrarQR();
-            }
+            if (e.target === this) cerrarQR();
         });
         
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && qrModalAbierto) {
-                cerrarQR();
-            }
+            if (e.key === 'Escape' && qrModalAbierto) cerrarQR();
         });
         
-        // ============================================
-        // INICIALIZACIÓN PRINCIPAL
-        // ============================================
         async function inicializar() {
-            console.log('💳 Inicializando Billetera ASARI...');
-            
             const isAuthenticated = await checkAuth();
-            
-            if (!isAuthenticated) {
-                return;
-            }
-            
+            if (!isAuthenticated) return;
             await inicializarTenant();
-            
             await cargarDatosEstudiante();
             
             setTimeout(() => {
                 loader.classList.add('hidden');
             }, 300);
-            
-            console.log('✅ Billetera inicializada correctamente');
         }
         
-        // ============================================
-        // EVENTOS DEL DOM
-        // ============================================
         window.addEventListener('DOMContentLoaded', inicializar);
         
         document.addEventListener('touchmove', function(e) {
-            if (e.target === document.body) {
-                e.preventDefault();
-            }
+            if (e.target === document.body) e.preventDefault();
         }, { passive: false });
         
         window.addEventListener('load', () => {
             lucide.createIcons();
         });
         
-        window.addEventListener('popstate', () => {
-            history.pushState(null, '', window.location.href);
-        });
-        
-        history.pushState(null, '', window.location.href);
-        
-        console.log('💳 Wallet ASARI - Lista');
     </script>
 </body>
 </html>
