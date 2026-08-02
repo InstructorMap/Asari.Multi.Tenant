@@ -1000,7 +1000,7 @@
                     .select('*')
                     .eq('email', userEmail)
                     .eq('instituto_id', institutoId)
-                    .maybesingle();
+                    .maybeSingle();
                     
                 if (error) throw error;
                 
