@@ -4,280 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASARI - Panel Dios | Centro de Comando Supremo</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
         * { font-family: 'Inter', sans-serif; }
-        
         body { background: #0a0a0f; color: #e5e7eb; }
-        
-        .sidebar {
-            background: rgba(10, 10, 20, 0.95);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-        }
-        
-        .card-dios {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .card-dios:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(139, 92, 246, 0.3);
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-            transform: translateY(-1px);
-        }
-        
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .btn-danger {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .btn-danger:hover {
-            background: rgba(239, 68, 68, 0.2);
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
-        }
-        
-        .toggle-switch {
-            position: relative;
-            width: 44px;
-            height: 24px;
-        }
-        
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.1);
-            transition: 0.4s;
-            border-radius: 34px;
-        }
-        
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .toggle-slider {
-            background: linear-gradient(135deg, #7c3aed, #6d28d9);
-        }
-        
-        input:checked + .toggle-slider:before {
-            transform: translateX(20px);
-        }
-        
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-        }
-        
-        .input-dios {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            color: white;
-            padding: 10px 14px;
-            width: 100%;
-            font-size: 14px;
-        }
-        
-        .input-dios:focus {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(139, 92, 246, 0.5);
-            outline: none;
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.1);
-        }
-        
+        .sidebar { background: rgba(10,10,20,0.95); border-right: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(20px); }
+        .card-dios { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; transition: all 0.3s ease; }
+        .card-dios:hover { background: rgba(255,255,255,0.05); border-color: rgba(139,92,246,0.3); box-shadow: 0 8px 32px rgba(139,92,246,0.1); }
+        .btn-primary { background: linear-gradient(135deg,#7c3aed 0%,#6d28d9 100%); border: 1px solid rgba(139,92,246,0.3); transition: all 0.3s ease; cursor: pointer; color: white; font-weight: 600; padding: 10px 20px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+        .btn-primary:hover { background: linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); box-shadow: 0 0 20px rgba(139,92,246,0.3); transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); transition: all 0.3s ease; cursor: pointer; color: #fca5a5; padding: 10px 20px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+        .btn-danger:hover { background: rgba(239,68,68,0.2); box-shadow: 0 0 20px rgba(239,68,68,0.2); }
+        .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease; cursor: pointer; color: #cbd5e1; padding: 10px 20px; border-radius: 10px; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+        .toggle-switch { position: relative; width: 44px; height: 24px; display: inline-block; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: 0.4s; border-radius: 34px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: 0.4s; border-radius: 50%; }
+        input:checked + .toggle-slider { background: linear-gradient(135deg,#7c3aed,#6d28d9); }
+        input:checked + .toggle-slider:before { transform: translateX(20px); }
+        .modal-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+        .input-dios { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; transition: all 0.3s ease; color: white; padding: 10px 14px; width: 100%; font-size: 14px; }
+        .input-dios:focus { background: rgba(255,255,255,0.08); border-color: rgba(139,92,246,0.5); outline: none; box-shadow: 0 0 15px rgba(139,92,246,0.1); }
         .input-dios::placeholder { color: rgba(255,255,255,0.3); }
-        
-        select.input-dios { appearance: none; cursor: pointer; }
+        select.input-dios { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 10px center; background-repeat: no-repeat; background-size: 20px; padding-right: 40px; }
         select.input-dios option { background: #1a1a2e; color: white; }
-        
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        .status-activo {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-        
-        .status-inactivo {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-        
-        .file-upload-area {
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.02);
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .file-upload-area:hover {
-            border-color: rgba(139, 92, 246, 0.5);
-            background: rgba(139, 92, 246, 0.05);
-        }
-        
-        .file-upload-area input[type="file"] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-        
-        .file-upload-area.has-file {
-            border-color: rgba(16, 185, 129, 0.5);
-            background: rgba(16, 185, 129, 0.05);
-        }
-        
-        .tab-nav-item {
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: rgba(255,255,255,0.5);
-            border-bottom: 2px solid transparent;
-        }
-        
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+        .status-activo { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+        .status-inactivo { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+        .status-dot-green { background: #10b981; }
+        .status-dot-red { background: #ef4444; }
+        .file-upload-area { border: 2px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 24px; text-align: center; transition: all 0.3s ease; background: rgba(255,255,255,0.02); cursor: pointer; position: relative; }
+        .file-upload-area:hover { border-color: rgba(139,92,246,0.5); background: rgba(139,92,246,0.05); }
+        .file-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .file-upload-area.has-file { border-color: rgba(16,185,129,0.5); background: rgba(16,185,129,0.05); }
+        .tab-nav-item { padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; white-space: nowrap; }
         .tab-nav-item:hover { color: rgba(255,255,255,0.8); }
-        
-        .tab-nav-item.active {
-            color: #a78bfa;
-            border-bottom-color: #7c3aed;
-            background: rgba(124,58,237,0.1);
-        }
-        
+        .tab-nav-item.active { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(124,58,237,0.1); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 200;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: toastIn 0.3s ease-out;
-            max-width: 400px;
-        }
-        
+        .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: toastIn 0.3s ease-out; max-width: 400px; }
         .toast.success { background: #059669; color: white; }
         .toast.error { background: #dc2626; color: white; }
-        
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
+        @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .slide-in { animation: slideIn 0.3s ease-out; }
-        
-        .spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: #7c3aed;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            display: inline-block;
-        }
-        
+        .spinner { width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #7c3aed; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            color: #64748b;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            margin-bottom: 4px;
-        }
-        
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: #cbd5e1; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px; color: #94a3b8; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s ease; margin-bottom: 4px; }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
         .nav-item.active { background: rgba(124,58,237,0.2); color: #a78bfa; font-weight: 600; }
-        
-        @media (max-width: 1024px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0 !important; }
-        }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 10px; transition: width 0.6s ease; }
+        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0 !important; } }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
     
-    <!-- SIDEBAR OVERLAY MÓVIL -->
     <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black/50 z-30" onclick="toggleSidebar()"></div>
     
     <!-- SIDEBAR -->
@@ -287,232 +75,110 @@
                 <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
                     <i data-lucide="shield" class="w-6 h-6 text-white"></i>
                 </div>
-                <div>
-                    <h1 class="text-xl font-bold text-white">ASARI</h1>
-                    <p class="text-xs text-purple-400">Panel Dios</p>
-                </div>
+                <div><h1 class="text-xl font-bold text-white">ASARI</h1><p class="text-xs text-purple-400">Panel Dios v4</p></div>
             </div>
         </div>
-        
         <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <div class="nav-item active" onclick="navegarA('dashboard', this)">
-                <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
-                <span>Dashboard</span>
-            </div>
-            <div class="nav-item" onclick="navegarA('institutos', this)">
-                <i data-lucide="building-2" class="w-5 h-5"></i>
-                <span>Institutos</span>
-            </div>
-            <div class="nav-item" onclick="navegarA('usuarios', this)">
-                <i data-lucide="users" class="w-5 h-5"></i>
-                <span>Usuarios y Roles</span>
-            </div>
-            <div class="nav-item" onclick="navegarA('builder', this)">
-                <i data-lucide="wrench" class="w-5 h-5"></i>
-                <span>Builder / Extensiones</span>
-            </div>
+            <div class="nav-item active" onclick="navegarA('dashboard', this)"><i data-lucide="bar-chart-3" class="w-5 h-5"></i><span>Dashboard</span></div>
+            <div class="nav-item" onclick="navegarA('institutos', this)"><i data-lucide="building-2" class="w-5 h-5"></i><span>Institutos</span></div>
+            <div class="nav-item" onclick="navegarA('usuarios', this)"><i data-lucide="users" class="w-5 h-5"></i><span>Usuarios y Roles</span></div>
+            <div class="nav-item" onclick="navegarA('builder', this)"><i data-lucide="wrench" class="w-5 h-5"></i><span>Builder</span></div>
         </nav>
-        
         <div class="p-4 border-t border-white/5">
             <button onclick="logout()" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 transition w-full">
-                <i data-lucide="log-out" class="w-5 h-5"></i>
-                <span>Cerrar Sesión</span>
+                <i data-lucide="log-out" class="w-5 h-5"></i><span>Cerrar Sesión</span>
             </button>
         </div>
     </aside>
 
     <!-- MAIN CONTENT -->
     <main class="flex-1 overflow-y-auto ml-64 transition-all duration-300" id="mainContent">
-        
-        <!-- TOPBAR -->
         <header class="sticky top-0 z-20 bg-[#0a0a0f]/95 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <button class="lg:hidden p-2 rounded-lg hover:bg-white/5" onclick="toggleSidebar()">
-                    <i data-lucide="menu" class="w-5 h-5"></i>
-                </button>
-                <div>
-                    <h2 class="text-xl font-bold text-white" id="viewTitle">Dashboard & Analíticas</h2>
-                    <p class="text-xs text-gray-500" id="viewSubtitle">Centro de Comando ASARI</p>
-                </div>
+                <button class="lg:hidden p-2 rounded-lg hover:bg-white/5" onclick="toggleSidebar()"><i data-lucide="menu" class="w-5 h-5"></i></button>
+                <div><h2 class="text-xl font-bold text-white" id="viewTitle">Dashboard & Analíticas</h2><p class="text-xs text-gray-500" id="viewSubtitle">Centro de Comando ASARI</p></div>
             </div>
             <div id="topbarActions"></div>
         </header>
-        
-        <!-- CONTENEDOR DE VISTAS -->
         <div class="p-6">
             
-            <!-- ========== VISTA 1: DASHBOARD ========== -->
+            <!-- VISTA DASHBOARD -->
             <section id="view-dashboard" class="view-section">
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="card-dios p-5">
-                        <p class="text-xs text-gray-400">Total Institutos</p>
-                        <p class="text-3xl font-bold text-white mt-1" id="dashTotalInstitutos">0</p>
-                    </div>
-                    <div class="card-dios p-5">
-                        <p class="text-xs text-gray-400">Alumnos en Red</p>
-                        <p class="text-3xl font-bold text-blue-400 mt-1" id="dashTotalAlumnos">0</p>
-                    </div>
-                    <div class="card-dios p-5">
-                        <p class="text-xs text-gray-400">Certificaciones Emitidas</p>
-                        <p class="text-3xl font-bold text-green-400 mt-1" id="dashCertificaciones">0</p>
-                    </div>
-                    <div class="card-dios p-5">
-                        <p class="text-xs text-gray-400">Módulos Activos</p>
-                        <p class="text-3xl font-bold text-yellow-400 mt-1" id="dashModulosActivos">0</p>
-                    </div>
+                    <div class="card-dios p-5"><p class="text-xs text-gray-400 uppercase tracking-wider">Total Institutos</p><p class="text-4xl font-bold text-white mt-2" id="dashTotalInstitutos">0</p><div class="flex items-center gap-1 mt-1"><span class="text-xs text-green-400" id="dashInstitutosActivos">0 activos</span></div></div>
+                    <div class="card-dios p-5"><p class="text-xs text-gray-400 uppercase tracking-wider">Alumnos en Red</p><p class="text-4xl font-bold text-blue-400 mt-2" id="dashTotalAlumnos">0</p><div class="flex items-center gap-1 mt-1"><span class="text-xs text-gray-500">Total registrados</span></div></div>
+                    <div class="card-dios p-5"><p class="text-xs text-gray-400 uppercase tracking-wider">Módulos Activos</p><p class="text-4xl font-bold text-yellow-400 mt-2" id="dashModulosActivos">0</p><div class="flex items-center gap-1 mt-1"><span class="text-xs text-gray-500">En toda la red</span></div></div>
+                    <div class="card-dios p-5"><p class="text-xs text-gray-400 uppercase tracking-wider">Crecimiento Mensual</p><p class="text-4xl font-bold text-green-400 mt-2" id="dashCrecimiento">+0%</p><div class="flex items-center gap-1 mt-1"><span class="text-xs text-gray-500">vs mes anterior</span></div></div>
                 </div>
-                
-                <div class="card-dios p-6">
-                    <h3 class="font-bold text-white mb-4">Top Institutos por Tráfico</h3>
-                    <div id="topInstitutosBarras" class="space-y-3">
-                        <p class="text-sm text-gray-500">Cargando datos...</p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card-dios p-6">
+                        <h3 class="font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="trending-up" class="w-5 h-5 text-purple-400"></i>Distribución de Módulos</h3>
+                        <div class="space-y-3" id="distribucionModulos"></div>
+                    </div>
+                    <div class="card-dios p-6">
+                        <h3 class="font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="building-2" class="w-5 h-5 text-purple-400"></i>Top 5 Institutos</h3>
+                        <div class="space-y-3" id="topInstitutos"></div>
                     </div>
                 </div>
             </section>
             
-            <!-- ========== VISTA 2: INSTITUTOS ========== -->
+            <!-- VISTA INSTITUTOS -->
             <section id="view-institutos" class="view-section hidden">
                 <div class="card-dios overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b border-white/5">
-                                    <th class="text-left p-4 text-sm font-medium text-gray-400">Instituto</th>
-                                    <th class="text-left p-4 text-sm font-medium text-gray-400">Slug</th>
-                                    <th class="text-left p-4 text-sm font-medium text-gray-400">Estado</th>
-                                    <th class="text-center p-4 text-sm font-medium text-gray-400">Módulos</th>
-                                    <th class="text-right p-4 text-sm font-medium text-gray-400">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="institutosTableBody"></tbody>
-                        </table>
-                    </div>
-                    <div id="loadingInstitutos" class="p-12 text-center"><div class="spinner"></div><p class="text-gray-400 mt-3">Cargando...</p></div>
-                    <div id="emptyInstitutos" class="hidden p-12 text-center text-gray-500">No hay institutos registrados</div>
+                    <div class="overflow-x-auto"><table class="w-full"><thead><tr class="border-b border-white/5"><th class="text-left p-4 text-sm font-medium text-gray-400">Instituto</th><th class="text-left p-4 text-sm font-medium text-gray-400">Slug</th><th class="text-left p-4 text-sm font-medium text-gray-400">Estado</th><th class="text-center p-4 text-sm font-medium text-gray-400">Módulos</th><th class="text-right p-4 text-sm font-medium text-gray-400">Acciones</th></tr></thead><tbody id="institutosTableBody"></tbody></table></div>
+                    <div id="loadingInstitutos" class="p-12 text-center"><div class="spinner"></div><p class="text-gray-400 mt-3">Cargando institutos...</p></div>
+                    <div id="emptyInstitutos" class="hidden p-12 text-center"><i data-lucide="building-2" class="w-16 h-16 text-gray-600 mx-auto mb-4"></i><p class="text-gray-400 text-lg">No hay institutos registrados</p><p class="text-gray-600 text-sm mt-2">Crea tu primer instituto para comenzar</p></div>
                 </div>
             </section>
             
-            <!-- ========== VISTA 3: USUARIOS Y ROLES ========== -->
+            <!-- VISTA USUARIOS -->
             <section id="view-usuarios" class="view-section hidden">
-                <div class="card-dios p-6 mb-4">
-                    <label class="text-sm text-gray-400 mb-2 block">Seleccionar Instituto</label>
-                    <select id="selectInstitutoUsuarios" class="input-dios" onchange="cargarUsuariosDeInstituto()">
-                        <option value="">-- Selecciona un instituto --</option>
-                    </select>
-                </div>
-                <div class="card-dios overflow-hidden">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="border-b border-white/5">
-                                <th class="text-left p-4 text-sm font-medium text-gray-400">Email</th>
-                                <th class="text-left p-4 text-sm font-medium text-gray-400">Nombre</th>
-                                <th class="text-left p-4 text-sm font-medium text-gray-400">Rol</th>
-                                <th class="text-right p-4 text-sm font-medium text-gray-400">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usuariosTableBody">
-                            <tr><td colspan="4" class="p-8 text-center text-gray-500">Selecciona un instituto para ver sus usuarios</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div class="card-dios p-6 mb-4"><label class="text-sm text-gray-400 mb-2 block">Seleccionar Instituto</label><select id="selectInstitutoUsuarios" class="input-dios" onchange="cargarUsuariosDeInstituto()"><option value="">-- Selecciona un instituto --</option></select></div>
+                <div class="card-dios overflow-hidden"><table class="w-full"><thead><tr class="border-b border-white/5"><th class="text-left p-4 text-sm font-medium text-gray-400">Email</th><th class="text-left p-4 text-sm font-medium text-gray-400">Nombre</th><th class="text-left p-4 text-sm font-medium text-gray-400">Rol</th><th class="text-right p-4 text-sm font-medium text-gray-400">Acciones</th></tr></thead><tbody id="usuariosTableBody"><tr><td colspan="4" class="p-8 text-center text-gray-500">Selecciona un instituto para ver sus usuarios</td></tr></tbody></table></div>
             </section>
             
-            <!-- ========== VISTA 4: BUILDER ========== -->
+            <!-- VISTA BUILDER -->
             <section id="view-builder" class="view-section hidden">
-                <div class="card-dios p-6 mb-4">
-                    <label class="text-sm text-gray-400 mb-2 block">Instituto a Personalizar</label>
-                    <select id="selectInstitutoBuilder" class="input-dios" onchange="cargarCustomUI()">
-                        <option value="">-- Selecciona --</option>
-                    </select>
-                </div>
-                <div class="card-dios p-6" id="builderEditor">
-                    <p class="text-gray-500 text-center">Selecciona un instituto para editar su configuración avanzada</p>
-                </div>
+                <div class="card-dios p-6 mb-4"><label class="text-sm text-gray-400 mb-2 block">Instituto a Personalizar</label><select id="selectInstitutoBuilder" class="input-dios" onchange="cargarCustomUI()"><option value="">-- Selecciona --</option></select></div>
+                <div class="card-dios p-6" id="builderEditor"><p class="text-gray-500 text-center">Selecciona un instituto para editar su configuración avanzada</p></div>
             </section>
             
         </div>
     </main>
 
-    <!-- MODAL SÚPER EDITOR (TABS) -->
+    <!-- MODAL SÚPER EDITOR -->
     <div id="superEditorModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-overlay absolute inset-0" onclick="closeSuperEditor()"></div>
         <div class="card-dios p-6 w-full max-w-3xl relative slide-in" style="max-height: 90vh; overflow-y: auto;">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-bold text-white" id="superEditorTitle">Editar Instituto</h3>
-                <button onclick="closeSuperEditor()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            
-            <!-- TABS -->
+            <div class="flex items-center justify-between mb-4"><h3 class="text-lg font-bold text-white" id="superEditorTitle">Editar Instituto</h3><button onclick="closeSuperEditor()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button></div>
             <div class="flex gap-2 border-b border-white/10 mb-4 overflow-x-auto" id="superEditorTabs">
                 <div class="tab-nav-item active" onclick="switchSuperTab('info', this)">Info Básica</div>
                 <div class="tab-nav-item" onclick="switchSuperTab('branding', this)">Branding</div>
                 <div class="tab-nav-item" onclick="switchSuperTab('terminologia', this)">Terminología</div>
                 <div class="tab-nav-item" onclick="switchSuperTab('modulos', this)">Módulos</div>
             </div>
-            
-            <form id="superEditorForm">
-                <input type="hidden" id="seInstitutoId">
-                
-                <!-- TAB INFO -->
+            <form id="superEditorForm"><input type="hidden" id="seInstitutoId">
                 <div class="tab-content active" id="tab-info">
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-sm text-gray-400 block mb-1">Nombre</label>
-                            <input type="text" id="seNombre" class="input-dios" required>
-                        </div>
-                        <div>
-                            <label class="text-sm text-gray-400 block mb-1">Slug</label>
-                            <input type="text" id="seSlug" class="input-dios" required>
-                        </div>
-                        <div>
-                            <label class="text-sm text-gray-400 block mb-1">Estado</label>
-                            <select id="seEstado" class="input-dios">
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
-                            </select>
-                        </div>
+                        <div><label class="text-sm text-gray-400 block mb-1">Nombre *</label><input type="text" id="seNombre" class="input-dios" required></div>
+                        <div><label class="text-sm text-gray-400 block mb-1">Slug *</label><input type="text" id="seSlug" class="input-dios lowercase" required pattern="[a-z0-9-]+"><p class="text-xs text-gray-500 mt-1">Ej: instituto-abc</p></div>
+                        <div><label class="text-sm text-gray-400 block mb-1">Estado</label><select id="seEstado" class="input-dios"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select></div>
                     </div>
                 </div>
-                
-                <!-- TAB BRANDING -->
                 <div class="tab-content" id="tab-branding">
                     <div class="grid grid-cols-2 gap-6">
-                        <div>
-                            <label class="text-sm text-gray-400 block mb-2">Logo Principal</label>
-                            <div class="file-upload-area" id="seLogoPrincipalArea">
-                                <input type="file" accept="image/*" onchange="previewLogoSE(this, 'seLogoPrincipalPreview', 'seLogoPrincipalPlaceholder', 'seLogoPrincipalArea')">
-                                <div id="seLogoPrincipalPlaceholder"><i data-lucide="upload-cloud" class="w-6 h-6 text-gray-400 mx-auto mb-1"></i><p class="text-xs text-gray-500">Click para subir</p></div>
-                                <div id="seLogoPrincipalPreview" class="hidden mt-2"><img src="" class="w-16 h-16 rounded-lg object-cover mx-auto" id="seLogoPrincipalImg"></div>
-                            </div>
-                            <div id="seLogoPrincipalCurrent" class="hidden mt-2 flex items-center gap-2 p-2 bg-white/5 rounded-lg">
-                                <span class="text-xs text-gray-400">Actual:</span>
-                                <img src="" class="w-8 h-8 rounded object-cover" id="seLogoPrincipalCurrentImg">
-                            </div>
+                        <div><label class="text-sm text-gray-400 block mb-2">Logo Principal</label>
+                            <div class="file-upload-area" id="seLogoPrincipalArea"><input type="file" accept="image/*" onchange="previewLogoSE(this, 'seLogoPrincipalPreview', 'seLogoPrincipalPlaceholder', 'seLogoPrincipalArea')"><div id="seLogoPrincipalPlaceholder"><i data-lucide="upload-cloud" class="w-6 h-6 text-gray-400 mx-auto mb-1"></i><p class="text-xs text-gray-500">Click para subir</p></div><div id="seLogoPrincipalPreview" class="hidden mt-2"><img src="" class="w-20 h-20 rounded-xl object-cover mx-auto" id="seLogoPrincipalImg"></div></div>
+                            <div id="seLogoPrincipalCurrent" class="hidden mt-2 flex items-center gap-2 p-2 bg-white/5 rounded-lg"><span class="text-xs text-gray-400">Actual:</span><img src="" class="w-10 h-10 rounded-lg object-cover" id="seLogoPrincipalCurrentImg"></div>
                         </div>
-                        <div>
-                            <label class="text-sm text-gray-400 block mb-2">Logo Secundario</label>
-                            <div class="file-upload-area" id="seLogoSecundarioArea">
-                                <input type="file" accept="image/*" onchange="previewLogoSE(this, 'seLogoSecundarioPreview', 'seLogoSecundarioPlaceholder', 'seLogoSecundarioArea')">
-                                <div id="seLogoSecundarioPlaceholder"><i data-lucide="upload-cloud" class="w-6 h-6 text-gray-400 mx-auto mb-1"></i><p class="text-xs text-gray-500">Click para subir</p></div>
-                                <div id="seLogoSecundarioPreview" class="hidden mt-2"><img src="" class="w-16 h-16 rounded-lg object-cover mx-auto" id="seLogoSecundarioImg"></div>
-                            </div>
-                            <div id="seLogoSecundarioCurrent" class="hidden mt-2 flex items-center gap-2 p-2 bg-white/5 rounded-lg">
-                                <span class="text-xs text-gray-400">Actual:</span>
-                                <img src="" class="w-8 h-8 rounded object-cover" id="seLogoSecundarioCurrentImg">
-                            </div>
+                        <div><label class="text-sm text-gray-400 block mb-2">Logo Secundario</label>
+                            <div class="file-upload-area" id="seLogoSecundarioArea"><input type="file" accept="image/*" onchange="previewLogoSE(this, 'seLogoSecundarioPreview', 'seLogoSecundarioPlaceholder', 'seLogoSecundarioArea')"><div id="seLogoSecundarioPlaceholder"><i data-lucide="upload-cloud" class="w-6 h-6 text-gray-400 mx-auto mb-1"></i><p class="text-xs text-gray-500">Click para subir</p></div><div id="seLogoSecundarioPreview" class="hidden mt-2"><img src="" class="w-20 h-20 rounded-xl object-cover mx-auto" id="seLogoSecundarioImg"></div></div>
+                            <div id="seLogoSecundarioCurrent" class="hidden mt-2 flex items-center gap-2 p-2 bg-white/5 rounded-lg"><span class="text-xs text-gray-400">Actual:</span><img src="" class="w-10 h-10 rounded-lg object-cover" id="seLogoSecundarioCurrentImg"></div>
                         </div>
-                        <div>
-                            <label class="text-sm text-gray-400 block mb-1">Color Primario</label>
-                            <input type="color" id="seColorPrimario" class="w-full h-10 rounded-lg cursor-pointer bg-transparent border border-white/10">
-                        </div>
-                        <div>
-                            <label class="text-sm text-gray-400 block mb-1">Color Secundario</label>
-                            <input type="color" id="seColorSecundario" class="w-full h-10 rounded-lg cursor-pointer bg-transparent border border-white/10">
-                        </div>
+                        <div><label class="text-sm text-gray-400 block mb-1">Color Primario</label><input type="color" id="seColorPrimario" class="w-full h-10 rounded-lg cursor-pointer bg-transparent border border-white/10"></div>
+                        <div><label class="text-sm text-gray-400 block mb-1">Color Secundario</label><input type="color" id="seColorSecundario" class="w-full h-10 rounded-lg cursor-pointer bg-transparent border border-white/10"></div>
                     </div>
                 </div>
-                
-                <!-- TAB TERMINOLOGÍA -->
                 <div class="tab-content" id="tab-terminologia">
                     <div class="grid grid-cols-2 gap-4">
                         <div><label class="text-sm text-gray-400 block mb-1">Alumno</label><input type="text" id="seTermAlumno" class="input-dios" placeholder="Alumno"></div>
@@ -521,32 +187,17 @@
                         <div><label class="text-sm text-gray-400 block mb-1">Matrícula</label><input type="text" id="seTermMatricula" class="input-dios" placeholder="Nº de Registro"></div>
                     </div>
                 </div>
-                
-                <!-- TAB MÓDULOS -->
                 <div class="tab-content" id="tab-modulos">
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                            <span>Campus Virtual</span>
-                            <label class="toggle-switch"><input type="checkbox" id="seModCampus"><span class="toggle-slider"></span></label>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                            <span>Billetera Digital</span>
-                            <label class="toggle-switch"><input type="checkbox" id="seModWallet"><span class="toggle-slider"></span></label>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                            <span>Validador QR</span>
-                            <label class="toggle-switch"><input type="checkbox" id="seModValidador"><span class="toggle-slider"></span></label>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                            <span>Portal</span>
-                            <label class="toggle-switch"><input type="checkbox" id="seModPortal"><span class="toggle-slider"></span></label>
-                        </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl"><div><p class="font-medium text-white">Campus Virtual</p><p class="text-xs text-gray-500">Aula virtual con videos y recursos</p></div><label class="toggle-switch"><input type="checkbox" id="seModCampus"><span class="toggle-slider"></span></label></div>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl"><div><p class="font-medium text-white">Billetera Digital</p><p class="text-xs text-gray-500">Credenciales y certificados digitales</p></div><label class="toggle-switch"><input type="checkbox" id="seModWallet"><span class="toggle-slider"></span></label></div>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl"><div><p class="font-medium text-white">Validador QR</p><p class="text-xs text-gray-500">Verificación de credenciales</p></div><label class="toggle-switch"><input type="checkbox" id="seModValidador"><span class="toggle-slider"></span></label></div>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl"><div><p class="font-medium text-white">Portal Público</p><p class="text-xs text-gray-500">Landing page del instituto</p></div><label class="toggle-switch"><input type="checkbox" id="seModPortal"><span class="toggle-slider"></span></label></div>
                     </div>
                 </div>
-                
                 <div class="flex gap-3 mt-6 pt-4 border-t border-white/10">
-                    <button type="button" onclick="closeSuperEditor()" class="flex-1 py-3 rounded-lg border border-white/10 text-gray-300 hover:bg-white/5 transition">Cancelar</button>
-                    <button type="submit" class="flex-1 btn-primary py-3 rounded-lg text-white font-medium" id="seSubmitBtn">Guardar Cambios</button>
+                    <button type="button" onclick="closeSuperEditor()" class="flex-1 btn-secondary py-3 rounded-lg justify-center">Cancelar</button>
+                    <button type="submit" class="flex-1 btn-primary py-3 rounded-lg justify-center" id="seSubmitBtn">Guardar Cambios</button>
                 </div>
             </form>
         </div>
@@ -556,58 +207,61 @@
     <div id="nuevoUsuarioModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="modal-overlay absolute inset-0" onclick="closeNuevoUsuarioModal()"></div>
         <div class="card-dios p-6 w-full max-w-md relative slide-in">
-            <h3 class="text-lg font-bold text-white mb-4">Nuevo Usuario</h3>
+            <div class="flex items-center justify-between mb-4"><h3 class="text-lg font-bold text-white">Nuevo Usuario</h3><button onclick="closeNuevoUsuarioModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button></div>
             <form id="nuevoUsuarioForm">
                 <div class="space-y-4">
-                    <div><label class="text-sm text-gray-400 block mb-1">Email</label><input type="email" id="nuEmail" class="input-dios" required></div>
-                    <div><label class="text-sm text-gray-400 block mb-1">Contraseña</label><input type="password" id="nuPassword" class="input-dios" required minlength="6"></div>
-                    <div><label class="text-sm text-gray-400 block mb-1">Nombre Completo</label><input type="text" id="nuNombre" class="input-dios" required></div>
-                    <div><label class="text-sm text-gray-400 block mb-1">Rol</label><select id="nuRol" class="input-dios"><option value="director">Director</option><option value="asesor">Asesor</option><option value="profesor">Profesor</option></select></div>
+                    <div><label class="text-sm text-gray-400 block mb-1">Email *</label><input type="email" id="nuEmail" class="input-dios" required></div>
+                    <div><label class="text-sm text-gray-400 block mb-1">Contraseña *</label><input type="password" id="nuPassword" class="input-dios" required minlength="6"></div>
+                    <div><label class="text-sm text-gray-400 block mb-1">Nombre Completo *</label><input type="text" id="nuNombre" class="input-dios" required></div>
+                    <div><label class="text-sm text-gray-400 block mb-1">Rol *</label><select id="nuRol" class="input-dios"><option value="director">Director</option><option value="asesor">Asesor</option><option value="profesor">Profesor</option></select></div>
                 </div>
-                <div class="flex gap-3 mt-6">
-                    <button type="button" onclick="closeNuevoUsuarioModal()" class="flex-1 py-3 rounded-lg border border-white/10 text-gray-300 hover:bg-white/5 transition">Cancelar</button>
-                    <button type="submit" class="flex-1 btn-primary py-3 rounded-lg text-white font-medium">Crear Usuario</button>
-                </div>
+                <div class="flex gap-3 mt-6"><button type="button" onclick="closeNuevoUsuarioModal()" class="flex-1 btn-secondary py-3 rounded-lg justify-center">Cancelar</button><button type="submit" class="flex-1 btn-primary py-3 rounded-lg justify-center">Crear Usuario</button></div>
             </form>
         </div>
     </div>
 
-    <!-- TOAST -->
     <div id="toast" class="toast hidden"></div>
 
-    <!-- SCRIPTS -->
     <script src="supabase-config.js?v=4"></script>
 
     <script>
         lucide.createIcons();
         
-        // ============ ESTADO GLOBAL ============
         let institutosData = [];
         let configuracionesData = {};
         let currentView = 'dashboard';
         const STORAGE_BUCKET = 'asari-assets';
         const SILENT_URL = 'https://wdewtjdimbecdfyntcll.supabase.co';
         const SILENT_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
-        
+
         // ============ AUTENTICACIÓN ============
         function verificarSesion() {
-            const session = localStorage.getItem('asari_admin_session');
-            if (!session) { window.location.href = 'admin-login.html'; return false; }
-            const parsed = JSON.parse(session);
-            if ((new Date() - new Date(parsed.timestamp)) / 3600000 >= 24) {
-                localStorage.removeItem('asari_admin_session');
-                window.location.href = 'admin-login.html';
-                return false;
-            }
+            const s = localStorage.getItem('asari_admin_session');
+            if (!s) { window.location.href = 'admin-login.html'; return false; }
+            const p = JSON.parse(s);
+            if ((new Date() - new Date(p.timestamp)) / 3600000 >= 24) { localStorage.removeItem('asari_admin_session'); window.location.href = 'admin-login.html'; return false; }
             return true;
         }
-        
         async function logout() {
             try { await window.supabase.auth.signOut(); } catch(e) {}
             localStorage.removeItem('asari_admin_session');
             window.location.href = 'admin-login.html';
         }
-        
+
+        // ============ TOAST ============
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${msg}</span>`;
+            t.className = `toast ${type}`; lucide.createIcons();
+            clearTimeout(window._tt); window._tt = setTimeout(() => { t.className = 'toast hidden'; }, 4000);
+        }
+
+        // ============ SIDEBAR TOGGLE ============
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('hidden');
+        }
+
         // ============ NAVEGACIÓN SPA ============
         function navegarA(view, navItem) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
@@ -615,98 +269,99 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             navItem.classList.add('active');
             currentView = view;
-            
-            const titles = {
-                dashboard: ['Dashboard & Analíticas', 'Centro de Comando ASARI'],
-                institutos: ['Gestión de Institutos', 'Administra los institutos de la red'],
-                usuarios: ['Usuarios y Roles', 'Gestiona accesos por instituto'],
-                builder: ['Builder / Extensiones', 'Personalización avanzada por instituto']
-            };
+            const titles = { dashboard: ['Dashboard & Analíticas', 'Centro de Comando ASARI'], institutos: ['Gestión de Institutos', 'Administra los institutos de la red'], usuarios: ['Usuarios y Roles', 'Gestiona accesos por instituto'], builder: ['Builder / Extensiones', 'Personalización avanzada por instituto'] };
             document.getElementById('viewTitle').textContent = titles[view][0];
             document.getElementById('viewSubtitle').textContent = titles[view][1];
-            
             const actions = document.getElementById('topbarActions');
-            if (view === 'institutos') {
-                actions.innerHTML = `<button onclick="openSuperEditor(null)" class="btn-primary px-5 py-2.5 rounded-lg text-white font-medium flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i> Nuevo Instituto</button>`;
-            } else if (view === 'usuarios') {
-                actions.innerHTML = `<button onclick="openNuevoUsuarioModal()" class="btn-primary px-5 py-2.5 rounded-lg text-white font-medium flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4"></i> Nuevo Usuario</button>`;
-            } else {
-                actions.innerHTML = '';
-            }
-            
+            if (view === 'institutos') actions.innerHTML = `<button onclick="openSuperEditor(null)" class="btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Nuevo Instituto</button>`;
+            else if (view === 'usuarios') actions.innerHTML = `<button onclick="openNuevoUsuarioModal()" class="btn-primary"><i data-lucide="user-plus" class="w-4 h-4"></i> Nuevo Usuario</button>`;
+            else actions.innerHTML = '';
             lucide.createIcons();
-            
-            if (view === 'institutos') cargarInstitutos();
             if (view === 'dashboard') cargarDashboard();
+            if (view === 'institutos') cargarInstitutos();
             if (view === 'usuarios') cargarSelectInstitutos('selectInstitutoUsuarios');
             if (view === 'builder') cargarSelectInstitutos('selectInstitutoBuilder');
         }
-        
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebarOverlay').classList.toggle('hidden');
-        }
-        
-        // ============ TOAST ============
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.innerHTML = `<i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}" class="w-5 h-5"></i><span>${message}</span>`;
-            toast.className = `toast ${type}`;
+
+        // ============ DASHBOARD ============
+        async function cargarDashboard() {
+            const { data: insts } = await window.supabase.from('sys_institutos').select('*');
+            const { count: totalAlumnos } = await window.supabase.from('padron_global').select('*', { count: 'exact', head: true });
+            
+            const total = (insts || []).length;
+            const activos = (insts || []).filter(i => i.estado === 'activo').length;
+            let modsActivos = 0;
+            let campusCount = 0, walletCount = 0, validadorCount = 0, portalCount = 0;
+            (insts || []).forEach(i => {
+                if (i.modulos_activos?.campus) { modsActivos++; campusCount++; }
+                if (i.modulos_activos?.wallet) { modsActivos++; walletCount++; }
+                if (i.modulos_activos?.validador) { modsActivos++; validadorCount++; }
+                if (i.modulos_activos?.portal) { modsActivos++; portalCount++; }
+            });
+            
+            document.getElementById('dashTotalInstitutos').textContent = total;
+            document.getElementById('dashInstitutosActivos').textContent = `${activos} activos`;
+            document.getElementById('dashTotalAlumnos').textContent = totalAlumnos || 0;
+            document.getElementById('dashModulosActivos').textContent = modsActivos;
+            document.getElementById('dashCrecimiento').textContent = total > 0 ? `+${activos}` : '+0%';
+            
+            // Distribución de módulos
+            const maxMod = Math.max(campusCount, walletCount, validadorCount, portalCount, 1);
+            document.getElementById('distribucionModulos').innerHTML = [
+                { label: 'Campus Virtual', count: campusCount, color: 'from-purple-500 to-indigo-500' },
+                { label: 'Billetera', count: walletCount, color: 'from-blue-500 to-cyan-500' },
+                { label: 'Validador', count: validadorCount, color: 'from-green-500 to-emerald-500' },
+                { label: 'Portal', count: portalCount, color: 'from-yellow-500 to-amber-500' }
+            ].map(m => `
+                <div><div class="flex justify-between text-sm mb-1"><span>${m.label}</span><span class="font-semibold">${m.count}</span></div>
+                <div class="progress-bar"><div class="progress-fill bg-gradient-to-r ${m.color}" style="width:${(m.count/maxMod)*100}%"></div></div></div>
+            `).join('');
+            
+            // Top institutos
+            const sorted = [...(insts || [])].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
+            document.getElementById('topInstitutos').innerHTML = sorted.length === 0 ? '<p class="text-gray-500 text-sm">Sin institutos registrados</p>' : sorted.map((inst, idx) => `
+                <div class="flex items-center gap-3 p-3 bg-white/5 rounded-xl">
+                    <span class="text-lg font-bold text-purple-400 w-8">#${idx+1}</span>
+                    <div class="flex-1"><p class="font-medium text-white text-sm">${inst.nombre}</p><p class="text-xs text-gray-500">${inst.slug_dominio}</p></div>
+                    <span class="status-badge ${inst.estado==='activo'?'status-activo':'status-inactivo'}"><span class="status-dot ${inst.estado==='activo'?'status-dot-green':'status-dot-red'}"></span>${inst.estado}</span>
+                </div>
+            `).join('');
             lucide.createIcons();
-            clearTimeout(window._toastTimeout);
-            window._toastTimeout = setTimeout(() => { toast.className = 'toast hidden'; }, 4000);
         }
-        
+
         // ============ CARGAR DATOS ============
         async function cargarInstitutos() {
             const tbody = document.getElementById('institutosTableBody');
             const loading = document.getElementById('loadingInstitutos');
             const empty = document.getElementById('emptyInstitutos');
-            
             loading.classList.remove('hidden'); empty.classList.add('hidden'); tbody.innerHTML = '';
-            
             try {
                 const { data, error } = await window.supabase.from('sys_institutos').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
                 institutosData = data || [];
-                
                 await cargarConfiguraciones();
-                
                 loading.classList.add('hidden');
                 if (institutosData.length === 0) { empty.classList.remove('hidden'); return; }
-                
                 tbody.innerHTML = institutosData.map(inst => {
                     const mods = inst.modulos_activos || {};
                     const config = configuracionesData[inst.id];
                     const logoUrl = config?.branding?.logo_principal || null;
-                    return `
-                        <tr class="border-b border-white/5 hover:bg-white/[0.02]">
-                            <td class="p-4"><div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600/20 to-indigo-600/20 flex items-center justify-center overflow-hidden">
-                                    ${logoUrl ? `<img src="${logoUrl}" class="w-full h-full object-cover">` : `<i data-lucide="building-2" class="w-5 h-5 text-purple-400"></i>`}
-                                </div>
-                                <div><p class="font-medium text-white">${inst.nombre}</p><p class="text-xs text-gray-500">${inst.slug_dominio}</p></div>
-                            </div></td>
-                            <td class="p-4"><code class="text-sm text-purple-400 bg-purple-400/10 px-2 py-1 rounded">${inst.slug_dominio}</code></td>
-                            <td class="p-4"><span class="status-badge ${inst.estado === 'activo' ? 'status-activo' : 'status-inactivo'}">${inst.estado}</span></td>
-                            <td class="p-4"><div class="flex justify-center gap-3">
-                                ${['campus','wallet','validador','portal'].map(m => `<span class="text-xs px-2 py-1 rounded ${mods[m] ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-500'}">${m}</span>`).join('')}
-                            </div></td>
-                            <td class="p-4 text-right">
-                                <button onclick="openSuperEditor('${inst.id}')" class="p-2 hover:bg-white/5 rounded-lg text-gray-400 hover:text-white"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                                <button onclick="toggleEstadoInstituto('${inst.id}')" class="p-2 hover:bg-white/5 rounded-lg text-gray-400 hover:text-yellow-400"><i data-lucide="power" class="w-4 h-4"></i></button>
-                                <button onclick="eliminarInstituto('${inst.id}')" class="p-2 hover:bg-red-500/10 rounded-lg text-gray-400 hover:text-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                            </td>
-                        </tr>`;
+                    return `<tr class="border-b border-white/5 hover:bg-white/[0.02]">
+                        <td class="p-4"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600/20 to-indigo-600/20 flex items-center justify-center overflow-hidden">${logoUrl ? `<img src="${logoUrl}" class="w-full h-full object-cover">` : `<i data-lucide="building-2" class="w-5 h-5 text-purple-400"></i>`}</div><div><p class="font-medium text-white">${inst.nombre}</p><p class="text-xs text-gray-500">${inst.slug_dominio}</p></div></div></td>
+                        <td class="p-4"><code class="text-sm text-purple-400 bg-purple-400/10 px-3 py-1 rounded-lg">${inst.slug_dominio}</code></td>
+                        <td class="p-4"><span class="status-badge ${inst.estado==='activo'?'status-activo':'status-inactivo'}"><span class="status-dot ${inst.estado==='activo'?'status-dot-green':'status-dot-red'}"></span>${inst.estado}</span></td>
+                        <td class="p-4"><div class="flex justify-center gap-2 flex-wrap">${['campus','wallet','validador','portal'].map(m => `<span class="text-xs px-2 py-1 rounded-lg ${mods[m] ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-gray-500/10 text-gray-500 border border-gray-500/20'}">${m}</span>`).join('')}</div></td>
+                        <td class="p-4"><div class="flex items-center justify-end gap-2">
+                            <button onclick="openSuperEditor('${inst.id}')" class="p-2 rounded-lg hover:bg-white/5 transition text-gray-400 hover:text-white" title="Editar"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                            <button onclick="toggleEstadoInstituto('${inst.id}')" class="p-2 rounded-lg hover:bg-white/5 transition text-gray-400 hover:text-yellow-400" title="Cambiar estado"><i data-lucide="power" class="w-4 h-4"></i></button>
+                            <button onclick="eliminarInstituto('${inst.id}')" class="p-2 rounded-lg hover:bg-red-500/10 transition text-gray-400 hover:text-red-400" title="Eliminar"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div></td>
+                    </tr>`;
                 }).join('');
                 lucide.createIcons();
-            } catch(e) {
-                console.error(e);
-                loading.classList.add('hidden');
-                showToast('Error al cargar institutos', 'error');
-            }
+            } catch(e) { console.error(e); loading.classList.add('hidden'); showToast('Error al cargar institutos', 'error'); }
         }
-        
+
         async function cargarConfiguraciones() {
             const ids = institutosData.map(i => i.id);
             if (ids.length === 0) return;
@@ -714,99 +369,73 @@
             configuracionesData = {};
             (data || []).forEach(c => { configuracionesData[c.instituto_id] = c; });
         }
-        
+
         async function cargarSelectInstitutos(selectId) {
             const select = document.getElementById(selectId);
             select.innerHTML = '<option value="">-- Selecciona --</option>';
             const { data } = await window.supabase.from('sys_institutos').select('id, nombre').order('nombre');
-            (data || []).forEach(inst => {
-                select.innerHTML += `<option value="${inst.id}">${inst.nombre}</option>`;
-            });
+            (data || []).forEach(inst => { select.innerHTML += `<option value="${inst.id}">${inst.nombre}</option>`; });
         }
-        
-        // ============ DASHBOARD ============
-        async function cargarDashboard() {
-            const { data: insts } = await window.supabase.from('sys_institutos').select('*');
-            const total = (insts || []).length;
-            const activos = (insts || []).filter(i => i.estado === 'activo').length;
-            
-            let modsActivos = 0;
-            (insts || []).forEach(i => {
-                if (i.modulos_activos?.campus) modsActivos++;
-                if (i.modulos_activos?.wallet) modsActivos++;
-                if (i.modulos_activos?.validador) modsActivos++;
-            });
-            
-            document.getElementById('dashTotalInstitutos').textContent = total;
-            document.getElementById('dashTotalAlumnos').textContent = '—';
-            document.getElementById('dashCertificaciones').textContent = '—';
-            document.getElementById('dashModulosActivos').textContent = modsActivos;
-            
-            const barrasDiv = document.getElementById('topInstitutosBarras');
-            barrasDiv.innerHTML = (insts || []).slice(0, 5).map(inst => {
-                const width = Math.floor(Math.random() * 60 + 20);
-                return `<div class="flex items-center gap-3"><span class="text-xs text-gray-400 w-32 truncate">${inst.nombre}</span><div class="flex-1 h-4 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-purple-600 to-indigo-500 rounded-full" style="width:${width}%"></div></div><span class="text-xs text-gray-500">${width}%</span></div>`;
-            }).join('') || '<p class="text-sm text-gray-500">Sin datos</p>';
-        }
-        
+
         // ============ CRUD INSTITUTOS ============
         async function toggleEstadoInstituto(id) {
             const inst = institutosData.find(i => i.id === id);
-            if (!inst || !confirm(`¿Cambiar estado de "${inst.nombre}"?`)) return;
+            if (!inst || !confirm(`¿Cambiar estado de "${inst.nombre}" a ${inst.estado==='activo'?'inactivo':'activo'}?`)) return;
             const nuevo = inst.estado === 'activo' ? 'inactivo' : 'activo';
-            await window.supabase.from('sys_institutos').update({ estado: nuevo }).eq('id', id);
+            const { error } = await window.supabase.from('sys_institutos').update({ estado: nuevo }).eq('id', id);
+            if (error) { showToast('Error al cambiar estado', 'error'); return; }
             await cargarInstitutos();
             showToast(`Estado cambiado a ${nuevo}`);
         }
-        
+
         async function eliminarInstituto(id) {
             const inst = institutosData.find(i => i.id === id);
-            if (!inst || !confirm(`¿Eliminar "${inst.nombre}" permanentemente?`)) return;
-            await window.supabase.from('sys_institutos').delete().eq('id', id);
+            if (!inst || !confirm(`¿Eliminar "${inst.nombre}" permanentemente?\n\nEsta acción NO se puede deshacer.`)) return;
+            const { error } = await window.supabase.from('sys_institutos').delete().eq('id', id);
+            if (error) { showToast('Error al eliminar', 'error'); return; }
             await cargarInstitutos();
-            showToast('Instituto eliminado');
+            showToast('Instituto eliminado correctamente');
         }
-        
-        // ============ SÚPER EDITOR (MODAL CON TABS) ============
+
+        // ============ SÚPER EDITOR ============
         function switchSuperTab(tabName, el) {
             document.querySelectorAll('#superEditorTabs .tab-nav-item').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
             document.querySelectorAll('#superEditorForm .tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(`tab-${tabName}`).classList.add('active');
         }
-        
+
         async function openSuperEditor(institutoId) {
             document.getElementById('superEditorForm').reset();
             document.getElementById('seInstitutoId').value = '';
             resetearSEArchivos();
             
             if (institutoId) {
-                const inst = institutosData.find(i => i.id === institutoId);
+                const inst = institutosData.find(i => i.id === institutoId) || (await window.supabase.from('sys_institutos').select('*').eq('id', institutoId).single()).data;
                 if (!inst) return;
                 document.getElementById('superEditorTitle').textContent = `Editando: ${inst.nombre}`;
                 document.getElementById('seInstitutoId').value = inst.id;
-                document.getElementById('seNombre').value = inst.nombre;
-                document.getElementById('seSlug').value = inst.slug_dominio;
-                document.getElementById('seEstado').value = inst.estado;
+                document.getElementById('seNombre').value = inst.nombre || '';
+                document.getElementById('seSlug').value = inst.slug_dominio || '';
+                document.getElementById('seEstado').value = inst.estado || 'activo';
                 
                 const mods = inst.modulos_activos || {};
-                document.getElementById('seModCampus').checked = mods.campus || false;
-                document.getElementById('seModWallet').checked = mods.wallet || false;
-                document.getElementById('seModValidador').checked = mods.validador || false;
-                document.getElementById('seModPortal').checked = mods.portal || false;
+                document.getElementById('seModCampus').checked = !!mods.campus;
+                document.getElementById('seModWallet').checked = !!mods.wallet;
+                document.getElementById('seModValidador').checked = !!mods.validador;
+                document.getElementById('seModPortal').checked = !!mods.portal;
                 
-                const config = configuracionesData[institutoId] || {};
-                const branding = config.branding || {};
-                const term = config.terminologia || {};
+                let config = configuracionesData[institutoId];
+                if (!config) {
+                    const { data } = await window.supabase.from('sys_configuracion').select('*').eq('instituto_id', institutoId).single();
+                    config = data;
+                    if (config) configuracionesData[institutoId] = config;
+                }
+                const branding = config?.branding || {};
+                const term = config?.terminologia || {};
                 
-                if (branding.logo_principal) {
-                    document.getElementById('seLogoPrincipalCurrentImg').src = branding.logo_principal;
-                    document.getElementById('seLogoPrincipalCurrent').classList.remove('hidden');
-                }
-                if (branding.logo_secundario) {
-                    document.getElementById('seLogoSecundarioCurrentImg').src = branding.logo_secundario;
-                    document.getElementById('seLogoSecundarioCurrent').classList.remove('hidden');
-                }
+                if (branding.logo_principal) { document.getElementById('seLogoPrincipalCurrentImg').src = branding.logo_principal; document.getElementById('seLogoPrincipalCurrent').classList.remove('hidden'); }
+                if (branding.logo_secundario) { document.getElementById('seLogoSecundarioCurrentImg').src = branding.logo_secundario; document.getElementById('seLogoSecundarioCurrent').classList.remove('hidden'); }
                 document.getElementById('seColorPrimario').value = branding.colores?.primario || '#7c3aed';
                 document.getElementById('seColorSecundario').value = branding.colores?.secundario || '#ffffff';
                 document.getElementById('seTermAlumno').value = term.alumno || '';
@@ -815,17 +444,17 @@
                 document.getElementById('seTermMatricula').value = term.matricula || '';
             } else {
                 document.getElementById('superEditorTitle').textContent = 'Nuevo Instituto';
+                document.getElementById('seColorPrimario').value = '#7c3aed';
+                document.getElementById('seColorSecundario').value = '#ffffff';
             }
             
             document.getElementById('superEditorModal').classList.remove('hidden');
             switchSuperTab('info', document.querySelector('#superEditorTabs .tab-nav-item'));
             lucide.createIcons();
         }
-        
-        function closeSuperEditor() {
-            document.getElementById('superEditorModal').classList.add('hidden');
-        }
-        
+
+        function closeSuperEditor() { document.getElementById('superEditorModal').classList.add('hidden'); }
+
         function resetearSEArchivos() {
             ['logoPrincipal','logoSecundario'].forEach(tipo => {
                 document.getElementById(`se${tipo}Preview`).classList.add('hidden');
@@ -834,7 +463,7 @@
                 document.getElementById(`se${tipo}Current`).classList.add('hidden');
             });
         }
-        
+
         function previewLogoSE(input, previewId, placeholderId, areaId) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -847,18 +476,17 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
-        
+
         async function uploadLogoSE(file, tipo, institutoId) {
-            const MAX_SIZE = 5 * 1024 * 1024;
-            if (file.size > MAX_SIZE) throw new Error('Archivo excede 5MB');
+            if (file.size > 5*1024*1024) throw new Error('Archivo excede 5MB');
             const ext = file.name.split('.').pop();
             const path = `institutos/${institutoId}/${tipo}/${Date.now()}_${Math.random().toString(36).substring(2,8)}.${ext}`;
-            const { error } = await window.supabase.storage.from(STORAGE_BUCKET).upload(path, file, { cacheControl: '3600', upsert: false });
+            const { error } = await window.supabase.storage.from(STORAGE_BUCKET).upload(path, file, { cacheControl: '3600', upsert: false, contentType: file.type });
             if (error) throw error;
             const { data } = window.supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
             return data.publicUrl;
         }
-        
+
         document.getElementById('superEditorForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('seInstitutoId').value;
@@ -866,80 +494,57 @@
             const slug = document.getElementById('seSlug').value.trim();
             const estado = document.getElementById('seEstado').value;
             
-            if (!nombre || !slug) return showToast('Nombre y Slug son obligatorios', 'error');
+            if (!nombre || !slug) { showToast('Nombre y Slug son obligatorios', 'error'); return; }
             
             const btn = document.getElementById('seSubmitBtn');
+            const origHTML = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Guardando...</span>';
             
             try {
                 let institutoId = id;
-                const modulos = {
-                    campus: document.getElementById('seModCampus').checked,
-                    wallet: document.getElementById('seModWallet').checked,
-                    validador: document.getElementById('seModValidador').checked,
-                    portal: document.getElementById('seModPortal').checked
-                };
+                const modulos = { campus: document.getElementById('seModCampus').checked, wallet: document.getElementById('seModWallet').checked, validador: document.getElementById('seModValidador').checked, portal: document.getElementById('seModPortal').checked };
                 
                 if (id) {
-                    await window.supabase.from('sys_institutos').update({ nombre, slug_dominio: slug, estado, modulos_activos: modulos }).eq('id', id);
+                    const { error } = await window.supabase.from('sys_institutos').update({ nombre, slug_dominio: slug, estado, modulos_activos: modulos }).eq('id', id);
+                    if (error) throw error;
                 } else {
                     const { data, error } = await window.supabase.from('sys_institutos').insert([{ nombre, slug_dominio: slug, estado, modulos_activos: modulos }]).select().single();
-                    if (error) throw error;
+                    if (error) { if (error.code === '23505') throw new Error('El slug ya está en uso'); throw error; }
                     institutoId = data.id;
                     await window.supabase.from('sys_configuracion').insert([{ instituto_id: institutoId, branding: { colores: { primario: '#7c3aed', secundario: '#ffffff' } }, terminologia: { alumno: 'Alumno', docente: 'Instructor', wallet: 'Billetera Virtual', matricula: 'Nº de Registro' } }]);
                 }
                 
-                const nuevoBranding = {
-                    colores: {
-                        primario: document.getElementById('seColorPrimario').value,
-                        secundario: document.getElementById('seColorSecundario').value
-                    }
-                };
-                
+                const nuevoBranding = { colores: { primario: document.getElementById('seColorPrimario').value, secundario: document.getElementById('seColorSecundario').value } };
                 const logoPFile = document.querySelector('#seLogoPrincipalArea input[type="file"]')?.files[0];
                 const logoSFile = document.querySelector('#seLogoSecundarioArea input[type="file"]')?.files[0];
                 
                 if (logoPFile) nuevoBranding.logo_principal = await uploadLogoSE(logoPFile, 'logo_principal', institutoId);
                 else if (configuracionesData[institutoId]?.branding?.logo_principal) nuevoBranding.logo_principal = configuracionesData[institutoId].branding.logo_principal;
-                
                 if (logoSFile) nuevoBranding.logo_secundario = await uploadLogoSE(logoSFile, 'logo_secundario', institutoId);
                 else if (configuracionesData[institutoId]?.branding?.logo_secundario) nuevoBranding.logo_secundario = configuracionesData[institutoId].branding.logo_secundario;
                 
-                const nuevaTerminologia = {
-                    alumno: document.getElementById('seTermAlumno').value,
-                    docente: document.getElementById('seTermDocente').value,
-                    wallet: document.getElementById('seTermWallet').value,
-                    matricula: document.getElementById('seTermMatricula').value
-                };
+                const nuevaTerminologia = { alumno: document.getElementById('seTermAlumno').value, docente: document.getElementById('seTermDocente').value, wallet: document.getElementById('seTermWallet').value, matricula: document.getElementById('seTermMatricula').value };
                 
-                await window.supabase.from('sys_configuracion').update({
-                    branding: nuevoBranding,
-                    terminologia: nuevaTerminologia,
-                    updated_at: new Date().toISOString()
-                }).eq('instituto_id', institutoId);
+                const { error: updError } = await window.supabase.from('sys_configuracion').update({ branding: nuevoBranding, terminologia: nuevaTerminologia, updated_at: new Date().toISOString() }).eq('instituto_id', institutoId);
+                if (updError) throw updError;
                 
                 closeSuperEditor();
                 await cargarInstitutos();
-                showToast(id ? 'Instituto actualizado' : 'Instituto creado exitosamente');
+                showToast(id ? 'Instituto actualizado exitosamente' : 'Instituto creado exitosamente');
             } catch(err) {
                 console.error(err);
                 showToast('Error: ' + err.message, 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = 'Guardar Cambios';
+                btn.innerHTML = origHTML;
             }
         });
-        
+
         // ============ USUARIOS ============
-        function openNuevoUsuarioModal() {
-            document.getElementById('nuevoUsuarioModal').classList.remove('hidden');
-        }
-        function closeNuevoUsuarioModal() {
-            document.getElementById('nuevoUsuarioModal').classList.add('hidden');
-            document.getElementById('nuevoUsuarioForm').reset();
-        }
-        
+        function openNuevoUsuarioModal() { document.getElementById('nuevoUsuarioModal').classList.remove('hidden'); }
+        function closeNuevoUsuarioModal() { document.getElementById('nuevoUsuarioModal').classList.add('hidden'); document.getElementById('nuevoUsuarioForm').reset(); }
+
         document.getElementById('nuevoUsuarioForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('nuEmail').value.trim();
@@ -948,7 +553,12 @@
             const rol = document.getElementById('nuRol').value;
             const institutoId = document.getElementById('selectInstitutoUsuarios').value;
             
-            if (!institutoId) return showToast('Selecciona un instituto primero', 'error');
+            if (!institutoId) { showToast('Selecciona un instituto primero', 'error'); return; }
+            if (password.length < 6) { showToast('La contraseña debe tener al menos 6 caracteres', 'error'); return; }
+            
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Creando...</span>';
             
             try {
                 const res = await fetch(`${SILENT_URL}/auth/v1/signup`, {
@@ -956,90 +566,81 @@
                     headers: { 'Content-Type': 'application/json', 'apikey': SILENT_KEY },
                     body: JSON.stringify({ email, password, data: { nombre_completo: nombre } })
                 });
-                if (!res.ok && res.status !== 422) throw new Error((await res.json()).msg || 'Error');
+                const resData = await res.json();
+                if (!res.ok && res.status !== 422) throw new Error(resData.msg || 'Error en registro');
                 
-                await window.supabase.from('sys_roles_usuarios').upsert({
-                    user_email: email,
-                    instituto_id: institutoId,
-                    rol_nivel: rol,
-                    nombre_completo: nombre
-                }, { onConflict: 'user_email,instituto_id' });
+                const { error } = await window.supabase.from('sys_roles_usuarios').upsert({ user_email: email, instituto_id: institutoId, rol_nivel: rol, nombre_completo: nombre }, { onConflict: 'user_email,instituto_id' });
+                if (error) throw error;
                 
                 closeNuevoUsuarioModal();
                 await cargarUsuariosDeInstituto();
                 showToast('Usuario creado exitosamente');
             } catch(err) {
                 showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Crear Usuario';
             }
         });
-        
+
         async function cargarUsuariosDeInstituto() {
             const institutoId = document.getElementById('selectInstitutoUsuarios').value;
             const tbody = document.getElementById('usuariosTableBody');
-            if (!institutoId) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-gray-500">Selecciona un instituto</td></tr>';
-                return;
-            }
+            if (!institutoId) { tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-gray-500">Selecciona un instituto para ver sus usuarios</td></tr>'; return; }
             
+            tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center"><div class="spinner"></div></td></tr>';
             const { data, error } = await window.supabase.from('sys_roles_usuarios').select('*').eq('instituto_id', institutoId);
-            if (error) { showToast('Error cargando usuarios', 'error'); return; }
+            if (error) { tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-red-400">Error al cargar usuarios</td></tr>'; return; }
             
             tbody.innerHTML = (data || []).length === 0
                 ? '<tr><td colspan="4" class="p-8 text-center text-gray-500">Sin usuarios en este instituto</td></tr>'
-                : data.map(u => `
-                    <tr class="border-b border-white/5">
-                        <td class="p-4">${u.user_email}</td>
-                        <td class="p-4">${u.nombre_completo || '-'}</td>
-                        <td class="p-4"><span class="text-xs px-3 py-1 rounded-full bg-purple-500/20 text-purple-300">${u.rol_nivel}</span></td>
-                        <td class="p-4 text-right">
-                            <button onclick="eliminarUsuario('${u.id}')" class="p-2 hover:bg-red-500/10 rounded-lg text-gray-400 hover:text-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </td>
-                    </tr>`).join('');
+                : data.map(u => `<tr class="border-b border-white/5 hover:bg-white/[0.02]">
+                    <td class="p-4 text-sm">${u.user_email}</td>
+                    <td class="p-4">${u.nombre_completo || '-'}</td>
+                    <td class="p-4"><span class="text-xs px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-medium">${u.rol_nivel}</span></td>
+                    <td class="p-4 text-right"><button onclick="eliminarUsuario('${u.id}')" class="p-2 rounded-lg hover:bg-red-500/10 transition text-gray-400 hover:text-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+                </tr>`).join('');
             lucide.createIcons();
         }
-        
+
         async function eliminarUsuario(id) {
-            if (!confirm('¿Eliminar este usuario?')) return;
-            await window.supabase.from('sys_roles_usuarios').delete().eq('id', id);
+            if (!confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.')) return;
+            const { error } = await window.supabase.from('sys_roles_usuarios').delete().eq('id', id);
+            if (error) { showToast('Error al eliminar', 'error'); return; }
             await cargarUsuariosDeInstituto();
             showToast('Usuario eliminado');
         }
-        
+
         // ============ BUILDER ============
         async function cargarCustomUI() {
             const institutoId = document.getElementById('selectInstitutoBuilder').value;
             const editor = document.getElementById('builderEditor');
-            if (!institutoId) {
-                editor.innerHTML = '<p class="text-gray-500 text-center">Selecciona un instituto</p>';
-                return;
-            }
+            if (!institutoId) { editor.innerHTML = '<p class="text-gray-500 text-center">Selecciona un instituto para editar su configuración avanzada</p>'; return; }
             
+            editor.innerHTML = '<div class="text-center py-4"><div class="spinner"></div></div>';
             const { data } = await window.supabase.from('sys_configuracion').select('custom_ui').eq('instituto_id', institutoId).single();
             const customUI = data?.custom_ui || { tabs: [], campos_extra: [] };
             
             editor.innerHTML = `
-                <h4 class="font-bold text-white mb-3">Configuración Dinámica</h4>
-                <div class="mb-4">
-                    <label class="text-sm text-gray-400 block mb-1">Tabs Especiales (separados por coma)</label>
-                    <input type="text" id="builderTabs" class="input-dios" value="${(customUI.tabs || []).join(', ')}" placeholder="Ej: Horarios, Bolsa de Trabajo">
-                </div>
-                <div class="mb-4">
-                    <label class="text-sm text-gray-400 block mb-1">Campos Extra (JSON)</label>
-                    <textarea id="builderCampos" class="input-dios h-32" placeholder='[{"nombre":"horario_atencion","tipo":"texto"}]'>${JSON.stringify(customUI.campos_extra || [], null, 2)}</textarea>
-                </div>
-                <button onclick="guardarCustomUI('${institutoId}')" class="btn-primary px-5 py-2.5 rounded-lg text-white font-medium">Guardar Extensión</button>
+                <h4 class="font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="wrench" class="w-5 h-5 text-purple-400"></i>Configuración Dinámica</h4>
+                <div class="mb-4"><label class="text-sm text-gray-400 block mb-1">Tabs Especiales (separados por coma)</label><input type="text" id="builderTabs" class="input-dios" value="${(customUI.tabs || []).join(', ')}" placeholder="Ej: Horarios, Bolsa de Trabajo"><p class="text-xs text-gray-500 mt-1">Estos tabs aparecerán en la app del alumno</p></div>
+                <div class="mb-4"><label class="text-sm text-gray-400 block mb-1">Campos Extra (JSON válido)</label><textarea id="builderCampos" class="input-dios h-40 font-mono text-sm" placeholder='[{"nombre":"horario_atencion","tipo":"texto","label":"Horario de Atención"}]'>${JSON.stringify(customUI.campos_extra || [], null, 2)}</textarea><p class="text-xs text-gray-500 mt-1">Define campos personalizados para este instituto</p></div>
+                <button onclick="guardarCustomUI('${institutoId}')" class="btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Guardar Extensión</button>
             `;
+            lucide.createIcons();
         }
-        
+
         async function guardarCustomUI(institutoId) {
             const tabs = document.getElementById('builderTabs').value.split(',').map(t => t.trim()).filter(Boolean);
             let campos = [];
-            try { campos = JSON.parse(document.getElementById('builderCampos').value); } catch(e) { return showToast('JSON inválido en Campos Extra', 'error'); }
+            try { campos = JSON.parse(document.getElementById('builderCampos').value); } catch(e) { showToast('JSON inválido en Campos Extra', 'error'); return; }
+            if (!Array.isArray(campos)) { showToast('Campos Extra debe ser un array JSON', 'error'); return; }
             
-            await window.supabase.from('sys_configuracion').update({ custom_ui: { tabs, campos_extra: campos } }).eq('instituto_id', institutoId);
+            const { error } = await window.supabase.from('sys_configuracion').update({ custom_ui: { tabs, campos_extra: campos } }).eq('instituto_id', institutoId);
+            if (error) { showToast('Error al guardar', 'error'); return; }
             showToast('Extensión guardada correctamente');
         }
-        
+
         // ============ INICIALIZACIÓN ============
         window.addEventListener('DOMContentLoaded', () => {
             if (!verificarSesion()) return;
@@ -1048,10 +649,7 @@
         });
         
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeSuperEditor();
-                closeNuevoUsuarioModal();
-            }
+            if (e.key === 'Escape') { closeSuperEditor(); closeNuevoUsuarioModal(); }
         });
     </script>
 </body>
