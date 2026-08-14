@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificaciones - Panel Director</title>
+    <title>Certificaciones - Panel Director | ASARI</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎖️</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,194 +16,122 @@
         * { font-family: 'Inter', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
-        :root {
-            --color-primary: #7c3aed;
-            --color-secondary: #ffffff;
-            --color-primary-light: #a78bfa;
-            --color-primary-dark: #5b21b6;
-        }
+        :root { --color-primary: #7c3aed; --color-primary-light: #a78bfa; --color-primary-dark: #5b21b6; }
         
-        body { background: #f8fafc; color: #1e293b; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        body { background: #050509; color: #e2e8f0; min-height: 100vh; -webkit-font-smoothing: antialiased; }
         
         .app-layout { display: flex; min-height: 100vh; }
         
-        .sidebar {
-            width: 260px; background: white; border-right: 1px solid #e2e8f0;
-            display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
-            z-index: 40; transition: transform 0.3s ease; box-shadow: 2px 0 15px rgba(0,0,0,0.03);
-        }
-        
-        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid #f1f5f9; }
-        
-        .sidebar-logo-box {
-            width: 44px; height: 44px; border-radius: 12px; overflow: hidden;
-            background: #f8fafc; border: 1px solid #e2e8f0; flex-shrink: 0;
-        }
+        .sidebar { width: 260px; background: rgba(10,10,20,0.95); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 40; transition: transform 0.3s ease; backdrop-filter: blur(20px); }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-logo-box { width: 44px; height: 44px; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
         .sidebar-logo-box img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .sidebar-logo-placeholder {
-            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-            font-size: 22px; background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-        }
-        
-        .sidebar-institute-name { font-size: 14px; font-weight: 700; color: #1e293b; line-height: 1.2; }
+        .sidebar-logo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 22px; background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary)); }
+        .sidebar-institute-name { font-size: 14px; font-weight: 700; color: white; line-height: 1.2; }
         .sidebar-institute-role { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-        
         .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
         
-        .nav-item {
-            display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 10px;
-            color: #64748b; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;
-            margin-bottom: 4px; text-decoration: none;
-        }
-        .nav-item:hover { background: #f1f5f9; color: #334155; }
-        .nav-item.active { background: #fef3c7; color: #b45309; font-weight: 600; }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #94a3b8; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s ease; margin-bottom: 2px; text-decoration: none; }
+        .nav-item:hover { background: rgba(255,255,255,0.04); color: #e2e8f0; }
+        .nav-item.active { background: rgba(124,58,237,0.15); color: #a78bfa; font-weight: 600; }
         
-        .sidebar-footer { padding: 16px 12px; border-top: 1px solid #f1f5f9; }
+        .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .btn-logout { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 14px; border-radius: 10px; background: none; border: none; color: #ef4444; font-size: 14px; font-weight: 500; cursor: pointer; }
+        .btn-logout:hover { background: rgba(239,68,68,0.1); }
         
-        .btn-logout {
-            display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 14px;
-            border-radius: 10px; background: none; border: none; color: #ef4444;
-            font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;
-        }
-        .btn-logout:hover { background: #fef2f2; }
-        
-        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 39; backdrop-filter: blur(2px); }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 39; backdrop-filter: blur(2px); }
         .sidebar-overlay.active { display: block; }
         
         .main-content { flex: 1; margin-left: 260px; min-height: 100vh; transition: margin-left 0.3s ease; }
         
-        .topbar {
-            background: white; border-bottom: 1px solid #e2e8f0; padding: 16px 28px;
-            display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 30;
-        }
+        .topbar { background: rgba(5,5,9,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 30; }
+        .btn-hamburger { display: none; width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); cursor: pointer; align-items: center; justify-content: center; color: #94a3b8; }
         
-        .btn-hamburger { display: none; width: 40px; height: 40px; border-radius: 10px; background: #f1f5f9; border: none; cursor: pointer; align-items: center; justify-content: center; color: #64748b; }
-        .btn-hamburger:hover { background: #e2e8f0; }
+        .page-title { font-size: 20px; font-weight: 700; color: white; }
+        .page-subtitle { font-size: 13px; color: #64748b; margin-top: 2px; }
         
-        .page-title { font-size: 20px; font-weight: 700; color: #1e293b; }
-        .page-subtitle { font-size: 13px; color: #94a3b8; margin-top: 2px; }
-        
-        .btn-primary {
-            background: var(--color-primary); color: white; border: none; padding: 10px 20px;
-            border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; white-space: nowrap;
-        }
-        .btn-primary:hover { background: var(--color-primary-dark); box-shadow: 0 4px 15px rgba(124,58,237,0.3); transform: translateY(-1px); }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        
-        .btn-secondary {
-            background: white; color: #64748b; border: 1px solid #e2e8f0; padding: 10px 20px;
-            border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 8px; transition: all 0.15s ease;
-        }
-        .btn-secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .btn-primary { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; border: 1px solid rgba(139,92,246,0.3); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; white-space: nowrap; }
+        .btn-primary:hover { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 0 20px rgba(139,92,246,0.3); transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
         
         .content-area { padding: 24px 28px; }
         
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
-        
-        .kpi-card {
-            background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px;
-            transition: all 0.2s ease;
-        }
-        .kpi-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .kpi-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 20px; }
         .kpi-icon-box { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-        .kpi-value { font-size: 28px; font-weight: 800; color: #1e293b; line-height: 1; }
+        .kpi-value { font-size: 28px; font-weight: 800; color: white; line-height: 1; }
         .kpi-label { font-size: 13px; color: #94a3b8; margin-top: 4px; }
         
-        .table-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; }
-        .table-header { padding: 20px 24px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-        .table-title { font-size: 16px; font-weight: 700; color: #1e293b; }
+        .table-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
+        .table-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .table-title { font-size: 16px; font-weight: 700; color: white; }
         .table-wrapper { overflow-x: auto; }
         
         table { width: 100%; border-collapse: collapse; }
-        thead th {
-            text-align: left; padding: 12px 24px; font-size: 12px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8;
-            background: #f8fafc; border-bottom: 1px solid #e2e8f0; white-space: nowrap;
-        }
-        tbody td { padding: 14px 24px; font-size: 14px; color: #334155; border-bottom: 1px solid #f1f5f9; }
-        tbody tr { transition: background 0.1s ease; }
-        tbody tr:hover { background: #fafbfc; }
+        thead th { text-align: left; padding: 12px 24px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.05); white-space: nowrap; }
+        tbody td { padding: 14px 24px; font-size: 14px; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        tbody tr:hover { background: rgba(255,255,255,0.02); }
         
-        .txid-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 6px;
-            font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
-            border: 1px solid #fcd34d; letter-spacing: -0.3px;
-        }
+        .txid-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(245,158,11,0.1); color: #f59e0b; padding: 4px 10px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; border: 1px solid rgba(245,158,11,0.2); letter-spacing: -0.3px; }
         
-        .form-card {
-            background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px;
-            margin-bottom: 20px; transition: all 0.2s ease;
-        }
-        .form-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
-        .form-card-title { font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .fee-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(239,68,68,0.1); color: #f87171; padding: 4px 10px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; border: 1px solid rgba(239,68,68,0.2); }
         
-        .file-drop-zone {
-            border: 2px dashed #e2e8f0; border-radius: 14px; padding: 28px 20px;
-            text-align: center; cursor: pointer; transition: all 0.2s ease;
-            background: #fafbfc; position: relative;
-        }
-        .file-drop-zone:hover { border-color: var(--color-primary-light); background: #f8f4ff; }
-        .file-drop-zone.has-file { border-color: #10b981; background: #f0fdf4; }
+        .form-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+        .form-card-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        
+        .file-drop-zone { border: 2px dashed rgba(255,255,255,0.15); border-radius: 14px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.2s ease; background: rgba(255,255,255,0.02); position: relative; }
+        .file-drop-zone:hover { border-color: var(--color-primary-light); background: rgba(124,58,237,0.05); }
+        .file-drop-zone.has-file { border-color: #10b981; background: rgba(16,185,129,0.05); }
         .file-drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
         .file-drop-zone .preview-img { max-width: 100%; max-height: 120px; border-radius: 8px; margin-top: 12px; display: none; }
         .file-drop-zone.has-file .preview-img { display: block; }
         
         .form-group { margin-bottom: 18px; }
-        .form-label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
-        .form-input, .form-select {
-            width: 100%; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 10px;
-            font-size: 14px; color: #1e293b; outline: none; transition: all 0.15s ease; background: #fafbfc;
-        }
-        .form-input:focus, .form-select:focus { border-color: var(--color-primary-light); box-shadow: 0 0 0 3px rgba(124,58,237,0.08); background: white; }
-        .form-input::placeholder { color: #cbd5e1; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
+        .form-input, .form-select { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px; color: white; outline: none; transition: all 0.15s ease; }
+        .form-input:focus, .form-select:focus { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 15px rgba(139,92,246,0.1); background: rgba(255,255,255,0.06); }
+        .form-input::placeholder { color: #475569; }
+        select.form-select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 10px center; background-repeat: no-repeat; background-size: 20px; padding-right: 40px; }
+        select.form-select option { background: #1a1a2e; color: white; }
+        .form-hint { font-size: 11px; color: #64748b; margin-top: 4px; }
         
-        .toast {
-            position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 12px;
-            font-size: 14px; font-weight: 500; z-index: 200; display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: toastIn 0.3s ease-out; max-width: 400px;
-        }
+        .btn-icon-sm { width: 34px; height: 34px; border-radius: 8px; background: none; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.15s ease; }
+        .btn-icon-sm:hover { background: rgba(255,255,255,0.05); color: white; }
+        .btn-icon-sm.danger:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+        
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-badge.activo { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .status-badge.revocado { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .status-dot.green { background: #10b981; }
+        .status-dot.red { background: #ef4444; }
+        
+        .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: toastIn 0.3s ease-out; max-width: 400px; }
         .toast.success { background: #059669; color: white; }
         .toast.error { background: #dc2626; color: white; }
         @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
         
-        .spinner {
-            width: 32px; height: 32px; border: 3px solid #e2e8f0; border-top-color: var(--color-primary);
-            border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
-        }
+        .spinner { width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #7c3aed; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        .empty-state { text-align: center; padding: 48px 24px; color: #94a3b8; }
+        .empty-state { text-align: center; padding: 48px 24px; color: #64748b; }
         
-        @media (max-width: 1024px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .btn-hamburger { display: flex; }
-        }
-        @media (max-width: 640px) {
-            .content-area { padding: 16px; }
-            .topbar { padding: 12px 16px; }
-            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } .btn-hamburger { display: flex; } }
+        @media (max-width: 640px) { .content-area { padding: 16px; } .topbar { padding: 12px 16px; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR UNIFICADO -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="flex items-center gap-3">
                 <div class="sidebar-logo-box">
                     <div class="sidebar-logo-placeholder" id="sidebarLogoPlaceholder"><span>🎓</span></div>
-                    <img data-tenant-logo="principal" src="" alt="Logo" id="sidebarLogoImg" style="display: none;"
-                        onerror="this.style.display='none';document.getElementById('sidebarLogoPlaceholder').style.display='flex';"
-                        onload="this.style.display='block';document.getElementById('sidebarLogoPlaceholder').style.display='none';">
+                    <img data-tenant-logo="principal" src="" alt="Logo" id="sidebarLogoImg" style="display: none;" onerror="this.style.display='none';document.getElementById('sidebarLogoPlaceholder').style.display='flex';" onload="this.style.display='block';document.getElementById('sidebarLogoPlaceholder').style.display='none';">
                 </div>
                 <div>
                     <div class="sidebar-institute-name" id="sidebarInstituteName">Instituto</div>
@@ -213,11 +141,15 @@
         </div>
         
         <nav class="sidebar-nav">
-            <a href="dashboard.html" class="nav-item"><i data-lucide="bar-chart-3" class="w-5 h-5"></i><span>Dashboard</span></a>
-            <a href="crm.html" class="nav-item"><i data-lucide="users" class="w-5 h-5"></i><span>Padrón de Alumnos</span></a>
-            <a href="campus-admin.html" class="nav-item"><i data-lucide="graduation-cap" class="w-5 h-5"></i><span>Campus Virtual</span></a>
-            <a href="#" class="nav-item active"><i data-lucide="award" class="w-5 h-5"></i><span>Certificaciones</span></a>
-            <a href="dashboard.html" class="nav-item"><i data-lucide="map-pin" class="w-5 h-5"></i><span>Gestión de Sedes</span></a>
+            <a href="dashboard.html" class="nav-item"><i data-lucide="bar-chart-3" class="w-4 h-4"></i><span>Dashboard</span></a>
+            <a href="staff.html" class="nav-item"><i data-lucide="shield" class="w-4 h-4"></i><span>Staff & Permisos</span></a>
+            <a href="crm.html" class="nav-item"><i data-lucide="users" class="w-4 h-4"></i><span>Alumnos</span></a>
+            <a href="sedes.html" class="nav-item"><i data-lucide="map-pin" class="w-4 h-4"></i><span>Sedes y Cobros</span></a>
+            <a href="campus-admin.html" class="nav-item"><i data-lucide="graduation-cap" class="w-4 h-4"></i><span>Campus Virtual</span></a>
+            <a href="certificados.html" class="nav-item active"><i data-lucide="award" class="w-4 h-4"></i><span>Certificaciones</span></a>
+            <a href="portal-admin.html" class="nav-item"><i data-lucide="globe" class="w-4 h-4"></i><span>Portal & CMS</span></a>
+            <a href="reportes.html" class="nav-item"><i data-lucide="file-text" class="w-4 h-4"></i><span>Reportes</span></a>
+            <a href="configuracion.html" class="nav-item"><i data-lucide="settings" class="w-4 h-4"></i><span>Configuración</span></a>
         </nav>
         
         <div class="sidebar-footer">
@@ -252,7 +184,7 @@
                     <div class="table-header"><h2 class="table-title">Historial de Certificados Emitidos</h2></div>
                     <div class="table-wrapper">
                         <table>
-                            <thead><tr><th>Alumno</th><th>Curso</th><th>Tipo</th><th>TXID</th><th>Fecha</th><th>Acciones</th></tr></thead>
+                            <thead><tr><th>Alumno</th><th>Curso</th><th>TXID</th><th>Fee ASARI</th><th>Fecha</th><th>Acciones</th></tr></thead>
                             <tbody id="certificadosTableBody"></tbody>
                         </table>
                     </div>
@@ -262,49 +194,53 @@
             <!-- VISTA EMISOR -->
             <section id="view-emisor" class="view-section hidden">
                 <div class="form-card">
-                    <h3 class="form-card-title"><span style="background:#ede9fe; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="user" class="w-5 h-5" style="color:var(--color-primary);"></i></span> Paso 1: Selección del Alumno</h3>
+                    <h3 class="form-card-title"><span style="background:rgba(124,58,237,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="user" class="w-5 h-5" style="color:#a78bfa;"></i></span> Paso 1: Selección del Alumno</h3>
                     <div class="form-group"><label class="form-label">Alumno *</label><select id="emisorAlumno" class="form-select"><option value="">Cargando alumnos...</option></select></div>
                 </div>
                 
                 <div class="form-card">
-                    <h3 class="form-card-title"><span style="background:#dbeafe; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="book-open" class="w-5 h-5" style="color:#2563eb;"></i></span> Paso 2: Datos del Curso</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="form-group"><label class="form-label">Título del Curso *</label><input type="text" id="emisorCurso" class="form-input" placeholder="Ej: Diplomatura en IA Generativa"></div>
-                        <div class="form-group"><label class="form-label">Tipo *</label><select id="emisorTipo" class="form-select"><option value="Seminario">Seminario</option><option value="Curso Corto">Curso Corto</option><option value="Formación Completa">Formación Completa</option></select></div>
+                    <h3 class="form-card-title"><span style="background:rgba(59,130,246,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="book-open" class="w-5 h-5" style="color:#93c5fd;"></i></span> Paso 2: Curso (Revenue Share)</h3>
+                    <div class="form-group">
+                        <label class="form-label">Curso *</label>
+                        <select id="emisorCursoSelect" class="form-select" onchange="mostrarCalculoFee()"><option value="">Selecciona un curso...</option></select>
+                    </div>
+                    <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 hidden" id="feePreview">
+                        <p class="text-sm text-red-300">Fee ASARI a retener: <strong class="font-mono" id="feePreviewMonto">$0.00 USD</strong></p>
+                        <p class="text-xs text-gray-500 mt-1">Nivel del instituto: <span id="feePreviewNivel">-</span></p>
                     </div>
                 </div>
                 
                 <div class="form-card">
-                    <h3 class="form-card-title"><span style="background:#d1fae5; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="upload-cloud" class="w-5 h-5" style="color:#059669;"></i></span> Paso 3: Carga de Archivos</h3>
+                    <h3 class="form-card-title"><span style="background:rgba(16,185,129,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="upload-cloud" class="w-5 h-5" style="color:#10b981;"></i></span> Paso 3: Carga de Archivos</h3>
                     <div class="grid grid-cols-3 gap-4">
                         <div>
                             <label class="form-label">Diploma *</label>
                             <div class="file-drop-zone" id="dropDiploma">
                                 <input type="file" accept="image/*,.pdf" onchange="handleFileDrop(this, 'diploma')">
-                                <i data-lucide="file-text" class="w-8 h-8 text-gray-300 mx-auto mb-2"></i>
+                                <i data-lucide="file-text" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
                                 <p class="text-sm text-gray-400">Click para subir</p>
                                 <img src="" class="preview-img" id="previewDiploma">
-                                <p class="text-xs text-green-600 mt-1 hidden" id="fileNameDiploma"></p>
+                                <p class="text-xs text-green-500 mt-1 hidden" id="fileNameDiploma"></p>
                             </div>
                         </div>
                         <div>
                             <label class="form-label">Analítico</label>
                             <div class="file-drop-zone" id="dropAnalitico">
                                 <input type="file" accept="image/*,.pdf" onchange="handleFileDrop(this, 'analitico')">
-                                <i data-lucide="file-spreadsheet" class="w-8 h-8 text-gray-300 mx-auto mb-2"></i>
+                                <i data-lucide="file-spreadsheet" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
                                 <p class="text-sm text-gray-400">Opcional</p>
                                 <img src="" class="preview-img" id="previewAnalitico">
-                                <p class="text-xs text-green-600 mt-1 hidden" id="fileNameAnalitico"></p>
+                                <p class="text-xs text-green-500 mt-1 hidden" id="fileNameAnalitico"></p>
                             </div>
                         </div>
                         <div>
                             <label class="form-label">Extra</label>
                             <div class="file-drop-zone" id="dropExtra">
                                 <input type="file" accept="image/*,.pdf" onchange="handleFileDrop(this, 'extra')">
-                                <i data-lucide="paperclip" class="w-8 h-8 text-gray-300 mx-auto mb-2"></i>
+                                <i data-lucide="paperclip" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
                                 <p class="text-sm text-gray-400">Opcional</p>
                                 <img src="" class="preview-img" id="previewExtra">
-                                <p class="text-xs text-green-600 mt-1 hidden" id="fileNameExtra"></p>
+                                <p class="text-xs text-green-500 mt-1 hidden" id="fileNameExtra"></p>
                             </div>
                         </div>
                     </div>
@@ -328,33 +264,30 @@
     <script>
         lucide.createIcons();
         
-        // ============ ESTADO GLOBAL ============
+        const STORAGE_BUCKET = 'asari-assets';
+        
         let tenantConfig = null;
         let certificadosData = [];
+        let cursosData = [];
         let archivosSeleccionados = { diploma: null, analitico: null, extra: null };
         let currentView = 'ledger';
         
-        // ============ REFERENCIAS DOM ============
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const viewTitle = document.getElementById('viewTitle');
         const viewSubtitle = document.getElementById('viewSubtitle');
         const topbarActions = document.getElementById('topbarActions');
         const toast = document.getElementById('toast');
-        const STORAGE_BUCKET = 'asari-assets';
         
-        // ============ SIDEBAR ============
         function toggleSidebar() { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); }
         function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); }
         
-        // ============ TOAST ============
-        function showToast(message, type = 'success') {
-            toast.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${message}</span>`;
+        function showToast(msg, type = 'success') {
+            toast.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${msg}</span>`;
             toast.className = `toast ${type}`; lucide.createIcons();
             clearTimeout(window._tt); window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
         }
         
-        // ============ NAVEGACIÓN SPA ============
         function navegarA(view) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
             document.getElementById(`view-${view}`).classList.remove('hidden');
@@ -367,14 +300,14 @@
                 cargarCertificados();
             } else if (view === 'emisor') {
                 viewTitle.textContent = 'Emitir Nuevo Certificado';
-                viewSubtitle.textContent = 'Formulario de emisión';
+                viewSubtitle.textContent = 'Formulario de emisión con Revenue Share';
                 topbarActions.innerHTML = `<button class="btn-secondary" onclick="navegarA('ledger')"><i data-lucide="arrow-left" class="w-5 h-5"></i> Volver al Ledger</button>`;
                 cargarAlumnosSelect();
+                cargarCursosSelect();
             }
             lucide.createIcons();
         }
         
-        // ============ AUTENTICACIÓN ============
         async function checkAuth() {
             const { data: { session } } = await window.supabase.auth.getSession();
             if (!session?.user) { redirectToLogin(); return false; }
@@ -391,14 +324,13 @@
             redirectToLogin();
         }
         
-        // ============ TENANT ============
         async function inicializarTenant() {
             if (typeof window.fetchTenantConfig !== 'function') { setTimeout(inicializarTenant, 100); return; }
             tenantConfig = await window.fetchTenantConfig();
             if (tenantConfig) {
                 const { instituto, configuracion } = tenantConfig;
                 document.getElementById('sidebarInstituteName').textContent = instituto.nombre;
-                document.title = `Certificaciones - ${instituto.nombre}`;
+                document.title = `Certificaciones - ${instituto.nombre} | ASARI`;
                 if (configuracion?.branding?.logo_principal) {
                     document.getElementById('sidebarLogoImg').src = configuracion.branding.logo_principal;
                     document.getElementById('sidebarLogoImg').style.display = 'block';
@@ -408,12 +340,44 @@
             }
         }
         
-        // ============ GENERAR TXID ============
         function generarTXID() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let hash = '';
             for (let i = 0; i < 12; i++) hash += chars.charAt(Math.floor(Math.random() * chars.length));
             return `ASARI-TX-${hash}-${Date.now().toString(36).toUpperCase()}`;
+        }
+        
+        // ============ CÁLCULO DE FEE (REVENUE SHARE) ============
+        function calcularFee(nivelInstituto, precioDeclarado) {
+            let porcentaje;
+            switch(nivelInstituto) {
+                case 1: porcentaje = 0.30; break;
+                case 2: porcentaje = 0.25; break;
+                case 3: porcentaje = 0.20; break;
+                default: porcentaje = 0.30;
+            }
+            let fee = precioDeclarado * porcentaje;
+            if (fee < 10) fee = 10;
+            return fee;
+        }
+        
+        function mostrarCalculoFee() {
+            const cursoId = document.getElementById('emisorCursoSelect').value;
+            const curso = cursosData.find(c => c.id === cursoId);
+            const preview = document.getElementById('feePreview');
+            
+            if (!curso) {
+                preview.classList.add('hidden');
+                return;
+            }
+            
+            const nivel = tenantConfig?.instituto?.nivel || tenantConfig?.configuracion?.nivel_instituto || 1;
+            const fee = calcularFee(nivel, curso.precio_declarado_usd || 0);
+            
+            document.getElementById('feePreviewMonto').textContent = `$${fee.toFixed(2)} USD`;
+            document.getElementById('feePreviewNivel').textContent = `Nivel ${nivel} (${nivel===1?'30%':(nivel===2?'25%':'20%')})`;
+            preview.classList.remove('hidden');
+            lucide.createIcons();
         }
         
         // ============ FILE HANDLING ============
@@ -423,17 +387,13 @@
                 const dropZone = document.getElementById(`drop${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
                 const preview = document.getElementById(`preview${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
                 const fileName = document.getElementById(`fileName${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
-                
                 dropZone.classList.add('has-file');
                 fileName.textContent = input.files[0].name;
                 fileName.classList.remove('hidden');
-                
                 if (input.files[0].type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = (e) => { preview.src = e.target.result; preview.style.display = 'block'; };
                     reader.readAsDataURL(input.files[0]);
-                } else {
-                    preview.style.display = 'none';
                 }
             }
         }
@@ -442,12 +402,8 @@
             const institutoId = tenantConfig.instituto.id;
             const ext = file.name.split('.').pop();
             const path = `certificados/${institutoId}/${alumnoEmail.replace(/[^a-zA-Z0-9]/g, '_')}/${tipo}_${Date.now()}.${ext}`;
-            
-            const { error } = await window.supabase.storage.from(STORAGE_BUCKET).upload(path, file, {
-                cacheControl: '3600', upsert: false, contentType: file.type
-            });
+            const { error } = await window.supabase.storage.from(STORAGE_BUCKET).upload(path, file, { cacheControl: '3600', upsert: false, contentType: file.type });
             if (error) throw error;
-            
             const { data } = window.supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
             return data.publicUrl;
         }
@@ -456,54 +412,46 @@
         async function cargarCertificados() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
-            
             const tbody = document.getElementById('certificadosTableBody');
             tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8"><div class="spinner"></div></td></tr>';
-            
             try {
                 const { data, error, count } = await window.supabase.from('sys_certificados').select('*', { count: 'exact' }).eq('instituto_id', institutoId).order('created_at', { ascending: false });
                 if (error) throw error;
                 certificadosData = data || [];
                 
-                // KPIs
+                const totalFees = certificadosData.reduce((sum, c) => sum + (c.fee_asari_retenido || 0), 0);
                 const container = document.getElementById('kpiContainer');
-                const ultimaEmision = certificadosData.length > 0 ? new Date(certificadosData[0].created_at).toLocaleDateString('es-AR') : 'N/A';
                 container.innerHTML = `
-                    <div class="kpi-card"><div class="kpi-icon-box" style="background:#ede9fe;"><i data-lucide="award" class="w-5 h-5" style="color:var(--color-primary);"></i></div><div class="kpi-value">${count || 0}</div><div class="kpi-label">Total Emitidos</div></div>
-                    <div class="kpi-card"><div class="kpi-icon-box" style="background:#dbeafe;"><i data-lucide="users" class="w-5 h-5" style="color:#2563eb;"></i></div><div class="kpi-value">${new Set(certificadosData.map(c => c.alumno_email)).size}</div><div class="kpi-label">Alumnos Certificados</div></div>
-                    <div class="kpi-card"><div class="kpi-icon-box" style="background:#fef3c7;"><i data-lucide="clock" class="w-5 h-5" style="color:#d97706;"></i></div><div class="kpi-value" style="font-size:16px;">${ultimaEmision}</div><div class="kpi-label">Última Emisión</div></div>
+                    <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(124,58,237,0.15);"><i data-lucide="award" class="w-5 h-5" style="color:#a78bfa;"></i></div><div class="kpi-value">${count || 0}</div><div class="kpi-label">Total Emitidos</div></div>
+                    <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(239,68,68,0.15);"><i data-lucide="dollar-sign" class="w-5 h-5" style="color:#f87171;"></i></div><div class="kpi-value font-mono">$${totalFees.toFixed(2)}</div><div class="kpi-label">Total Fees Retenidos</div></div>
                 `;
                 
                 if (certificadosData.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><i data-lucide="award" class="w-12 h-12 mx-auto mb-3" style="opacity:0.3;"></i><p class="font-semibold">Sin certificados emitidos</p><p class="text-sm mt-1">Emite el primer certificado para un alumno</p></div></td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><i data-lucide="award" class="w-12 h-12 mx-auto mb-3 opacity-20"></i><p class="font-semibold">Sin certificados emitidos</p></div></td></tr>';
                 } else {
                     tbody.innerHTML = certificadosData.map(cert => `
                         <tr>
                             <td><span class="font-semibold">${cert.alumno_nombre || cert.alumno_email}</span></td>
-                            <td>${cert.curso_titulo}</td>
-                            <td><span class="text-xs px-2 py-1 rounded-full bg-blue-50 text-blue-700 font-medium">${cert.curso_tipo}</span></td>
-                            <td><span class="txid-badge"><i data-lucide="fingerprint" class="w-3 h-3"></i>${cert.txid?.substring(0,20)}...</span></td>
+                            <td>${cert.curso_titulo || '-'}</td>
+                            <td><span class="txid-badge"><i data-lucide="fingerprint" class="w-3 h-3"></i>${cert.txid?.substring(0,18)}...</span></td>
+                            <td><span class="fee-badge">$${(cert.fee_asari_retenido || 0).toFixed(2)}</span></td>
                             <td class="text-sm">${new Date(cert.created_at).toLocaleDateString('es-AR')}</td>
-                            <td>
-                                <div class="flex gap-2">
-                                    ${cert.archivos?.diploma ? `<a href="${cert.archivos.diploma}" target="_blank" class="btn-icon-sm" title="Ver Diploma"><i data-lucide="eye" class="w-4 h-4"></i></a>` : ''}
-                                    <button class="btn-icon-sm danger" onclick="revocarCertificado('${cert.id}')" title="Revocar"><i data-lucide="x-circle" class="w-4 h-4"></i></button>
-                                </div>
-                            </td>
+                            <td><div class="flex gap-2">
+                                ${cert.archivos?.diploma ? `<a href="${cert.archivos.diploma}" target="_blank" class="btn-icon-sm"><i data-lucide="eye" class="w-4 h-4"></i></a>` : ''}
+                                <button class="btn-icon-sm danger" onclick="revocarCertificado('${cert.id}')"><i data-lucide="x-circle" class="w-4 h-4"></i></button>
+                            </div></td>
                         </tr>
                     `).join('');
                 }
                 lucide.createIcons();
             } catch(e) {
-                console.error('Error cargando certificados:', e);
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-red-500">Error al cargar certificados</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-red-400">Error al cargar</td></tr>';
             }
         }
         
         async function revocarCertificado(id) {
-            if (!confirm('¿Revocar este certificado? El TXID quedará invalidado.')) return;
-            const { error } = await window.supabase.from('sys_certificados').update({ estado: 'revocado' }).eq('id', id);
-            if (error) { showToast('Error al revocar', 'error'); return; }
+            if (!confirm('¿Revocar este certificado?')) return;
+            await window.supabase.from('sys_certificados').update({ estado: 'revocado' }).eq('id', id);
             await cargarCertificados();
             showToast('Certificado revocado');
         }
@@ -512,10 +460,16 @@
         async function cargarAlumnosSelect() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
-            const select = document.getElementById('emisorAlumno');
-            
             const { data } = await window.supabase.from('padron_global').select('id, nombre_completo, email').eq('instituto_id', institutoId).order('nombre_completo');
-            select.innerHTML = '<option value="">Selecciona un alumno...</option>' + (data || []).map(a => `<option value="${a.email}" data-nombre="${a.nombre_completo}">${a.nombre_completo} (${a.email})</option>`).join('');
+            document.getElementById('emisorAlumno').innerHTML = '<option value="">Selecciona un alumno...</option>' + (data || []).map(a => `<option value="${a.email}" data-nombre="${a.nombre_completo}">${a.nombre_completo} (${a.email})</option>`).join('');
+        }
+        
+        async function cargarCursosSelect() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            const { data } = await window.supabase.from('sys_cursos').select('*').eq('instituto_id', institutoId).eq('estado', 'activo').order('titulo');
+            cursosData = data || [];
+            document.getElementById('emisorCursoSelect').innerHTML = '<option value="">Selecciona un curso...</option>' + cursosData.map(c => `<option value="${c.id}" data-titulo="${c.titulo}" data-precio="${c.precio_declarado_usd}">${c.titulo} — $${(c.precio_declarado_usd||0).toFixed(2)} USD</option>`).join('');
         }
         
         async function emitirCertificado() {
@@ -525,30 +479,27 @@
             const selectAlumno = document.getElementById('emisorAlumno');
             const alumnoEmail = selectAlumno.value;
             const alumnoNombre = selectAlumno.selectedOptions[0]?.getAttribute('data-nombre') || alumnoEmail;
-            const cursoTitulo = document.getElementById('emisorCurso').value.trim();
-            const cursoTipo = document.getElementById('emisorTipo').value;
+            const selectCurso = document.getElementById('emisorCursoSelect');
+            const cursoId = selectCurso.value;
+            const curso = cursosData.find(c => c.id === cursoId);
             
             if (!alumnoEmail) { showToast('Selecciona un alumno', 'error'); return; }
-            if (!cursoTitulo) { showToast('Ingresa el título del curso', 'error'); return; }
+            if (!curso) { showToast('Selecciona un curso', 'error'); return; }
             if (!archivosSeleccionados.diploma) { showToast('El Diploma es obligatorio', 'error'); return; }
             
+            const nivelInstituto = tenantConfig?.instituto?.nivel || tenantConfig?.configuracion?.nivel_instituto || 1;
+            const precioDeclarado = curso.precio_declarado_usd || 0;
+            const feeCalculado = calcularFee(nivelInstituto, precioDeclarado);
+            
             const btn = document.getElementById('btnEmitir');
-            const origHTML = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Emitiendo...</span>';
             
             try {
                 const archivos = {};
-                
-                if (archivosSeleccionados.diploma) {
-                    archivos.diploma = await uploadCertificadoFile(archivosSeleccionados.diploma, 'diploma', alumnoEmail);
-                }
-                if (archivosSeleccionados.analitico) {
-                    archivos.analitico = await uploadCertificadoFile(archivosSeleccionados.analitico, 'analitico', alumnoEmail);
-                }
-                if (archivosSeleccionados.extra) {
-                    archivos.extra = await uploadCertificadoFile(archivosSeleccionados.extra, 'extra', alumnoEmail);
-                }
+                if (archivosSeleccionados.diploma) archivos.diploma = await uploadCertificadoFile(archivosSeleccionados.diploma, 'diploma', alumnoEmail);
+                if (archivosSeleccionados.analitico) archivos.analitico = await uploadCertificadoFile(archivosSeleccionados.analitico, 'analitico', alumnoEmail);
+                if (archivosSeleccionados.extra) archivos.extra = await uploadCertificadoFile(archivosSeleccionados.extra, 'extra', alumnoEmail);
                 
                 const txid = generarTXID();
                 
@@ -556,54 +507,44 @@
                     instituto_id: institutoId,
                     alumno_email: alumnoEmail,
                     alumno_nombre: alumnoNombre,
-                    curso_titulo: cursoTitulo,
-                    curso_tipo: cursoTipo,
+                    curso_id: cursoId,
+                    curso_titulo: curso.titulo,
+                    curso_tipo: curso.tipo_curso,
                     txid: txid,
                     archivos: archivos,
-                    estado: 'activo'
+                    estado: 'activo',
+                    fee_asari_retenido: feeCalculado,
+                    precio_declarado_usd: precioDeclarado
                 }]);
-                
                 if (error) throw error;
                 
-                // Limpiar formulario
-                document.getElementById('emisorCurso').value = '';
                 archivosSeleccionados = { diploma: null, analitico: null, extra: null };
                 ['Diploma','Analitico','Extra'].forEach(t => {
-                    const drop = document.getElementById(`drop${t}`);
-                    drop.classList.remove('has-file');
-                    const preview = document.getElementById(`preview${t}`);
-                    preview.style.display = 'none';
-                    const fn = document.getElementById(`fileName${t}`);
-                    fn.classList.add('hidden');
+                    document.getElementById(`drop${t}`).classList.remove('has-file');
+                    document.getElementById(`preview${t}`).style.display = 'none';
+                    document.getElementById(`fileName${t}`).classList.add('hidden');
                 });
                 
                 navegarA('ledger');
-                showToast(`Certificado emitido: ${txid.substring(0,20)}...`);
+                showToast(`Certificado emitido. Se retuvieron $${feeCalculado.toFixed(2)} USD del saldo`, 'success');
             } catch(e) {
-                console.error('Error emitiendo:', e);
                 showToast('Error: ' + e.message, 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = origHTML;
+                btn.innerHTML = '<i data-lucide="shield-check" class="w-5 h-5"></i><span>Emitir Certificado</span>';
                 lucide.createIcons();
             }
         }
         
-        // ============ INICIALIZACIÓN ============
         async function inicializar() {
-            console.log('🎖️ Inicializando Motor de Certificaciones...');
-            const isAuth = await checkAuth();
-            if (!isAuth) return;
+            if (!await checkAuth()) return;
             await inicializarTenant();
             await cargarCertificados();
-            console.log('✅ Certificaciones inicializado');
         }
         
         window.addEventListener('DOMContentLoaded', inicializar);
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && currentView === 'emisor') navegarA('ledger'); });
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => { if (window.innerWidth < 1024) closeSidebar(); });
-        });
+        document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', () => { if (window.innerWidth < 1024) closeSidebar(); }));
     </script>
 </body>
 </html>
