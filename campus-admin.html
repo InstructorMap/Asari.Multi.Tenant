@@ -16,21 +16,13 @@
         * { font-family: 'Inter', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
-        :root {
-            --color-primary: #7c3aed;
-            --color-primary-light: #a78bfa;
-            --color-primary-dark: #5b21b6;
-        }
+        :root { --color-primary: #7c3aed; --color-primary-light: #a78bfa; --color-primary-dark: #5b21b6; }
         
         body { background: #050509; color: #e2e8f0; min-height: 100vh; -webkit-font-smoothing: antialiased; }
         
         .app-layout { display: flex; min-height: 100vh; }
         
-        .sidebar {
-            width: 260px; background: rgba(10,10,20,0.95); border-right: 1px solid rgba(255,255,255,0.05);
-            display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
-            z-index: 40; transition: transform 0.3s ease; backdrop-filter: blur(20px);
-        }
+        .sidebar { width: 260px; background: rgba(10,10,20,0.95); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 40; transition: transform 0.3s ease; backdrop-filter: blur(20px); }
         .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar-logo-box { width: 44px; height: 44px; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
         .sidebar-logo-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -65,6 +57,12 @@
         .btn-secondary:hover { background: rgba(255,255,255,0.1); }
         
         .content-area { padding: 24px 28px; }
+        
+        .tab-nav-item { padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; white-space: nowrap; }
+        .tab-nav-item:hover { color: rgba(255,255,255,0.8); }
+        .tab-nav-item.active { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(124,58,237,0.1); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
         .kpi-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 20px; }
@@ -106,10 +104,7 @@
         select.form-select option { background: #1a1a2e; color: white; }
         .form-hint { font-size: 11px; color: #64748b; margin-top: 4px; }
         
-        .file-drop-zone {
-            border: 2px dashed rgba(255,255,255,0.15); border-radius: 14px; padding: 28px 20px;
-            text-align: center; cursor: pointer; transition: all 0.2s ease; background: rgba(255,255,255,0.02); position: relative;
-        }
+        .file-drop-zone { border: 2px dashed rgba(255,255,255,0.15); border-radius: 14px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.2s ease; background: rgba(255,255,255,0.02); position: relative; }
         .file-drop-zone:hover { border-color: var(--color-primary-light); background: rgba(124,58,237,0.05); }
         .file-drop-zone.has-file { border-color: #10b981; background: rgba(16,185,129,0.05); }
         .file-drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
@@ -139,9 +134,7 @@
             <div class="flex items-center gap-3">
                 <div class="sidebar-logo-box">
                     <div class="sidebar-logo-placeholder" id="sidebarLogoPlaceholder"><span>🎓</span></div>
-                    <img data-tenant-logo="principal" src="" alt="Logo" id="sidebarLogoImg" style="display: none;"
-                        onerror="this.style.display='none';document.getElementById('sidebarLogoPlaceholder').style.display='flex';"
-                        onload="this.style.display='block';document.getElementById('sidebarLogoPlaceholder').style.display='none';">
+                    <img data-tenant-logo="principal" src="" alt="Logo" id="sidebarLogoImg" style="display: none;" onerror="this.style.display='none';document.getElementById('sidebarLogoPlaceholder').style.display='flex';" onload="this.style.display='block';document.getElementById('sidebarLogoPlaceholder').style.display='none';">
                 </div>
                 <div>
                     <div class="sidebar-institute-name" id="sidebarInstituteName">Instituto</div>
@@ -174,86 +167,95 @@
                 <button class="btn-hamburger" onclick="toggleSidebar()"><i data-lucide="menu" class="w-5 h-5"></i></button>
                 <div>
                     <h1 class="page-title">Campus Virtual</h1>
-                    <p class="page-subtitle" id="tenantSubtitle">Gestión de módulos y contenido</p>
+                    <p class="page-subtitle" id="tenantSubtitle">Gestión académica</p>
                 </div>
             </div>
-            <button class="btn-primary" onclick="openCreateModal()"><i data-lucide="plus" class="w-5 h-5"></i> Nuevo Módulo</button>
+            <div id="topbarActions"></div>
         </header>
         
         <div class="content-area">
             
-            <!-- KPIs -->
-            <div class="kpi-grid">
-                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(124,58,237,0.15);"><i data-lucide="play" class="w-5 h-5" style="color:#a78bfa;"></i></div><div class="kpi-value" id="statTotalModulos">0</div><div class="kpi-label">Total Módulos</div></div>
-                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(59,130,246,0.15);"><i data-lucide="clock" class="w-5 h-5" style="color:#93c5fd;"></i></div><div class="kpi-value" id="statTiempoTotal">0min</div><div class="kpi-label">Tiempo Total</div></div>
-                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(16,185,129,0.15);"><i data-lucide="video" class="w-5 h-5" style="color:#10b981;"></i></div><div class="kpi-value" id="statVideos">0</div><div class="kpi-label">Contenido Cargado</div></div>
+            <!-- TABS SPA -->
+            <div class="flex gap-2 border-b border-white/10 mb-6 overflow-x-auto">
+                <div class="tab-nav-item active" onclick="switchTab('cursos', this)">Gestión de Cursos</div>
+                <div class="tab-nav-item" onclick="switchTab('modulos', this)">Módulos de Video</div>
             </div>
             
-            <!-- TABLA -->
-            <div class="table-card">
-                <div class="table-header"><h2 class="table-title">Módulos del Campus</h2></div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead><tr><th style="width:60px;">Orden</th><th>Título del Módulo</th><th>Duración</th><th>Tipo</th><th>Video / Archivo</th><th style="width:100px;">Acciones</th></tr></thead>
-                        <tbody id="modulosTableBody"></tbody>
-                    </table>
+            <!-- TAB CURSOS -->
+            <div class="tab-content active" id="tab-cursos">
+                <div class="kpi-grid">
+                    <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(124,58,237,0.15);"><i data-lucide="book-open" class="w-5 h-5" style="color:#a78bfa;"></i></div><div class="kpi-value" id="statTotalCursos">0</div><div class="kpi-label">Total Cursos</div></div>
+                    <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(16,185,129,0.15);"><i data-lucide="dollar-sign" class="w-5 h-5" style="color:#10b981;"></i></div><div class="kpi-value font-mono" id="statValorTotal">$0</div><div class="kpi-label">Valor Declarado Total</div></div>
+                </div>
+                <div class="table-card">
+                    <div class="table-header"><h2 class="table-title">Cursos / Diplomaturas</h2></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Título</th><th>Tipo</th><th>Precio Venta (USD)</th><th>Estado</th><th>Acciones</th></tr></thead>
+                            <tbody id="cursosTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TAB MÓDULOS -->
+            <div class="tab-content" id="tab-modulos">
+                <div class="kpi-grid">
+                    <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(59,130,246,0.15);"><i data-lucide="video" class="w-5 h-5" style="color:#93c5fd;"></i></div><div class="kpi-value" id="statTotalModulos">0</div><div class="kpi-label">Total Módulos</div></div>
+                </div>
+                <div class="table-card">
+                    <div class="table-header"><h2 class="table-title">Módulos de Video</h2></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th style="width:60px;">Orden</th><th>Título</th><th>Curso</th><th>Duración</th><th>Tipo</th><th style="width:100px;">Acciones</th></tr></thead>
+                            <tbody id="modulosTableBody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             
         </div>
     </main>
     
+    <!-- MODAL CURSO -->
+    <div class="modal-overlay hidden" id="cursoModal">
+        <div class="modal-card">
+            <div class="modal-header"><h3 class="modal-title" id="cursoModalTitle">Nuevo Curso</h3><button class="modal-close" onclick="closeCursoModal()"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+            <form id="cursoForm">
+                <div class="modal-body">
+                    <input type="hidden" id="cursoId">
+                    <div class="form-group"><label class="form-label">Título del Curso *</label><input type="text" id="cursoTitulo" class="form-input" placeholder="Ej: Diplomatura en IA" required></div>
+                    <div class="form-group"><label class="form-label">Tipo de Curso *</label><select id="cursoTipo" class="form-select"><option value="diplomatura">Diplomatura</option><option value="curso_corto">Curso Corto</option><option value="formacion_completa">Formación Completa</option><option value="seminario">Seminario</option></select></div>
+                    <div class="form-group"><label class="form-label">Precio de Venta al Alumno (USD) *</label><input type="number" id="cursoPrecio" class="form-input" placeholder="Ej: 500" min="0" step="0.01" required><p class="form-hint">Este precio es vital para el cálculo del Revenue Share</p></div>
+                    <div class="form-group"><label class="form-label">Estado</label><select id="cursoEstado" class="form-select"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeCursoModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="cursoSubmitBtn"><i data-lucide="save" class="w-4 h-4"></i><span>Guardar Curso</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
     <!-- MODAL MÓDULO -->
     <div class="modal-overlay hidden" id="moduloModal">
         <div class="modal-card">
-            <div class="modal-header"><h3 class="modal-title" id="modalTitle">Nuevo Módulo</h3><button class="modal-close" onclick="closeModal()"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+            <div class="modal-header"><h3 class="modal-title" id="moduloModalTitle">Nuevo Módulo</h3><button class="modal-close" onclick="closeModuloModal()"><i data-lucide="x" class="w-5 h-5"></i></button></div>
             <form id="moduloForm">
                 <div class="modal-body">
                     <input type="hidden" id="moduloId">
-                    
-                    <div class="form-group"><label class="form-label">Orden *</label><input type="number" id="ordenModulo" class="form-input" placeholder="Ej: 1" min="1" required><p class="form-hint">Número de orden en el campus</p></div>
-                    <div class="form-group"><label class="form-label">Título del Módulo *</label><input type="text" id="tituloModulo" class="form-input" placeholder="Ej: Módulo 1: Introducción" required></div>
-                    <div class="form-group"><label class="form-label">Duración *</label><input type="text" id="duracionModulo" class="form-input" placeholder="Ej: 15:30" required><p class="form-hint">Formatos: "15:30", "15 min", "15m 30s"</p></div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Tipo de Contenido *</label>
-                        <select id="tipoContenido" class="form-select" onchange="toggleTipoContenido()">
-                            <option value="video">Video (YouTube / Vimeo)</option>
-                            <option value="archivo">Archivo (PDF, Imagen, Documento)</option>
-                            <option value="url">Enlace externo</option>
-                        </select>
-                    </div>
-                    
-                    <!-- URL del Video -->
-                    <div class="form-group" id="grupoVideoUrl">
-                        <label class="form-label">URL del Video *</label>
-                        <input type="url" id="videoUrlModulo" class="form-input" placeholder="https://www.youtube.com/embed/...">
-                        <p class="form-hint">Usa la URL de embed (YouTube/Vimeo)</p>
-                    </div>
-                    
-                    <!-- Upload de Archivo -->
-                    <div class="form-group hidden" id="grupoArchivo">
-                        <label class="form-label">Archivo (PDF, Imagen, Word, Excel, etc.)</label>
-                        <div class="file-drop-zone" id="dropArchivo">
-                            <input type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" onchange="handleFileDrop(this)">
-                            <i data-lucide="upload-cloud" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
-                            <p class="text-sm text-gray-400">Click para subir archivo</p>
-                            <img src="" class="preview-img" id="previewArchivo">
-                            <p class="text-xs text-green-500 mt-1 hidden" id="fileNameArchivo"></p>
-                        </div>
-                        <p class="form-hint">Formatos aceptados: PDF, imágenes, Word, Excel, PowerPoint, TXT, ZIP</p>
-                    </div>
-                    
-                    <!-- URL Externa -->
-                    <div class="form-group hidden" id="grupoUrlExterna">
-                        <label class="form-label">Enlace Externo</label>
-                        <input type="url" id="urlExternaModulo" class="form-input" placeholder="https://...">
-                        <p class="form-hint">Enlace a recurso externo (Google Drive, Dropbox, etc.)</p>
-                    </div>
+                    <div class="form-group"><label class="form-label">Curso al que pertenece *</label><select id="moduloCursoId" class="form-select" required><option value="">Cargando cursos...</option></select></div>
+                    <div class="form-group"><label class="form-label">Orden *</label><input type="number" id="moduloOrden" class="form-input" placeholder="Ej: 1" min="1" required></div>
+                    <div class="form-group"><label class="form-label">Título del Módulo *</label><input type="text" id="moduloTitulo" class="form-input" placeholder="Ej: Módulo 1: Introducción" required></div>
+                    <div class="form-group"><label class="form-label">Duración *</label><input type="text" id="moduloDuracion" class="form-input" placeholder="Ej: 15:30" required></div>
+                    <div class="form-group"><label class="form-label">Tipo de Contenido *</label><select id="moduloTipoContenido" class="form-select" onchange="toggleTipoContenido()"><option value="video">Video (YouTube/Vimeo)</option><option value="archivo">Archivo</option><option value="url">Enlace externo</option></select></div>
+                    <div class="form-group" id="grupoVideoUrl"><label class="form-label">URL del Video *</label><input type="url" id="moduloVideoUrl" class="form-input" placeholder="https://www.youtube.com/embed/..."></div>
+                    <div class="form-group hidden" id="grupoArchivo"><label class="form-label">Archivo</label><div class="file-drop-zone" id="dropArchivo"><input type="file" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" onchange="handleFileDrop(this)"><i data-lucide="upload-cloud" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i><p class="text-sm text-gray-400">Click para subir</p><img src="" class="preview-img" id="previewArchivo"><p class="text-xs text-green-500 mt-1 hidden" id="fileNameArchivo"></p></div></div>
+                    <div class="form-group hidden" id="grupoUrlExterna"><label class="form-label">Enlace Externo</label><input type="url" id="moduloUrlExterna" class="form-input" placeholder="https://..."></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
-                    <button type="submit" class="btn-primary" id="submitBtn"><i data-lucide="save" class="w-4 h-4"></i><span>Guardar Módulo</span></button>
+                    <button type="button" class="btn-secondary" onclick="closeModuloModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="moduloSubmitBtn"><i data-lucide="save" class="w-4 h-4"></i><span>Guardar Módulo</span></button>
                 </div>
             </form>
         </div>
@@ -268,15 +270,14 @@
         
         const STORAGE_BUCKET = 'asari-assets';
         
-        let modulosData = [];
         let tenantConfig = null;
+        let cursosData = [];
+        let modulosData = [];
         let archivoSeleccionado = null;
+        let currentTab = 'cursos';
         
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
-        const modulosTableBody = document.getElementById('modulosTableBody');
-        const moduloModal = document.getElementById('moduloModal');
-        const moduloForm = document.getElementById('moduloForm');
         const toast = document.getElementById('toast');
         
         function toggleSidebar() { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); }
@@ -309,48 +310,200 @@
                     document.getElementById('sidebarLogoPlaceholder').style.display = 'none';
                 }
                 window.__TENANT_CONFIG__ = tenantConfig;
+                await cargarCursos();
                 await cargarModulos();
+                actualizarTopbar();
             }
         }
         
-        // ============ TOGGLE TIPO CONTENIDO ============
+        // ============ SPA TABS ============
+        function switchTab(tab, el) {
+            document.querySelectorAll('.tab-nav-item').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            currentTab = tab;
+            actualizarTopbar();
+        }
+        
+        function actualizarTopbar() {
+            const actions = document.getElementById('topbarActions');
+            if (currentTab === 'cursos') {
+                actions.innerHTML = `<button class="btn-primary" onclick="openCursoModal()"><i data-lucide="plus" class="w-5 h-5"></i> Nuevo Curso</button>`;
+            } else {
+                actions.innerHTML = `<button class="btn-primary" onclick="openModuloModal()"><i data-lucide="plus" class="w-5 h-5"></i> Nuevo Módulo</button>`;
+            }
+            lucide.createIcons();
+        }
+        
+        // ============ CRUD CURSOS ============
+        async function cargarCursos() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            const tbody = document.getElementById('cursosTableBody');
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8"><div class="spinner"></div></td></tr>';
+            try {
+                const { data, error } = await window.supabase.from('sys_cursos').select('*').eq('instituto_id', institutoId).order('created_at', { ascending: false });
+                if (error) throw error;
+                cursosData = data || [];
+                
+                document.getElementById('statTotalCursos').textContent = cursosData.length;
+                const valorTotal = cursosData.reduce((sum, c) => sum + (c.precio_declarado_usd || 0), 0);
+                document.getElementById('statValorTotal').textContent = `$${valorTotal.toLocaleString()}`;
+                
+                if (cursosData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><i data-lucide="book-open" class="w-12 h-12 mx-auto mb-3 opacity-20"></i><p class="font-semibold">No hay cursos cargados</p></div></td></tr>';
+                } else {
+                    tbody.innerHTML = cursosData.map(c => `
+                        <tr>
+                            <td><span class="font-semibold">${c.titulo}</span></td>
+                            <td><span class="text-xs px-2 py-1 rounded-full bg-purple-500/15 text-purple-300">${c.tipo_curso || '-'}</span></td>
+                            <td class="font-mono text-green-400 font-bold">$${(c.precio_declarado_usd || 0).toFixed(2)}</td>
+                            <td><span class="status-badge ${c.estado==='activo'?'activo':'suspendido'}"><span class="status-dot ${c.estado==='activo'?'green':'red'}"></span>${c.estado}</span></td>
+                            <td><div class="flex gap-2">
+                                <button class="btn-icon-sm" onclick="editarCurso('${c.id}')"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                                <button class="btn-icon-sm danger" onclick="eliminarCurso('${c.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            </div></td>
+                        </tr>
+                    `).join('');
+                }
+                lucide.createIcons();
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-red-400">Error al cargar cursos</td></tr>';
+            }
+        }
+        
+        function openCursoModal() {
+            document.getElementById('cursoForm').reset();
+            document.getElementById('cursoId').value = '';
+            document.getElementById('cursoModalTitle').textContent = 'Nuevo Curso';
+            document.getElementById('cursoModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        function closeCursoModal() { document.getElementById('cursoModal').classList.add('hidden'); }
+        
+        function editarCurso(id) {
+            const c = cursosData.find(x => x.id === id);
+            if (!c) return;
+            document.getElementById('cursoId').value = c.id;
+            document.getElementById('cursoTitulo').value = c.titulo || '';
+            document.getElementById('cursoTipo').value = c.tipo_curso || 'curso_corto';
+            document.getElementById('cursoPrecio').value = c.precio_declarado_usd || 0;
+            document.getElementById('cursoEstado').value = c.estado || 'activo';
+            document.getElementById('cursoModalTitle').textContent = 'Editar Curso';
+            document.getElementById('cursoModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        
+        document.getElementById('cursoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!tenantConfig?.instituto?.id) return;
+            const id = document.getElementById('cursoId').value;
+            const titulo = document.getElementById('cursoTitulo').value.trim();
+            const tipo_curso = document.getElementById('cursoTipo').value;
+            const precio = parseFloat(document.getElementById('cursoPrecio').value) || 0;
+            const estado = document.getElementById('cursoEstado').value;
+            
+            if (!titulo || precio < 0) { showToast('Datos inválidos', 'error'); return; }
+            
+            const cursoData = { instituto_id: tenantConfig.instituto.id, titulo, tipo_curso, precio_declarado_usd: precio, estado };
+            let result;
+            if (id) result = await window.supabase.from('sys_cursos').update(cursoData).eq('id', id);
+            else result = await window.supabase.from('sys_cursos').insert([cursoData]);
+            if (result.error) { showToast('Error: ' + result.error.message, 'error'); return; }
+            
+            closeCursoModal();
+            await cargarCursos();
+            await cargarModulos();
+            showToast(id ? 'Curso actualizado' : 'Curso creado');
+        });
+        
+        async function eliminarCurso(id) {
+            const c = cursosData.find(x => x.id === id);
+            if (!c || !confirm(`¿Eliminar "${c.titulo}"?`)) return;
+            await window.supabase.from('sys_cursos').delete().eq('id', id);
+            await cargarCursos();
+            showToast('Curso eliminado');
+        }
+        
+        // ============ CRUD MÓDULOS ============
+        async function cargarModulos() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            const tbody = document.getElementById('modulosTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8"><div class="spinner"></div></td></tr>';
+            try {
+                const { data, error } = await window.supabase.from('campus_modulos').select('*').eq('instituto_id', institutoId).order('orden', { ascending: true });
+                if (error) throw error;
+                modulosData = data || [];
+                document.getElementById('statTotalModulos').textContent = modulosData.length;
+                
+                if (modulosData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><i data-lucide="video" class="w-12 h-12 mx-auto mb-3 opacity-20"></i><p class="font-semibold">No hay módulos cargados</p></div></td></tr>';
+                } else {
+                    const cursosMap = {};
+                    cursosData.forEach(c => { cursosMap[c.id] = c.titulo; });
+                    
+                    tbody.innerHTML = modulosData.map(m => {
+                        const tipoBadge = m.contenido_tipo === 'archivo' ? 'bg-amber-500/15 text-amber-300' : (m.contenido_tipo === 'url' ? 'bg-cyan-500/15 text-cyan-300' : 'bg-purple-500/15 text-purple-300');
+                        const tipoIcono = m.contenido_tipo === 'archivo' ? 'file' : (m.contenido_tipo === 'url' ? 'external-link' : 'video');
+                        return `
+                            <tr>
+                                <td><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:rgba(124,58,237,0.2);color:#a78bfa;font-weight:700;font-size:14px;">${m.orden}</span></td>
+                                <td><span class="font-semibold">${m.titulo}</span></td>
+                                <td class="text-sm text-gray-400">${cursosMap[m.curso_id] || 'Sin curso'}</td>
+                                <td>${m.duracion || '-'}</td>
+                                <td><span class="text-xs px-2 py-1 rounded-full ${tipoBadge}"><i data-lucide="${tipoIcono}" class="w-3 h-3 inline"></i> ${m.contenido_tipo||'video'}</span></td>
+                                <td><div class="flex gap-2">
+                                    <button class="btn-icon-sm" onclick="editarModulo('${m.id}')"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                                    <button class="btn-icon-sm danger" onclick="eliminarModulo('${m.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </div></td>
+                            </tr>`;
+                    }).join('');
+                }
+                lucide.createIcons();
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-red-400">Error al cargar módulos</td></tr>';
+            }
+        }
+        
         function toggleTipoContenido() {
-            const tipo = document.getElementById('tipoContenido').value;
+            const tipo = document.getElementById('moduloTipoContenido').value;
             document.getElementById('grupoVideoUrl').classList.toggle('hidden', tipo !== 'video');
             document.getElementById('grupoArchivo').classList.toggle('hidden', tipo !== 'archivo');
             document.getElementById('grupoUrlExterna').classList.toggle('hidden', tipo !== 'url');
-            
-            document.getElementById('videoUrlModulo').required = (tipo === 'video');
+            document.getElementById('moduloVideoUrl').required = (tipo === 'video');
         }
         
-        // ============ FILE HANDLING ============
         function handleFileDrop(input) {
             if (input.files && input.files[0]) {
                 archivoSeleccionado = input.files[0];
                 const dropZone = document.getElementById('dropArchivo');
                 const preview = document.getElementById('previewArchivo');
                 const fileName = document.getElementById('fileNameArchivo');
-                
                 dropZone.classList.add('has-file');
                 fileName.textContent = input.files[0].name;
                 fileName.classList.remove('hidden');
-                
                 if (input.files[0].type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = (e) => { preview.src = e.target.result; preview.style.display = 'block'; };
                     reader.readAsDataURL(input.files[0]);
-                } else {
-                    preview.style.display = 'none';
                 }
             }
         }
         
         function resetearArchivo() {
             archivoSeleccionado = null;
-            const dropZone = document.getElementById('dropArchivo');
-            dropZone.classList.remove('has-file');
+            document.getElementById('dropArchivo').classList.remove('has-file');
             document.getElementById('previewArchivo').style.display = 'none';
             document.getElementById('fileNameArchivo').classList.add('hidden');
+        }
+        
+        async function cargarCursosSelect() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            const select = document.getElementById('moduloCursoId');
+            select.innerHTML = '<option value="">Selecciona un curso...</option>' + cursosData.map(c => `<option value="${c.id}">${c.titulo}</option>`).join('');
         }
         
         async function uploadArchivo(file) {
@@ -363,154 +516,91 @@
             return data.publicUrl;
         }
         
-        // ============ CRUD MÓDULOS ============
-        async function cargarModulos() {
-            const institutoId = tenantConfig?.instituto?.id;
-            if (!institutoId) return;
-            
-            try {
-                modulosTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-8"><div class="spinner"></div></td></tr>';
-                const { data, error } = await window.supabase.from('campus_modulos').select('*').eq('instituto_id', institutoId).order('orden', { ascending: true });
-                if (error) throw error;
-                modulosData = data || [];
-                renderizarModulos();
-                actualizarEstadisticas();
-            } catch(e) {
-                modulosTableBody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-red-400">Error al cargar módulos</td></tr>';
-            }
-        }
-        
-        function renderizarModulos() {
-            if (modulosData.length === 0) {
-                modulosTableBody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><i data-lucide="video" class="w-12 h-12 mx-auto mb-3 opacity-20"></i><p class="font-semibold">No hay módulos cargados</p><p class="text-sm mt-1">Agrega el primer módulo al campus virtual</p></div></td></tr>';
-            } else {
-                modulosTableBody.innerHTML = modulosData.map(m => {
-                    const tipoIcono = m.contenido_tipo === 'archivo' ? 'file' : (m.contenido_tipo === 'url' ? 'external-link' : 'video');
-                    const tipoBadge = m.contenido_tipo === 'archivo' ? 'bg-amber-500/15 text-amber-300' : (m.contenido_tipo === 'url' ? 'bg-cyan-500/15 text-cyan-300' : 'bg-purple-500/15 text-purple-300');
-                    const linkUrl = m.contenido_tipo === 'archivo' ? m.archivo_url : (m.contenido_tipo === 'url' ? m.url_externa : m.video_url);
-                    return `
-                        <tr>
-                            <td><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:rgba(124,58,237,0.2);color:#a78bfa;font-weight:700;font-size:14px;">${m.orden}</span></td>
-                            <td><div><div style="font-weight:600;">${m.titulo||'Sin título'}</div></div></td>
-                            <td><span style="background:rgba(255,255,255,0.04);padding:4px 10px;border-radius:6px;font-size:13px;">${m.duracion||'-'}</span></td>
-                            <td><span class="text-xs px-2 py-1 rounded-full ${tipoBadge} font-medium flex items-center gap-1 w-fit"><i data-lucide="${tipoIcono}" class="w-3 h-3"></i>${m.contenido_tipo||'video'}</span></td>
-                            <td>${linkUrl ? `<a href="${linkUrl}" target="_blank" class="text-purple-400 hover:underline text-xs flex items-center gap-1"><i data-lucide="external-link" class="w-3 h-3"></i>Ver</a>` : '<span class="text-gray-500 text-xs">-</span>'}</td>
-                            <td><div class="flex gap-2">
-                                <button class="btn-icon-sm" onclick="editarModulo('${m.id}')"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                                <button class="btn-icon-sm danger" onclick="eliminarModulo('${m.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                            </div></td>
-                        </tr>`;
-                }).join('');
-            }
-            lucide.createIcons();
-        }
-        
-        function actualizarEstadisticas() {
-            document.getElementById('statTotalModulos').textContent = modulosData.length;
-            document.getElementById('statVideos').textContent = modulosData.length;
-            
-            let tiempoTotalMinutos = 0;
-            modulosData.forEach(m => {
-                if (m.duracion) {
-                    const numeros = m.duracion.match(/\d+/g);
-                    if (numeros && numeros.length > 0) {
-                        tiempoTotalMinutos += parseInt(numeros[0]) || 0;
-                        if (numeros.length > 1) tiempoTotalMinutos += (parseInt(numeros[1]) || 0) / 60;
-                    }
-                }
-            });
-            const horas = Math.floor(tiempoTotalMinutos / 60);
-            const minutos = Math.round(tiempoTotalMinutos % 60);
-            document.getElementById('statTiempoTotal').textContent = horas > 0 ? `${horas}h ${minutos}min` : `${minutos}min`;
-        }
-        
-        function openCreateModal() {
-            document.getElementById('modalTitle').textContent = 'Nuevo Módulo';
-            document.getElementById('submitBtn').innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Guardar Módulo</span>';
-            moduloForm.reset();
+        function openModuloModal() {
+            document.getElementById('moduloForm').reset();
             document.getElementById('moduloId').value = '';
-            document.getElementById('tipoContenido').value = 'video';
+            document.getElementById('moduloTipoContenido').value = 'video';
             resetearArchivo();
             toggleTipoContenido();
+            cargarCursosSelect();
             
             const proximoOrden = modulosData.length > 0 ? Math.max(...modulosData.map(m => m.orden || 0)) + 1 : 1;
-            document.getElementById('ordenModulo').value = proximoOrden;
+            document.getElementById('moduloOrden').value = proximoOrden;
             
-            moduloModal.classList.remove('hidden');
+            document.getElementById('moduloModal').classList.remove('hidden');
             lucide.createIcons();
         }
-        
-        function closeModal() { moduloModal.classList.add('hidden'); moduloForm.reset(); resetearArchivo(); }
+        function closeModuloModal() { document.getElementById('moduloModal').classList.add('hidden'); resetearArchivo(); }
         
         function editarModulo(id) {
             const m = modulosData.find(x => x.id === id);
             if (!m) return;
-            
-            document.getElementById('modalTitle').textContent = 'Editar Módulo';
-            document.getElementById('submitBtn').innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Actualizar Módulo</span>';
             document.getElementById('moduloId').value = m.id;
-            document.getElementById('ordenModulo').value = m.orden || '';
-            document.getElementById('tituloModulo').value = m.titulo || '';
-            document.getElementById('duracionModulo').value = m.duracion || '';
-            document.getElementById('tipoContenido').value = m.contenido_tipo || 'video';
-            document.getElementById('videoUrlModulo').value = m.video_url || '';
-            document.getElementById('urlExternaModulo').value = m.url_externa || '';
+            document.getElementById('moduloOrden').value = m.orden || '';
+            document.getElementById('moduloTitulo').value = m.titulo || '';
+            document.getElementById('moduloDuracion').value = m.duracion || '';
+            document.getElementById('moduloTipoContenido').value = m.contenido_tipo || 'video';
+            document.getElementById('moduloVideoUrl').value = m.video_url || '';
+            document.getElementById('moduloUrlExterna').value = m.url_externa || '';
+            cargarCursosSelect();
+            setTimeout(() => { document.getElementById('moduloCursoId').value = m.curso_id || ''; }, 300);
             resetearArchivo();
             toggleTipoContenido();
-            
-            moduloModal.classList.remove('hidden');
+            document.getElementById('moduloModal').classList.remove('hidden');
             lucide.createIcons();
         }
         
-        moduloForm.addEventListener('submit', async (e) => {
+        document.getElementById('moduloForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!tenantConfig?.instituto?.id) { showToast('Error: Instituto no identificado', 'error'); return; }
+            if (!tenantConfig?.instituto?.id) return;
             
-            const moduloId = document.getElementById('moduloId').value;
-            const orden = parseInt(document.getElementById('ordenModulo').value);
-            const titulo = document.getElementById('tituloModulo').value.trim();
-            const duracion = document.getElementById('duracionModulo').value.trim();
-            const tipoContenido = document.getElementById('tipoContenido').value;
-            const videoUrl = document.getElementById('videoUrlModulo').value.trim();
-            const urlExterna = document.getElementById('urlExternaModulo').value.trim();
+            const id = document.getElementById('moduloId').value;
+            const curso_id = document.getElementById('moduloCursoId').value;
+            const orden = parseInt(document.getElementById('moduloOrden').value);
+            const titulo = document.getElementById('moduloTitulo').value.trim();
+            const duracion = document.getElementById('moduloDuracion').value.trim();
+            const contenido_tipo = document.getElementById('moduloTipoContenido').value;
+            const video_url = document.getElementById('moduloVideoUrl').value.trim();
+            const url_externa = document.getElementById('moduloUrlExterna').value.trim();
             
-            if (!orden || !titulo || !duracion) { showToast('Orden, Título y Duración son obligatorios', 'error'); return; }
-            if (tipoContenido === 'video' && !videoUrl) { showToast('Ingresa la URL del video', 'error'); return; }
-            if (tipoContenido === 'url' && !urlExterna) { showToast('Ingresa el enlace externo', 'error'); return; }
-            if (tipoContenido === 'archivo' && !archivoSeleccionado && !moduloId) { showToast('Selecciona un archivo para subir', 'error'); return; }
+            if (!curso_id) { showToast('Selecciona un curso', 'error'); return; }
+            if (!orden || !titulo || !duracion) { showToast('Todos los campos son obligatorios', 'error'); return; }
+            if (contenido_tipo === 'video' && !video_url) { showToast('Ingresa la URL del video', 'error'); return; }
+            if (contenido_tipo === 'url' && !url_externa) { showToast('Ingresa el enlace externo', 'error'); return; }
+            if (contenido_tipo === 'archivo' && !archivoSeleccionado && !id) { showToast('Selecciona un archivo', 'error'); return; }
             
-            const btn = document.getElementById('submitBtn');
+            const btn = document.getElementById('moduloSubmitBtn');
             btn.disabled = true;
             btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Guardando...</span>';
             
             try {
-                let archivoUrl = moduloId ? (modulosData.find(x => x.id === moduloId)?.archivo_url || null) : null;
-                if (tipoContenido === 'archivo' && archivoSeleccionado) {
-                    archivoUrl = await uploadArchivo(archivoSeleccionado);
+                let archivo_url = id ? (modulosData.find(x => x.id === id)?.archivo_url || null) : null;
+                if (contenido_tipo === 'archivo' && archivoSeleccionado) {
+                    archivo_url = await uploadArchivo(archivoSeleccionado);
                 }
                 
                 const moduloData = {
                     instituto_id: tenantConfig.instituto.id,
-                    orden, titulo, duracion,
-                    contenido_tipo: tipoContenido,
-                    video_url: tipoContenido === 'video' ? videoUrl : null,
-                    archivo_url: tipoContenido === 'archivo' ? archivoUrl : null,
-                    url_externa: tipoContenido === 'url' ? urlExterna : null
+                    curso_id,
+                    orden, titulo, duracion, contenido_tipo,
+                    video_url: contenido_tipo === 'video' ? video_url : null,
+                    archivo_url: contenido_tipo === 'archivo' ? archivo_url : null,
+                    url_externa: contenido_tipo === 'url' ? url_externa : null
                 };
                 
                 let result;
-                if (moduloId) result = await window.supabase.from('campus_modulos').update(moduloData).eq('id', moduloId);
+                if (id) result = await window.supabase.from('campus_modulos').update(moduloData).eq('id', id);
                 else result = await window.supabase.from('campus_modulos').insert([moduloData]);
                 if (result.error) throw result.error;
                 
-                closeModal();
+                closeModuloModal();
                 await cargarModulos();
-                showToast(moduloId ? 'Módulo actualizado' : 'Módulo creado exitosamente');
+                showToast(id ? 'Módulo actualizado' : 'Módulo creado');
             } catch(err) {
                 showToast('Error: ' + err.message, 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>' + (moduloId ? 'Actualizar' : 'Guardar') + ' Módulo</span>';
+                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Guardar Módulo</span>';
                 lucide.createIcons();
             }
         });
@@ -529,8 +619,7 @@
             clearTimeout(window._tt); window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
         }
         
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-        moduloModal.addEventListener('click', (e) => { if (e.target === moduloModal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeCursoModal(); closeModuloModal(); } });
         
         async function inicializar() { if (!await checkAuth()) return; await inicializarTenant(); }
         window.addEventListener('DOMContentLoaded', inicializar);
