@@ -80,6 +80,13 @@
         tbody td { padding: 14px 24px; font-size: 14px; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); }
         tbody tr:hover { background: rgba(255,255,255,0.02); }
         
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-badge.activo { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .status-badge.inactivo { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .status-dot.green { background: #10b981; }
+        .status-dot.red { background: #ef4444; }
+        
         .btn-icon-sm { width: 34px; height: 34px; border-radius: 8px; background: none; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.15s ease; }
         .btn-icon-sm:hover { background: rgba(255,255,255,0.05); color: white; }
         .btn-icon-sm.danger:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: #fca5a5; }
@@ -175,7 +182,7 @@
         
         <div class="content-area">
             
-            <!-- TABS SPA -->
+            <!-- TABS -->
             <div class="flex gap-2 border-b border-white/10 mb-6 overflow-x-auto">
                 <div class="tab-nav-item active" onclick="switchTab('cursos', this)">Gestión de Cursos</div>
                 <div class="tab-nav-item" onclick="switchTab('modulos', this)">Módulos de Video</div>
@@ -226,7 +233,7 @@
                     <input type="hidden" id="cursoId">
                     <div class="form-group"><label class="form-label">Título del Curso *</label><input type="text" id="cursoTitulo" class="form-input" placeholder="Ej: Diplomatura en IA" required></div>
                     <div class="form-group"><label class="form-label">Tipo de Curso *</label><select id="cursoTipo" class="form-select"><option value="diplomatura">Diplomatura</option><option value="curso_corto">Curso Corto</option><option value="formacion_completa">Formación Completa</option><option value="seminario">Seminario</option></select></div>
-                    <div class="form-group"><label class="form-label">Precio de Venta al Alumno (USD) *</label><input type="number" id="cursoPrecio" class="form-input" placeholder="Ej: 500" min="0" step="0.01" required><p class="form-hint">Este precio es vital para el cálculo del Revenue Share</p></div>
+                    <div class="form-group"><label class="form-label">Precio de Venta (USD) *</label><input type="number" id="cursoPrecio" class="form-input" placeholder="Ej: 500" min="0" step="0.01" required><p class="form-hint">Vital para el cálculo del Revenue Share</p></div>
                     <div class="form-group"><label class="form-label">Estado</label><select id="cursoEstado" class="form-select"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select></div>
                 </div>
                 <div class="modal-footer">
@@ -316,7 +323,6 @@
             }
         }
         
-        // ============ SPA TABS ============
         function switchTab(tab, el) {
             document.querySelectorAll('.tab-nav-item').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
@@ -359,7 +365,7 @@
                             <td><span class="font-semibold">${c.titulo}</span></td>
                             <td><span class="text-xs px-2 py-1 rounded-full bg-purple-500/15 text-purple-300">${c.tipo_curso || '-'}</span></td>
                             <td class="font-mono text-green-400 font-bold">$${(c.precio_declarado_usd || 0).toFixed(2)}</td>
-                            <td><span class="status-badge ${c.estado==='activo'?'activo':'suspendido'}"><span class="status-dot ${c.estado==='activo'?'green':'red'}"></span>${c.estado}</span></td>
+                            <td><span class="status-badge ${c.estado==='activo'?'activo':'inactivo'}"><span class="status-dot ${c.estado==='activo'?'green':'red'}"></span>${c.estado}</span></td>
                             <td><div class="flex gap-2">
                                 <button class="btn-icon-sm" onclick="editarCurso('${c.id}')"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
                                 <button class="btn-icon-sm danger" onclick="eliminarCurso('${c.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
@@ -414,7 +420,6 @@
             
             closeCursoModal();
             await cargarCursos();
-            await cargarModulos();
             showToast(id ? 'Curso actualizado' : 'Curso creado');
         });
         
@@ -500,10 +505,8 @@
         }
         
         async function cargarCursosSelect() {
-            const institutoId = tenantConfig?.instituto?.id;
-            if (!institutoId) return;
             const select = document.getElementById('moduloCursoId');
-            select.innerHTML = '<option value="">Selecciona un curso...</option>' + cursosData.map(c => `<option value="${c.id}">${c.titulo}</option>`).join('');
+            select.innerHTML = '<option value="">Selecciona un curso...</option>' + cursosData.filter(c => c.estado === 'activo').map(c => `<option value="${c.id}">${c.titulo} — $${(c.precio_declarado_usd||0).toFixed(2)} USD</option>`).join('');
         }
         
         async function uploadArchivo(file) {
@@ -615,8 +618,10 @@
         
         function showToast(msg, type = 'success') {
             toast.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${msg}</span>`;
-            toast.className = `toast ${type}`; lucide.createIcons();
-            clearTimeout(window._tt); window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
+            toast.className = `toast ${type}`;
+            lucide.createIcons();
+            clearTimeout(window._tt);
+            window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
         }
         
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeCursoModal(); closeModuloModal(); } });
