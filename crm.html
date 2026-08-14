@@ -58,10 +58,10 @@
         
         .content-area { padding: 24px 28px; }
         
-        .credit-indicator { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; }
-        .credit-ok { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
-        .credit-low { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
-        .credit-empty { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .saldo-indicator { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .saldo-ok { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .saldo-low { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+        .saldo-empty { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
         
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
         .kpi-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 20px; }
@@ -173,17 +173,18 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <span class="credit-indicator" id="creditIndicator"><div class="spinner w-4 h-4"></div></span>
-                <button class="btn-primary" onclick="intentarCrearAlumno()"><i data-lucide="user-plus" class="w-5 h-5"></i> Nuevo Alumno</button>
+                <span class="saldo-indicator" id="saldoIndicator"><div class="spinner w-4 h-4"></div></span>
+                <button class="btn-primary" onclick="abrirModalAlumno()"><i data-lucide="user-plus" class="w-5 h-5"></i> Nuevo Alumno</button>
             </div>
         </header>
         
         <div class="content-area">
+            
             <div class="kpi-grid">
                 <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(124,58,237,0.15);"><i data-lucide="users" class="w-5 h-5" style="color:#a78bfa;"></i></div><div class="kpi-value" id="statTotalAlumnos">0</div><div class="kpi-label">Total Alumnos</div></div>
                 <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(16,185,129,0.15);"><i data-lucide="user-check" class="w-5 h-5" style="color:#10b981;"></i></div><div class="kpi-value" id="statActivos">0</div><div class="kpi-label">Activos</div></div>
                 <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(239,68,68,0.15);"><i data-lucide="user-x" class="w-5 h-5" style="color:#ef4444;"></i></div><div class="kpi-value" id="statSuspendidos">0</div><div class="kpi-label">Suspendidos</div></div>
-                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(59,130,246,0.15);"><i data-lucide="credit-card" class="w-5 h-5" style="color:#93c5fd;"></i></div><div class="kpi-value" id="statCreditos">0</div><div class="kpi-label">Créditos Disponibles</div></div>
+                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(59,130,246,0.15);"><i data-lucide="wallet" class="w-5 h-5" style="color:#93c5fd;"></i></div><div class="kpi-value font-mono" id="statSaldo">$0.00</div><div class="kpi-label">Saldo Disponible</div></div>
             </div>
             
             <div class="table-card">
@@ -198,6 +199,7 @@
                     </table>
                 </div>
             </div>
+            
         </div>
     </main>
     
@@ -216,6 +218,10 @@
                         <div class="form-group"><label class="form-label">Rol</label><select id="rolAlumno" class="form-select"><option value="alumno">Alumno</option><option value="profesor">Profesor</option><option value="directivo">Directivo</option></select></div>
                         <div class="form-group"><label class="form-label">Estado</label><select id="estadoAlumno" class="form-select"><option value="activo">Activo</option><option value="suspendido">Suspendido</option></select></div>
                     </div>
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mt-2">
+                        <p class="text-sm text-blue-300">Costo de alta: <strong class="font-mono" id="costoAltaLabel">$0.00 USD</strong></p>
+                        <p class="text-xs text-gray-500 mt-1">Se descontará de tu saldo al confirmar</p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
@@ -225,21 +231,22 @@
         </div>
     </div>
     
-    <!-- MODAL CRÉDITOS AGOTADOS -->
-    <div class="modal-overlay hidden" id="creditosModal">
+    <!-- MODAL SALDO INSUFICIENTE -->
+    <div class="modal-overlay hidden" id="saldoModal">
         <div class="modal-card" style="max-width: 440px; text-align: center;">
             <div class="modal-body py-8">
-                <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(245,158,11,0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-                    <i data-lucide="alert-triangle" class="w-10 h-10" style="color: #f59e0b;"></i>
+                <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(239,68,68,0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i data-lucide="alert-triangle" class="w-10 h-10" style="color: #ef4444;"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">Créditos Agotados</h3>
-                <p class="text-gray-400 mb-6">No tienes créditos de legajo disponibles para registrar nuevos alumnos.</p>
-                <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mb-6">
-                    <p class="text-sm text-amber-300">Cada alumno consume <strong>1 crédito de legajo</strong>. Recarga en el Dashboard para continuar.</p>
+                <h3 class="text-xl font-bold text-white mb-2">Saldo Insuficiente</h3>
+                <p class="text-gray-400 mb-6">No tienes saldo suficiente para dar de alta a este alumno.</p>
+                <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">
+                    <p class="text-sm text-red-300">Costo por alta: <strong class="font-mono" id="costoFaltante">$0.00 USD</strong></p>
+                    <p class="text-sm text-red-300 mt-1">Tu saldo actual: <strong class="font-mono" id="saldoActualFaltante">$0.00 USD</strong></p>
                 </div>
                 <div class="flex gap-3">
-                    <button class="btn-secondary flex-1 justify-center" onclick="document.getElementById('creditosModal').classList.add('hidden')">Cancelar</button>
-                    <a href="dashboard.html" class="btn-primary flex-1 justify-center"><i data-lucide="arrow-right" class="w-4 h-4"></i> Ir al Dashboard</a>
+                    <button class="btn-secondary flex-1 justify-center" onclick="document.getElementById('saldoModal').classList.add('hidden')">Cancelar</button>
+                    <a href="dashboard.html" class="btn-primary flex-1 justify-center"><i data-lucide="arrow-right" class="w-4 h-4"></i> Recargar Saldo</a>
                 </div>
             </div>
         </div>
@@ -257,7 +264,8 @@
         
         let alumnosData = [];
         let tenantConfig = null;
-        let creditosDisponibles = 0;
+        let saldoUSD = 0;
+        let costoAlta = 0;
         
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -291,70 +299,211 @@
                 document.getElementById('sidebarInstituteName').textContent = instituto.nombre;
                 document.getElementById('tenantSubtitle').textContent = `Gestión de alumnos - ${instituto.nombre}`;
                 document.title = `Alumnos - ${instituto.nombre} | ASARI`;
+                
+                // Leer costo de alta desde SLA
+                costoAlta = configuracion?.sla_precios?.alta_alumno || 10;
+                document.getElementById('costoAltaLabel').textContent = `$${costoAlta.toFixed(2)} USD`;
+                
                 if (configuracion?.branding?.logo_principal) {
                     document.getElementById('sidebarLogoImg').src = configuracion.branding.logo_principal;
                     document.getElementById('sidebarLogoImg').style.display = 'block';
                     document.getElementById('sidebarLogoPlaceholder').style.display = 'none';
                 }
                 window.__TENANT_CONFIG__ = tenantConfig;
-                await cargarCreditos();
+                await cargarBilletera();
                 await cargarAlumnos();
             }
         }
         
-        // ============ CRÉDITOS (CORREGIDO: tipo_operacion) ============
-        async function cargarCreditos() {
+        // ============ BILLETERA ============
+        async function cargarBilletera() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
             try {
-                // CORREGIDO: .eq('tipo_operacion', 'compra_creditos_legajo')
-                const { data: transacciones } = await window.supabase
-                    .from('sys_transacciones')
-                    .select('tipo_operacion, cantidad_creditos, monto_usd, estado')
+                const { data, error } = await window.supabase
+                    .from('sys_billetera_institutos')
+                    .select('saldo_usd, deuda_usd')
                     .eq('instituto_id', institutoId)
-                    .eq('estado', 'completado')
-                    .eq('tipo_operacion', 'compra_creditos_legajo');
+                    .maybeSingle();
                 
-                let creditosComprados = 0;
-                (transacciones || []).forEach(t => {
-                    creditosComprados += t.cantidad_creditos || 0;
-                });
+                saldoUSD = data?.saldo_usd || 0;
+                const deudaUSD = data?.deuda_usd || 0;
                 
-                const { count: alumnosCreados } = await window.supabase
-                    .from('padron_global')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('instituto_id', institutoId);
-                
-                creditosDisponibles = Math.max(0, creditosComprados - (alumnosCreados || 0));
-                
-                const indicator = document.getElementById('creditIndicator');
-                if (creditosDisponibles > 5) {
-                    indicator.className = 'credit-indicator credit-ok';
-                    indicator.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i> ${creditosDisponibles} créditos`;
-                } else if (creditosDisponibles > 0) {
-                    indicator.className = 'credit-indicator credit-low';
-                    indicator.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4"></i> Solo ${creditosDisponibles}`;
+                const indicator = document.getElementById('saldoIndicator');
+                if (saldoUSD >= costoAlta * 3) {
+                    indicator.className = 'saldo-indicator saldo-ok';
+                    indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)} USD`;
+                } else if (saldoUSD >= costoAlta) {
+                    indicator.className = 'saldo-indicator saldo-low';
+                    indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)} USD`;
                 } else {
-                    indicator.className = 'credit-indicator credit-empty';
-                    indicator.innerHTML = `<i data-lucide="x-circle" class="w-4 h-4"></i> Sin créditos`;
+                    indicator.className = 'saldo-indicator saldo-empty';
+                    indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)} USD`;
                 }
-                document.getElementById('statCreditos').textContent = creditosDisponibles;
+                
+                document.getElementById('statSaldo').textContent = `$${saldoUSD.toFixed(2)}`;
+                if (deudaUSD > 0) {
+                    document.getElementById('statSaldo').textContent += ` ⚠️`;
+                }
                 lucide.createIcons();
             } catch(e) {
-                console.error('Error créditos:', e);
+                console.error('Error cargando billetera:', e);
             }
         }
         
-        function intentarCrearAlumno() {
-            if (creditosDisponibles <= 0) {
-                document.getElementById('creditosModal').classList.remove('hidden');
+        // ============ MODAL ALUMNO ============
+        function abrirModalAlumno() {
+            if (saldoUSD < costoAlta) {
+                document.getElementById('costoFaltante').textContent = `$${costoAlta.toFixed(2)} USD`;
+                document.getElementById('saldoActualFaltante').textContent = `$${saldoUSD.toFixed(2)} USD`;
+                document.getElementById('saldoModal').classList.remove('hidden');
                 lucide.createIcons();
                 return;
             }
             openCreateModal();
         }
         
-        // ============ CRUD ============
+        function openCreateModal() {
+            document.getElementById('modalTitle').textContent = 'Nuevo Alumno';
+            document.getElementById('submitBtn').innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Guardar Alumno</span>';
+            alumnoForm.reset();
+            document.getElementById('alumnoId').value = '';
+            document.getElementById('rolAlumno').value = 'alumno';
+            document.getElementById('estadoAlumno').value = 'activo';
+            alumnoModal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+        function closeModal() { alumnoModal.classList.add('hidden'); alumnoForm.reset(); }
+        
+        function editarAlumno(id) {
+            const a = alumnosData.find(x => x.id === id);
+            if (!a) return;
+            document.getElementById('modalTitle').textContent = 'Editar Alumno';
+            document.getElementById('submitBtn').innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Actualizar Alumno</span>';
+            document.getElementById('alumnoId').value = a.id;
+            document.getElementById('nombreCompleto').value = a.nombre_completo || '';
+            document.getElementById('emailAlumno').value = a.email || '';
+            document.getElementById('documento').value = a.documento || '';
+            document.getElementById('matricula').value = a.datos_dinamicos?.matricula || '';
+            document.getElementById('rolAlumno').value = a.rol || 'alumno';
+            document.getElementById('estadoAlumno').value = a.estado_credencial || 'activo';
+            alumnoModal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+        
+        async function registrarUsuarioEnAuth(email, password, nombreCompleto) {
+            const res = await fetch(`${SILENT_URL}/auth/v1/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'apikey': SILENT_KEY },
+                body: JSON.stringify({ email, password, data: { nombre_completo: nombreCompleto } })
+            });
+            if (!res.ok && res.status !== 422) {
+                const d = await res.json();
+                throw new Error(d.msg || 'Error en registro Auth');
+            }
+        }
+        
+        // ============ SUBMIT CON CONTROL DE SALDO ============
+        alumnoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!tenantConfig?.instituto?.id) { showToast('Error: Instituto no identificado', 'error'); return; }
+            
+            const alumnoId = document.getElementById('alumnoId').value;
+            const nombreCompleto = document.getElementById('nombreCompleto').value.trim();
+            const email = document.getElementById('emailAlumno').value.trim();
+            const documentoRaw = document.getElementById('documento').value.trim();
+            const matricula = document.getElementById('matricula').value.trim();
+            const rol = document.getElementById('rolAlumno').value;
+            const estado = document.getElementById('estadoAlumno').value;
+            const password = documentoRaw.replace(/[.\-\s]/g, '');
+            
+            if (!nombreCompleto || !email || !documentoRaw || !matricula) { showToast('Todos los campos son obligatorios', 'error'); return; }
+            if (password.length < 6) { showToast('El documento debe tener al menos 6 caracteres', 'error'); return; }
+            
+            // VERIFICAR SALDO SOLO PARA ALTAS NUEVAS
+            if (!alumnoId && saldoUSD < costoAlta) {
+                closeModal();
+                document.getElementById('costoFaltante').textContent = `$${costoAlta.toFixed(2)} USD`;
+                document.getElementById('saldoActualFaltante').textContent = `$${saldoUSD.toFixed(2)} USD`;
+                document.getElementById('saldoModal').classList.remove('hidden');
+                lucide.createIcons();
+                return;
+            }
+            
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Procesando...</span>';
+            
+            try {
+                // 1. Registrar en Auth (solo altas nuevas)
+                if (!alumnoId) {
+                    await registrarUsuarioEnAuth(email, password, nombreCompleto);
+                }
+                
+                // 2. INSERT en padron_global
+                const alumnoData = {
+                    instituto_id: tenantConfig.instituto.id,
+                    nombre_completo: nombreCompleto,
+                    documento: documentoRaw,
+                    email: email,
+                    rol: rol,
+                    estado_credencial: estado,
+                    datos_dinamicos: { matricula }
+                };
+                
+                let result;
+                if (alumnoId) {
+                    result = await window.supabase.from('padron_global').update(alumnoData).eq('id', alumnoId).select().single();
+                } else {
+                    result = await window.supabase.from('padron_global').insert([alumnoData]).select().single();
+                }
+                if (result.error) throw result.error.code === '23505' ? new Error('Email o documento ya existe') : result.error;
+                
+                // 3. SI ES ALTA NUEVA: Descontar saldo y registrar transacción
+                if (!alumnoId) {
+                    const nuevoSaldo = saldoUSD - costoAlta;
+                    
+                    // UPDATE sys_billetera_institutos
+                    const { error: billeteraError } = await window.supabase
+                        .from('sys_billetera_institutos')
+                        .update({ saldo_usd: nuevoSaldo })
+                        .eq('instituto_id', tenantConfig.instituto.id);
+                    if (billeteraError) throw billeteraError;
+                    
+                    // INSERT en sys_transacciones
+                    const { error: transaccionError } = await window.supabase
+                        .from('sys_transacciones')
+                        .insert([{
+                            instituto_id: tenantConfig.instituto.id,
+                            tipo_operacion: 'consumo_alta_alumno',
+                            monto_usd: -costoAlta,
+                            estado: 'completado',
+                            descripcion: `Alta de alumno: ${nombreCompleto} (${email})`
+                        }]);
+                    if (transaccionError) throw transaccionError;
+                    
+                    saldoUSD = nuevoSaldo;
+                    await cargarBilletera();
+                }
+                
+                closeModal();
+                await cargarAlumnos();
+                showToast(
+                    alumnoId 
+                        ? 'Alumno actualizado exitosamente' 
+                        : `Alumno creado. Se descontaron $${costoAlta.toFixed(2)} USD de tu saldo`,
+                    'success'
+                );
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>' + (alumnoId ? 'Actualizar' : 'Guardar') + ' Alumno</span>';
+                lucide.createIcons();
+            }
+        });
+        
+        // ============ CRUD ALUMNOS ============
         async function cargarAlumnos() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
@@ -369,7 +518,7 @@
                 alumnosData = data || [];
                 renderizarAlumnos(alumnosData);
                 actualizarEstadisticas();
-                await cargarCreditos();
+                await cargarBilletera();
             } catch(e) {
                 alumnosTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-red-400">Error al cargar</td></tr>';
             }
@@ -380,16 +529,19 @@
                 alumnosTableBody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i data-lucide="users" class="w-12 h-12 mx-auto mb-3 opacity-20"></i><p class="font-semibold">No hay alumnos registrados</p><p class="text-sm mt-1">Agrega el primer alumno al padrón</p></div></td></tr>';
             } else {
                 alumnosTableBody.innerHTML = data.map(a => `
-                    <tr><td><div class="flex items-center gap-3"><div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(139,92,246,0.15));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#a78bfa;">${obtenerIniciales(a.nombre_completo)}</div><div><div style="font-weight:600;">${a.nombre_completo||'Sin nombre'}</div></div></div></td>
-                    <td class="text-sm">${a.email||'-'}</td><td>${a.documento||'-'}</td>
-                    <td><code style="background:rgba(124,58,237,0.1);padding:4px 10px;border-radius:6px;font-size:12px;color:#a78bfa;">${a.datos_dinamicos?.matricula||'-'}</code></td>
-                    <td><span style="background:rgba(255,255,255,0.04);padding:4px 10px;border-radius:6px;font-size:12px;">${a.rol||'alumno'}</span></td>
-                    <td><span class="status-badge ${a.estado_credencial==='activo'?'activo':'suspendido'}"><span class="status-dot ${a.estado_credencial==='activo'?'green':'red'}"></span>${a.estado_credencial||'activo'}</span></td>
-                    <td><div class="flex gap-2">
-                        <button class="btn-icon-sm" onclick="editarAlumno('${a.id}')"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                        <button class="btn-icon-sm" onclick="toggleEstadoAlumno('${a.id}')"><i data-lucide="power" class="w-4 h-4"></i></button>
-                        <button class="btn-icon-sm danger" onclick="eliminarAlumno('${a.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </div></td></tr>
+                    <tr>
+                        <td><div class="flex items-center gap-3"><div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(139,92,246,0.15));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#a78bfa;">${obtenerIniciales(a.nombre_completo)}</div><div><div style="font-weight:600;">${a.nombre_completo||'Sin nombre'}</div></div></div></td>
+                        <td class="text-sm">${a.email||'-'}</td>
+                        <td>${a.documento||'-'}</td>
+                        <td><code style="background:rgba(124,58,237,0.1);padding:4px 10px;border-radius:6px;font-size:12px;color:#a78bfa;">${a.datos_dinamicos?.matricula||'-'}</code></td>
+                        <td><span style="background:rgba(255,255,255,0.04);padding:4px 10px;border-radius:6px;font-size:12px;">${a.rol||'alumno'}</span></td>
+                        <td><span class="status-badge ${a.estado_credencial==='activo'?'activo':'suspendido'}"><span class="status-dot ${a.estado_credencial==='activo'?'green':'red'}"></span>${a.estado_credencial||'activo'}</span></td>
+                        <td><div class="flex gap-2">
+                            <button class="btn-icon-sm" onclick="editarAlumno('${a.id}')"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                            <button class="btn-icon-sm" onclick="toggleEstadoAlumno('${a.id}')"><i data-lucide="power" class="w-4 h-4"></i></button>
+                            <button class="btn-icon-sm danger" onclick="eliminarAlumno('${a.id}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div></td>
+                    </tr>
                 `).join('');
             }
             lucide.createIcons();
@@ -413,97 +565,44 @@
             document.getElementById('statSuspendidos').textContent = alumnosData.filter(a=>a.estado_credencial==='suspendido').length;
         }
         
-        function openCreateModal() {
-            document.getElementById('modalTitle').textContent = 'Nuevo Alumno';
-            document.getElementById('submitBtn').innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Guardar Alumno</span>';
-            alumnoForm.reset(); document.getElementById('alumnoId').value = '';
-            document.getElementById('rolAlumno').value = 'alumno'; document.getElementById('estadoAlumno').value = 'activo';
-            alumnoModal.classList.remove('hidden'); lucide.createIcons();
-        }
-        function closeModal() { alumnoModal.classList.add('hidden'); alumnoForm.reset(); }
-        
-        function editarAlumno(id) {
-            const a = alumnosData.find(x => x.id === id);
-            if (!a) return;
-            document.getElementById('modalTitle').textContent = 'Editar Alumno';
-            document.getElementById('submitBtn').innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Actualizar Alumno</span>';
-            document.getElementById('alumnoId').value = a.id;
-            document.getElementById('nombreCompleto').value = a.nombre_completo || '';
-            document.getElementById('emailAlumno').value = a.email || '';
-            document.getElementById('documento').value = a.documento || '';
-            document.getElementById('matricula').value = a.datos_dinamicos?.matricula || '';
-            document.getElementById('rolAlumno').value = a.rol || 'alumno';
-            document.getElementById('estadoAlumno').value = a.estado_credencial || 'activo';
-            alumnoModal.classList.remove('hidden'); lucide.createIcons();
-        }
-        
-        async function registrarUsuarioEnAuth(email, password, nombreCompleto) {
-            const res = await fetch(`${SILENT_URL}/auth/v1/signup`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SILENT_KEY },
-                body: JSON.stringify({ email, password, data: { nombre_completo: nombreCompleto } })
-            });
-            if (!res.ok && res.status !== 422) { const d = await res.json(); throw new Error(d.msg || 'Error'); }
-        }
-        
-        alumnoForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!tenantConfig?.instituto?.id) { showToast('Error: Instituto no identificado', 'error'); return; }
-            
-            const alumnoId = document.getElementById('alumnoId').value;
-            const nombreCompleto = document.getElementById('nombreCompleto').value.trim();
-            const email = document.getElementById('emailAlumno').value.trim();
-            const documentoRaw = document.getElementById('documento').value.trim();
-            const matricula = document.getElementById('matricula').value.trim();
-            const rol = document.getElementById('rolAlumno').value;
-            const estado = document.getElementById('estadoAlumno').value;
-            const password = documentoRaw.replace(/[.\-\s]/g, '');
-            
-            if (!nombreCompleto || !email || !documentoRaw || !matricula) { showToast('Todos los campos son obligatorios', 'error'); return; }
-            if (password.length < 6) { showToast('El documento debe tener al menos 6 caracteres', 'error'); return; }
-            if (!alumnoId && creditosDisponibles <= 0) { closeModal(); document.getElementById('creditosModal').classList.remove('hidden'); lucide.createIcons(); return; }
-            
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true; btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Guardando...</span>';
-            
-            try {
-                if (!alumnoId) await registrarUsuarioEnAuth(email, password, nombreCompleto);
-                const alumnoData = { instituto_id: tenantConfig.instituto.id, nombre_completo: nombreCompleto, documento: documentoRaw, email, rol, estado_credencial: estado, datos_dinamicos: { matricula } };
-                let result;
-                if (alumnoId) result = await window.supabase.from('padron_global').update(alumnoData).eq('id', alumnoId).select().single();
-                else result = await window.supabase.from('padron_global').insert([alumnoData]).select().single();
-                if (result.error) throw result.error.code === '23505' ? new Error('Email o documento ya existe') : result.error;
-                closeModal(); await cargarAlumnos();
-                showToast(alumnoId ? 'Alumno actualizado' : 'Alumno creado. Contraseña: su documento', 'success');
-            } catch(err) { showToast('Error: ' + err.message, 'error'); }
-            finally { btn.disabled = false; btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>' + (alumnoId ? 'Actualizar' : 'Guardar') + ' Alumno</span>'; lucide.createIcons(); }
-        });
-        
         async function toggleEstadoAlumno(id) {
             const a = alumnosData.find(x => x.id === id);
             if (!a || !confirm(`¿Cambiar estado de "${a.nombre_completo}"?`)) return;
             const nuevo = a.estado_credencial === 'activo' ? 'suspendido' : 'activo';
             await window.supabase.from('padron_global').update({ estado_credencial: nuevo }).eq('id', id);
-            await cargarAlumnos(); showToast(`Estado: ${nuevo}`);
+            await cargarAlumnos();
+            showToast(`Estado: ${nuevo}`);
         }
         
         async function eliminarAlumno(id) {
             const a = alumnosData.find(x => x.id === id);
             if (!a || !confirm(`¿Eliminar a "${a.nombre_completo}"?`)) return;
             await window.supabase.from('padron_global').delete().eq('id', id);
-            await cargarAlumnos(); showToast('Alumno eliminado');
+            await cargarAlumnos();
+            showToast('Alumno eliminado');
         }
         
         function showToast(msg, type = 'success') {
             toast.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${msg}</span>`;
-            toast.className = `toast ${type}`; lucide.createIcons();
-            clearTimeout(window._tt); window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
+            toast.className = `toast ${type}`;
+            lucide.createIcons();
+            clearTimeout(window._tt);
+            window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
         }
         
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); document.getElementById('creditosModal').classList.add('hidden'); } });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.getElementById('saldoModal').classList.add('hidden');
+            }
+        });
         alumnoModal.addEventListener('click', (e) => { if (e.target === alumnoModal) closeModal(); });
-        document.getElementById('creditosModal').addEventListener('click', function(e) { if (e.target === this) this.classList.add('hidden'); });
+        document.getElementById('saldoModal').addEventListener('click', function(e) { if (e.target === this) this.classList.add('hidden'); });
         
-        async function inicializar() { if (!await checkAuth()) return; await inicializarTenant(); }
+        async function inicializar() {
+            if (!await checkAuth()) return;
+            await inicializarTenant();
+        }
         window.addEventListener('DOMContentLoaded', inicializar);
         document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', () => { if (window.innerWidth < 1024) closeSidebar(); }));
     </script>
