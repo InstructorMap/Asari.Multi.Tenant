@@ -3,880 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Institucional</title>
+    <title>Portal Institucional - ASARI</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
         
-        * {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { font-family: 'Inter', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
         
-        :root {
-            --color-primary: #7c3aed;
-            --color-secondary: #ffffff;
-            --color-primary-light: #a78bfa;
-            --color-primary-dark: #5b21b6;
-        }
+        :root { --color-primary: #7c3aed; --color-primary-light: #a78bfa; --color-primary-dark: #5b21b6; }
         
-        body {
-            background: #f8fafc;
-            color: #1e293b;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+        body { background: #0f172a; color: #e2e8f0; -webkit-font-smoothing: antialiased; }
         
-        /* ============================================ */
-        /* HERO SECTION - IMPONENTE */
-        /* ============================================ */
-        .hero-section {
-            position: relative;
-            width: 100%;
-            min-height: 480px;
-            background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
+        .navbar { position: sticky; top: 0; z-index: 50; background: rgba(15,23,42,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
         
-        /* Overlay oscuro con gradiente */
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                180deg,
-                rgba(0, 0, 0, 0.75) 0%,
-                rgba(15, 23, 42, 0.8) 60%,
-                rgba(15, 23, 42, 0.95) 100%
-            );
-            z-index: 1;
-        }
+        .hero-section { position: relative; min-height: 500px; background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; display: flex; align-items: center; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.9) 100%); }
         
-        /* Efecto de viñeta */
-        .hero-overlay::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
-        }
+        .section-title { font-size: 28px; font-weight: 800; color: white; margin-bottom: 8px; }
+        .section-subtitle { font-size: 15px; color: #94a3b8; margin-bottom: 32px; }
         
-        /* Contenido del Hero */
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            padding: 40px 20px;
-            animation: heroFadeIn 0.8s ease-out;
-        }
+        .quick-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: #e2e8f0; }
+        .quick-card:hover { border-color: var(--color-primary-light); box-shadow: 0 10px 30px rgba(124,58,237,0.2); transform: translateY(-4px); }
+        .quick-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 22px; }
         
-        @keyframes heroFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .curso-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; transition: all 0.3s ease; }
+        .curso-card:hover { border-color: var(--color-primary-light); box-shadow: 0 10px 30px rgba(124,58,237,0.15); }
         
-        /* Logo con resplandor */
-        .hero-logo-container {
-            width: 100px;
-            height: 100px;
-            border-radius: 28px;
-            overflow: hidden;
-            margin: 0 auto 24px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 0 40px rgba(124, 58, 237, 0.3),
-                0 0 80px rgba(124, 58, 237, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
+        .noticia-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; transition: all 0.3s ease; }
+        .noticia-card:hover { border-color: var(--color-primary-light); }
+        .noticia-card img { width: 100%; height: 180px; object-fit: cover; }
         
-        .hero-logo-container:hover {
-            box-shadow: 
-                0 0 60px rgba(124, 58, 237, 0.5),
-                0 0 120px rgba(124, 58, 237, 0.2);
-            transform: scale(1.05);
-        }
+        .btn-primary { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; border: 1px solid rgba(139,92,246,0.3); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(139,92,246,0.3); transform: translateY(-1px); }
+        .btn-secondary { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
         
-        .hero-logo-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .input-dios { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; padding: 10px 14px; width: 100%; font-size: 14px; outline: none; }
+        .input-dios:focus { border-color: #7c3aed; }
+        select.input-dios { appearance: none; }
+        select.input-dios option { background: #0f172a; color: white; }
         
-        .hero-logo-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 46px;
-            background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.hidden { display: none; }
+        .modal-card { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.5); animation: modalIn 0.25s ease-out; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         
-        .hero-badge {
-            display: inline-block;
-            padding: 6px 18px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
-        }
+        .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(100px); opacity: 0; transition: all 0.3s ease; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background: #059669; color: white; }
+        .toast.error { background: #dc2626; color: white; }
         
-        .hero-title {
-            font-size: 48px;
-            font-weight: 900;
-            color: white;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
-            margin-bottom: 12px;
-            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-        }
+        .file-drop-zone { border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; position: relative; background: rgba(0,0,0,0.2); }
+        .file-drop-zone:hover { border-color: #7c3aed; }
+        .file-drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .file-drop-zone.has-file { border-color: #10b981; }
         
-        .hero-subtitle {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.75);
-            font-weight: 400;
-            max-width: 500px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
+        .spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #a78bfa; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
-        @media (max-width: 640px) {
-            .hero-section {
-                min-height: 400px;
-            }
-            
-            .hero-logo-container {
-                width: 80px;
-                height: 80px;
-                border-radius: 22px;
-            }
-            
-            .hero-title {
-                font-size: 32px;
-            }
-            
-            .hero-subtitle {
-                font-size: 15px;
-                padding: 0 10px;
-            }
-        }
-        
-        /* ============================================ */
-        /* CONTENEDOR FLOTANTE (OVERLAPPING) */
-        /* ============================================ */
-        .floating-container {
-            position: relative;
-            z-index: 10;
-            margin-top: -100px;
-            padding: 0 20px 60px;
-            animation: floatUp 0.8s ease-out 0.2s both;
-        }
-        
-        @keyframes floatUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @media (max-width: 640px) {
-            .floating-container {
-                margin-top: -60px;
-                padding: 0 16px 40px;
-            }
-        }
-        
-        /* Grid de Módulos */
-        .modules-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        @media (min-width: 768px) {
-            .modules-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-        }
-        
-        /* ============================================ */
-        /* TARJETAS PREMIUM (HORIZONTALES) */
-        /* ============================================ */
-        .module-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-        }
-        
-        /* Brillo sutil en el borde superior */
-        .module-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 20px;
-            right: 20px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--color-primary-light), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .module-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-            border-color: var(--color-primary-light);
-        }
-        
-        .module-card:hover::after {
-            opacity: 1;
-        }
-        
-        .module-card:active {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        }
-        
-        /* Variante Destacada (Primaria) */
-        .module-card.featured {
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-            border-color: transparent;
-            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.25);
-        }
-        
-        .module-card.featured::after {
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-        }
-        
-        .module-card.featured:hover {
-            box-shadow: 0 20px 50px rgba(124, 58, 237, 0.4);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-        
-        .module-card.featured .module-title,
-        .module-card.featured .module-desc {
-            color: white;
-        }
-        
-        .module-card.featured .module-badge {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Ícono del Módulo */
-        .module-icon-box {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: transform 0.3s ease;
-        }
-        
-        .module-card:hover .module-icon-box {
-            transform: scale(1.1);
-        }
-        
-        .module-card.featured .module-icon-box {
-            background: rgba(255, 255, 255, 0.2) !important;
-        }
-        
-        /* Colores de iconos */
-        .icon-purple { background: #ede9fe; color: #7c3aed; }
-        .icon-green { background: #d1fae5; color: #059669; }
-        .icon-blue { background: #dbeafe; color: #2563eb; }
-        .icon-amber { background: #fef3c7; color: #d97706; }
-        .icon-rose { background: #ffe4e6; color: #e11d48; }
-        .icon-cyan { background: #cffafe; color: #0891b2; }
-        .icon-indigo { background: #e0e7ff; color: #4f46e5; }
-        .icon-teal { background: #ccfbf1; color: #0d9488; }
-        
-        /* Contenido de texto */
-        .module-info {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .module-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 3px;
-            transition: color 0.2s ease;
-        }
-        
-        .module-desc {
-            font-size: 13px;
-            color: #94a3b8;
-            line-height: 1.4;
-            transition: color 0.2s ease;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        /* Badge de estado */
-        .module-badge {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            z-index: 1;
-        }
-        
-        .badge-active {
-            background: #d1fae5;
-            color: #059669;
-        }
-        
-        .badge-soon {
-            background: #fef3c7;
-            color: #d97706;
-        }
-        
-        /* Flecha indicadora */
-        .module-arrow {
-            color: #cbd5e1;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-        
-        .module-card:hover .module-arrow {
-            color: var(--color-primary);
-            transform: translateX(4px);
-        }
-        
-        .module-card.featured .module-arrow {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .module-card.featured:hover .module-arrow {
-            color: white;
-        }
-        
-        /* ============================================ */
-        /* FOOTER */
-        /* ============================================ */
-        .portal-footer {
-            text-align: center;
-            padding: 40px 0;
-            border-top: 1px solid #e2e8f0;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .footer-text {
-            font-size: 13px;
-            color: #94a3b8;
-        }
-        
-        .footer-text strong {
-            color: #64748b;
-            font-weight: 700;
-        }
-        
-        .footer-link {
-            display: inline-block;
-            margin-top: 10px;
-            font-size: 11px;
-            color: #cbd5e1;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-        
-        .footer-link:hover {
-            color: var(--color-primary-light);
-        }
-        
-        /* ============================================ */
-        /* TOAST PERSONALIZADO */
-        /* ============================================ */
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        
-        @keyframes toastOut {
-            from {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-        }
-        
-        /* Ajustes responsive */
-        @media (max-width: 480px) {
-            .module-card {
-                padding: 16px 18px;
-                gap: 14px;
-                border-radius: 16px;
-            }
-            
-            .module-icon-box {
-                width: 48px;
-                height: 48px;
-                border-radius: 14px;
-            }
-            
-            .module-title {
-                font-size: 14px;
-            }
-            
-            .module-desc {
-                font-size: 12px;
-            }
-        }
+        @media (max-width: 768px) { .hero-section { min-height: 350px; } }
     </style>
 </head>
 <body>
-    <!-- ============================================ -->
-    <!-- HERO SECTION -->
-    <!-- ============================================ -->
+
+    <!-- NAVBAR -->
+    <nav class="navbar px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center" id="navLogoContainer">
+                <img data-tenant-logo="principal" src="" alt="Logo" id="navLogoImg" style="display:none;" onload="this.style.display='block';" onerror="this.style.display='none';">
+                <span id="navLogoPlaceholder" class="text-xl">🎓</span>
+            </div>
+            <span class="font-bold text-white hidden sm:block" id="navInstituteName">Instituto</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="#cursos" class="text-sm text-gray-400 hover:text-white transition hidden md:block">Cursos</a>
+            <a href="#noticias" class="text-sm text-gray-400 hover:text-white transition hidden md:block">Noticias</a>
+            <a href="#nosotros" class="text-sm text-gray-400 hover:text-white transition hidden md:block">Nosotros</a>
+            <a href="login.html" class="btn-primary text-sm"><i data-lucide="log-in" class="w-4 h-4"></i> Acceso Alumnos</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
     <section class="hero-section">
         <div class="hero-overlay"></div>
-        
-        <div class="hero-content">
-            <!-- Logo con resplandor -->
-            <div class="hero-logo-container">
-                <div class="hero-logo-placeholder" id="heroLogoPlaceholder">
-                    <span>🎓</span>
-                </div>
-                <img 
-                    data-tenant-logo="principal" 
-                    src="" 
-                    alt="Logo Instituto" 
-                    id="heroLogoImg"
-                    style="display: none;"
-                    onerror="this.style.display='none'; document.getElementById('heroLogoPlaceholder').style.display='flex';"
-                    onload="this.style.display='block'; document.getElementById('heroLogoPlaceholder').style.display='none';"
-                >
-            </div>
-            
-            <span class="hero-badge">🏛️ Portal Institucional</span>
-            
-            <h1 class="hero-title" id="heroInstituteName">Instituto</h1>
-            
-            <p class="hero-subtitle">
-                Accede a todos los servicios digitales de tu institución desde un solo lugar.
-                Billetera digital, campus virtual, validación de credenciales y más.
-            </p>
+        <div class="relative z-10 text-center px-6 py-16 max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-black text-white mb-4" id="heroInstituteName">Instituto</h1>
+            <p class="text-xl md:text-2xl text-purple-300 font-semibold mb-6" id="heroLema">Excelencia académica</p>
+            <p class="text-gray-300 max-w-2xl mx-auto mb-8">Formación de calidad con credenciales digitales verificables</p>
+            <a href="#cursos" class="btn-primary text-lg px-8 py-3"><i data-lucide="book-open" class="w-5 h-5"></i> Ver Oferta Académica</a>
         </div>
     </section>
-    
-    <!-- ============================================ -->
-    <!-- CONTENEDOR FLOTANTE (GRID DE MÓDULOS) -->
-    <!-- ============================================ -->
-    <div class="floating-container">
-        
-        <div class="modules-grid">
-            
-            <!-- Módulo 1: Mi Billetera Digital (DESTACADO) -->
-            <a href="login.html" class="module-card featured" id="linkWallet">
-                <div class="module-icon-box">
-                    <i data-lucide="wallet" class="w-7 h-7"></i>
-                </div>
-                <div class="module-info">
-                    <h3 class="module-title">Mi Billetera Digital</h3>
-                    <p class="module-desc">Credenciales verificables, certificados y matrícula digital</p>
-                </div>
-                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
-                <span class="module-badge badge-active">Activo</span>
-            </a>
-            
-            <!-- Módulo 2: Validar Credencial -->
-            <a href="validador.html" class="module-card" id="linkValidador">
-                <div class="module-icon-box icon-green">
-                    <i data-lucide="shield-check" class="w-7 h-7"></i>
-                </div>
-                <div class="module-info">
-                    <h3 class="module-title">Validar Credencial</h3>
-                    <p class="module-desc">Escanea y verifica la autenticidad de cualquier certificado</p>
-                </div>
-                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
-            </a>
-            
-            <!-- Módulo 3: Campus Virtual -->
-            <a href="campus.html" class="module-card" id="linkCampus">
-                <div class="module-icon-box icon-blue">
-                    <i data-lucide="graduation-cap" class="w-7 h-7"></i>
-                </div>
-                <div class="module-info">
-                    <h3 class="module-title">Campus Virtual</h3>
-                    <p class="module-desc">Aulas interactivas, videos, recursos y seguimiento de progreso</p>
-                </div>
-                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
-            </a>
-            
-            <!-- Módulo 4: Catálogo de Cursos -->
-            <div class="module-card" onclick="showComingSoon('Catálogo de Cursos')">
-                <div class="module-icon-box icon-amber">
-                    <i data-lucide="book-open" class="w-7 h-7"></i>
-                </div>
-                <div class="module-info">
-                    <h3 class="module-title">Catálogo de Cursos</h3>
-                    <p class="module-desc">Explora nuestra oferta académica completa y planes de estudio</p>
-                </div>
-                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
-                <span class="module-badge badge-soon">Próximamente</span>
-            </div>
-            
-            <!-- Módulo 5: Cartelera / Noticias -->
-            <div class="module-card" onclick="showComingSoon('Cartelera / Noticias')">
-                <div class="module-icon-box icon-rose">
-                    <i data-lucide="bell" class="w-7 h-7"></i>
-                </div>
-                <div class="module-info">
-                    <h3 class="module-title">Cartelera & Noticias</h3>
-                    <p class="module-desc">Mantente al día con anuncios, eventos y novedades institucionales</p>
-                </div>
-                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
-                <span class="module-badge badge-soon">Próximamente</span>
-            </div>
-            
-            <!-- Módulo 6: Biblioteca Digital -->
-            <div class="module-card" onclick="showComingSoon('Biblioteca Digital')">
-                <div class="module-icon-box icon-cyan">
-                    <i data-lucide="library" class="w-7 h-7"></i>
-                </div>
-                <div class="module-info">
-                    <h3 class="module-title">Biblioteca Digital</h3>
-                    <p class="module-desc">Accede a libros, papers y material de consulta en formato digital</p>
-                </div>
-                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
-                <span class="module-badge badge-soon">Próximamente</span>
-            </div>
-            
-            <!-- Módulo 7: Calendario Académico -->
-            <div class="module-card" onclick="showComingSoon('Calendario Académico')">
-                <div class="module-icon-box icon-indigo">
-                    <i data-lucide="calendar" class="w-7 h-7"></i>
-                </div>
-                <div class="module-info">
-                    <h3 class="module-title">Calendario Académico</h3>
-                    <p class="module-desc">Fechas de exámenes, inscripciones y eventos importantes</p>
-                </div>
-                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
-                <span class="module-badge badge-soon">Próximamente</span>
-            </div>
-            
-            <!-- Módulo 8: Contacto -->
-            <div class="module-card" onclick="showComingSoon('Contacto Institucional')">
-                <div class="module-icon-box icon-teal">
-                    <i data-lucide="mail" class="w-7 h-7"></i>
-                </div>
-                <div class="module-info">
-                    <h3 class="module-title">Contacto</h3>
-                    <p class="module-desc">Información de contacto, ubicación y horarios de atención</p>
-                </div>
-                <i data-lucide="chevron-right" class="module-arrow w-5 h-5"></i>
-                <span class="module-badge badge-soon">Próximamente</span>
-            </div>
-            
+
+    <!-- ACCESOS RÁPIDOS -->
+    <section class="px-6 py-16 max-w-6xl mx-auto">
+        <h2 class="section-title text-center">Accesos Rápidos</h2>
+        <p class="section-subtitle text-center">Todo lo que necesitas en un solo lugar</p>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <a href="login.html" class="quick-card"><div class="quick-icon" style="background:rgba(124,58,237,0.2);color:#a78bfa;"><i data-lucide="wallet" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Billetera</h3></a>
+            <a href="campus.html" class="quick-card"><div class="quick-icon" style="background:rgba(59,130,246,0.2);color:#93c5fd;"><i data-lucide="graduation-cap" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Campus</h3></a>
+            <a href="validador.html" class="quick-card"><div class="quick-icon" style="background:rgba(16,185,129,0.2);color:#6ee7b7;"><i data-lucide="shield-check" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Validador</h3></a>
+            <a href="biblioteca.html" class="quick-card"><div class="quick-icon" style="background:rgba(245,158,11,0.2);color:#fcd34d;"><i data-lucide="library" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Biblioteca</h3></a>
+            <a href="calendario.html" class="quick-card"><div class="quick-icon" style="background:rgba(236,72,153,0.2);color:#f9a8d4;"><i data-lucide="calendar" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Calendario</h3></a>
         </div>
+    </section>
+
+    <!-- OFERTA ACADÉMICA -->
+    <section id="cursos" class="px-6 py-16 max-w-6xl mx-auto">
+        <h2 class="section-title">Oferta Académica</h2>
+        <p class="section-subtitle">Explora nuestros programas</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="cursosGrid">
+            <div class="text-center py-12 col-span-full"><div class="spinner mx-auto"></div></div>
+        </div>
+    </section>
+
+    <!-- NOTICIAS -->
+    <section id="noticias" class="px-6 py-16 max-w-6xl mx-auto">
+        <h2 class="section-title">Cartelera y Noticias</h2>
+        <p class="section-subtitle">Novedades institucionales</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="noticiasGrid">
+            <div class="text-center py-12 col-span-full"><div class="spinner mx-auto"></div></div>
+        </div>
+    </section>
+
+    <!-- NOSOTROS -->
+    <section id="nosotros" class="px-6 py-16 max-w-4xl mx-auto">
+        <h2 class="section-title">Quiénes Somos</h2>
+        <p class="text-gray-300 leading-relaxed mb-8" id="historiaText">Cargando...</p>
+        <h3 class="text-xl font-bold text-white mb-4">Nuestra Historia</h3>
+        <p class="text-gray-300 leading-relaxed mb-12" id="quienesText">Cargando...</p>
         
-        <!-- Footer -->
-        <footer class="portal-footer">
-            <p class="footer-text">
-                Powered by <strong>ASARI</strong> &mdash; Plataforma Educativa Multi-Tenant
-            </p>
-            <a href="admin-login.html" class="footer-link">
-                <i data-lucide="shield" class="w-3 h-3 inline mr-1"></i>
-                Acceso Administrativo
-            </a>
-        </footer>
-        
+        <h3 class="text-xl font-bold text-white mb-6">Redes Sociales</h3>
+        <div class="flex gap-4" id="redesContainer"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5 py-8 text-center text-gray-500 text-sm">
+        Powered by <strong class="text-purple-400">ASARI</strong>
+        <a href="admin-login.html" class="block mt-2 text-xs text-gray-600 hover:text-purple-400">Acceso Administrativo</a>
+    </footer>
+
+    <!-- MODAL INSCRIPCIÓN -->
+    <div class="modal-overlay hidden" id="inscripcionModal">
+        <div class="modal-card">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-white" id="modalCursoTitulo">Inscripción</h3>
+                <button onclick="cerrarModalInscripcion()" class="p-2 hover:bg-white/10 rounded-lg text-gray-400"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="inscripcionForm" class="p-6 space-y-5">
+                <input type="hidden" id="cursoSeleccionadoId">
+                <div><label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Nombre Completo *</label><input type="text" id="leadNombre" class="input-dios" required></div>
+                <div><label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Email *</label><input type="email" id="leadEmail" class="input-dios" required></div>
+                <div><label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Teléfono *</label><input type="tel" id="leadTelefono" class="input-dios" required></div>
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Método de Pago *</label>
+                    <select id="leadMetodoPago" class="input-dios" onchange="toggleMetodoPago()">
+                        <option value="">-- Seleccione --</option>
+                        <option value="transferencia">Transferencia Bancaria</option>
+                        <option value="mercadopago">MercadoPago</option>
+                    </select>
+                </div>
+                <div id="divDatosBancarios" class="hidden bg-black/30 p-4 rounded-xl">
+                    <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Datos Bancarios</label>
+                    <pre class="text-xs text-green-300 font-mono whitespace-pre-wrap" id="datosBancariosTexto"></pre>
+                    <label class="text-xs font-bold text-gray-400 uppercase mt-4 mb-2 block">Comprobante de Pago *</label>
+                    <div class="file-drop-zone" id="dropComprobante">
+                        <input type="file" accept="image/*,.pdf" id="fileComprobante" onchange="handleComprobante(this)">
+                        <i data-lucide="upload-cloud" class="w-6 h-6 text-gray-500 mx-auto mb-1"></i>
+                        <p class="text-xs text-gray-400" id="comprobanteFileName">Click para subir comprobante</p>
+                    </div>
+                </div>
+                <div id="divMercadoPago" class="hidden bg-blue-500/10 p-4 rounded-xl text-center">
+                    <p class="text-sm text-blue-300">Serás redirigido a la pasarela de pago de MercadoPago</p>
+                </div>
+                <button type="submit" class="btn-primary w-full justify-center" id="btnEnviarLead"><i data-lucide="send" class="w-4 h-4"></i> Enviar Inscripción</button>
+            </form>
+        </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- CONFIGURACIÓN CENTRAL -->
-    <!-- ============================================ -->
-    <script src="supabase-config.js?v=3"></script>
+    <div class="toast" id="toastMsg"><i data-lucide="info" class="w-5 h-5"></i><span id="toastText"></span></div>
 
-    <!-- ============================================ -->
-    <!-- LÓGICA DEL PORTAL HUB (MANTENIDA INTACTA) -->
-    <!-- ============================================ -->
+    <script src="supabase-config.js?v=5"></script>
+
     <script>
-        // ============================================
-        // INICIALIZACIÓN DE ICONOS
-        // ============================================
         lucide.createIcons();
         
-        // ============================================
-        // REFERENCIAS AL DOM
-        // ============================================
-        const heroInstituteName = document.getElementById('heroInstituteName');
-        const heroLogoImg = document.getElementById('heroLogoImg');
-        const heroLogoPlaceholder = document.getElementById('heroLogoPlaceholder');
-        const linkWallet = document.getElementById('linkWallet');
-        const linkValidador = document.getElementById('linkValidador');
-        const linkCampus = document.getElementById('linkCampus');
+        const STORAGE_BUCKET = 'asari-assets';
+        let tenantConfig = null;
+        let cursosData = [];
+        let comprobanteFile = null;
         
-        // ============================================
-        // OBTENER SLUG DEL TENANT ACTUAL
-        // ============================================
-        function getCurrentTenantSlug() {
-            if (typeof window.getTenantSlug === 'function') {
-                return window.getTenantSlug();
-            }
-            
-            // Fallback: leer de URL o localStorage
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toastMsg');
+            document.getElementById('toastText').textContent = msg;
+            t.className = `toast show ${type}`;
+            const icon = t.querySelector('i');
+            icon.setAttribute('data-lucide', type === 'success' ? 'check-circle' : 'alert-triangle');
+            lucide.createIcons();
+            clearTimeout(window._tt);
+            window._tt = setTimeout(() => { t.classList.remove('show'); }, 4000);
+        }
+        
+        function getTenantSlug() {
+            if (typeof window.getTenantSlug === 'function') return window.getTenantSlug();
             const urlParams = new URLSearchParams(window.location.search);
-            const slug = urlParams.get('instituto');
-            
-            if (slug) return slug;
-            
-            const storedSlug = localStorage.getItem('asari_tenant_slug');
-            if (storedSlug) return storedSlug;
-            
-            return 'default';
+            return urlParams.get('instituto') || localStorage.getItem('asari_tenant_slug') || 'default';
         }
         
-        // ============================================
-        // CONSTRUIR URL CON PARÁMETRO DE TENANT
-        // ============================================
-        function buildTenantUrl(basePath) {
-            const tenantSlug = getCurrentTenantSlug();
-            
-            // Verificar si ya tiene query string
-            const separator = basePath.includes('?') ? '&' : '?';
-            
-            return `${basePath}${separator}instituto=${encodeURIComponent(tenantSlug)}`;
+        function buildUrl(path) {
+            const slug = getTenantSlug();
+            return `${path}?instituto=${encodeURIComponent(slug)}`;
         }
         
-        // ============================================
-        // ACTUALIZAR LINKS CON EL TENANT ACTUAL
-        // ============================================
-        function actualizarLinksConTenant() {
-            const tenantSlug = getCurrentTenantSlug();
-            
-            if (tenantSlug && tenantSlug !== 'default') {
-                // Actualizar href de los enlaces principales
-                linkWallet.href = buildTenantUrl('login.html');
-                linkValidador.href = buildTenantUrl('validador.html');
-                linkCampus.href = buildTenantUrl('campus.html');
-                
-                console.log('🔗 Links actualizados con tenant:', tenantSlug);
-            }
-        }
-        
-        // ============================================
-        // INICIALIZACIÓN DEL TENANT (BRANDING)
-        // ============================================
-        async function inicializarTenant() {
-            try {
-                if (typeof window.fetchTenantConfig !== 'function') {
-                    console.warn('fetchTenantConfig no disponible aún, reintentando...');
-                    setTimeout(inicializarTenant, 100);
-                    return;
-                }
-                
-                const tenant = await window.fetchTenantConfig();
-                
-                if (tenant) {
-                    const { instituto, configuracion } = tenant;
-                    
-                    // Actualizar nombre del instituto
-                    heroInstituteName.textContent = instituto.nombre;
-                    
-                    // Actualizar título de la página
-                    document.title = `${instituto.nombre} - Portal Institucional`;
-                    
-                    // Actualizar logo
-                    if (configuracion?.branding?.logo_principal) {
-                        heroLogoImg.src = configuracion.branding.logo_principal;
-                        heroLogoImg.style.display = 'block';
-                        heroLogoPlaceholder.style.display = 'none';
-                    } else {
-                        heroLogoImg.style.display = 'none';
-                        heroLogoPlaceholder.style.display = 'flex';
-                        heroLogoPlaceholder.style.background = 
-                            `linear-gradient(135deg, var(--color-primary-light), var(--color-primary))`;
-                    }
-                    
-                    // Guardar en window para uso global
-                    window.__TENANT_CONFIG__ = tenant;
-                    
-                    console.log('✅ Portal inicializado para:', instituto.nombre);
-                } else {
-                    heroInstituteName.textContent = 'Plataforma Educativa';
-                }
-            } catch (error) {
-                console.error('Error inicializando tenant en portal:', error);
-                heroInstituteName.textContent = 'Plataforma Educativa';
-            }
-        }
-        
-        // ============================================
-        // FUNCIÓN: Mostrar "Próximamente" (Toast elegante)
-        // ============================================
-        function showComingSoon(moduleName) {
-            // Crear un toast elegante
-            const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                bottom: 30px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: white;
-                border: 1px solid #e2e8f0;
-                border-radius: 16px;
-                padding: 16px 24px;
-                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-                z-index: 200;
-                display: flex;
-                align-items: center;
-                gap: 14px;
-                font-size: 14px;
-                font-weight: 500;
-                color: #475569;
-                animation: toastIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                max-width: calc(100vw - 40px);
-                backdrop-filter: blur(20px);
-            `;
-            
-            toast.innerHTML = `
-                <div style="
-                    width: 44px;
-                    height: 44px;
-                    border-radius: 14px;
-                    background: #fef3c7;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 22px;
-                    flex-shrink: 0;
-                ">🚀</div>
-                <div>
-                    <p style="font-weight: 700; color: #1e293b; font-size: 14px;">${moduleName}</p>
-                    <p style="font-size: 12px; color: #94a3b8; font-weight: 400; margin-top: 2px;">Estará disponible próximamente</p>
-                </div>
-            `;
-            
-            document.body.appendChild(toast);
-            
-            // Auto-eliminar después de 3.5 segundos
-            setTimeout(() => {
-                toast.style.animation = 'toastOut 0.3s ease forwards';
-                setTimeout(() => {
-                    if (toast.parentNode) {
-                        toast.parentNode.removeChild(toast);
-                    }
-                }, 300);
-            }, 3500);
-        }
-        
-        // ============================================
-        // INICIALIZACIÓN PRINCIPAL
-        // ============================================
         async function inicializar() {
-            console.log('🏛️ Inicializando Portal Hub Premium ASARI...');
+            if (typeof window.fetchTenantConfig !== 'function') { setTimeout(inicializar, 100); return; }
+            tenantConfig = await window.fetchTenantConfig();
             
-            // 1. Inicializar tenant (branding, colores, logos)
-            await inicializarTenant();
-            
-            // 2. Actualizar links con el tenant actual
-            actualizarLinksConTenant();
-            
-            // 3. Refrescar iconos de Lucide
-            lucide.createIcons();
-            
-            console.log('✅ Portal Hub Premium inicializado correctamente');
+            if (tenantConfig) {
+                const { instituto, configuracion } = tenantConfig;
+                
+                document.getElementById('heroInstituteName').textContent = instituto.nombre;
+                document.getElementById('navInstituteName').textContent = instituto.nombre;
+                document.title = `${instituto.nombre} - Portal`;
+                
+                const identidad = configuracion?.identidad || {};
+                document.getElementById('heroLema').textContent = identidad.lema || 'Excelencia académica';
+                document.getElementById('historiaText').textContent = identidad.historia || 'Sin historia cargada.';
+                document.getElementById('quienesText').textContent = identidad.quienes_somos || 'Sin información.';
+                document.getElementById('datosBancariosTexto').textContent = configuracion?.datos_bancarios || 'No configurado';
+                
+                if (configuracion?.branding?.logo_principal) {
+                    document.getElementById('navLogoImg').src = configuracion.branding.logo_principal;
+                    document.getElementById('navLogoPlaceholder').style.display = 'none';
+                }
+                
+                cargarRedes(configuracion?.redes_sociales || {});
+                cargarCursos();
+                cargarNoticias();
+                
+                // Actualizar links
+                document.querySelectorAll('a[href="login.html"]').forEach(a => a.href = buildUrl('login.html'));
+                document.querySelectorAll('a[href="campus.html"]').forEach(a => a.href = buildUrl('campus.html'));
+                document.querySelectorAll('a[href="validador.html"]').forEach(a => a.href = buildUrl('validador.html'));
+                document.querySelectorAll('a[href="biblioteca.html"]').forEach(a => a.href = buildUrl('biblioteca.html'));
+                document.querySelectorAll('a[href="calendario.html"]').forEach(a => a.href = buildUrl('calendario.html'));
+                
+                window.__TENANT_CONFIG__ = tenantConfig;
+            }
         }
         
-        // ============================================
-        // EVENTOS DEL DOM
-        // ============================================
-        window.addEventListener('DOMContentLoaded', inicializar);
-        
-        // Refrescar iconos cuando la página termine de cargar
-        window.addEventListener('load', () => {
+        function cargarRedes(redes) {
+            const container = document.getElementById('redesContainer');
+            const redesHTML = [];
+            
+            if (redes.whatsapp) redesHTML.push(`<a href="${redes.whatsapp}" target="_blank" class="quick-card flex-1"><i data-lucide="message-circle" class="w-6 h-6 text-green-400"></i><span class="text-xs">WhatsApp</span></a>`);
+            if (redes.instagram) redesHTML.push(`<a href="${redes.instagram}" target="_blank" class="quick-card flex-1"><i data-lucide="instagram" class="w-6 h-6 text-pink-400"></i><span class="text-xs">Instagram</span></a>`);
+            if (redes.facebook) redesHTML.push(`<a href="${redes.facebook}" target="_blank" class="quick-card flex-1"><i data-lucide="facebook" class="w-6 h-6 text-blue-400"></i><span class="text-xs">Facebook</span></a>`);
+            if (redes.linkedin) redesHTML.push(`<a href="${redes.linkedin}" target="_blank" class="quick-card flex-1"><i data-lucide="linkedin" class="w-6 h-6 text-blue-300"></i><span class="text-xs">LinkedIn</span></a>`);
+            
+            container.innerHTML = redesHTML.length > 0 ? redesHTML.join('') : '<p class="text-gray-500 text-sm">Sin redes sociales configuradas</p>';
             lucide.createIcons();
+        }
+        
+        async function cargarCursos() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            const { data } = await window.supabase.from('sys_cursos').select('*').eq('instituto_id', institutoId).eq('estado', 'activo');
+            cursosData = data || [];
+            
+            const grid = document.getElementById('cursosGrid');
+            if (cursosData.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center text-gray-500 py-12">No hay cursos disponibles</p>';
+                return;
+            }
+            
+            grid.innerHTML = cursosData.map(c => `
+                <div class="curso-card">
+                    <h3 class="text-lg font-bold text-white mb-2">${c.titulo}</h3>
+                    <p class="text-sm text-purple-300 mb-2">${c.tipo_curso || 'Curso'}</p>
+                    <p class="font-mono text-green-400 text-2xl font-bold mb-4">$${(c.precio_declarado_usd || 0).toFixed(2)} USD</p>
+                    <button class="btn-primary w-full justify-center" onclick="abrirModalInscripcion('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')">
+                        <i data-lucide="clipboard-list" class="w-4 h-4"></i> Quiero Inscribirme
+                    </button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+        
+        async function cargarNoticias() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            const { data } = await window.supabase.from('cms_publicaciones').select('*').eq('instituto_id', institutoId).eq('estado', 'publicado').order('created_at', { ascending: false }).limit(6);
+            const noticias = data || [];
+            
+            const grid = document.getElementById('noticiasGrid');
+            if (noticias.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center text-gray-500 py-12">Sin noticias publicadas</p>';
+                return;
+            }
+            
+            grid.innerHTML = noticias.map(n => `
+                <div class="noticia-card">
+                    ${n.imagen_url ? `<img src="${n.imagen_url}" alt="${n.titulo}">` : '<div class="h-44 bg-white/5 flex items-center justify-center"><i data-lucide="newspaper" class="w-10 h-10 text-gray-600"></i></div>'}
+                    <div class="p-5">
+                        <span class="text-xs text-purple-400 font-bold uppercase">${n.tipo}</span>
+                        <h3 class="font-bold text-white mt-1 mb-2">${n.titulo}</h3>
+                        <p class="text-sm text-gray-400 line-clamp-3">${n.descripcion || ''}</p>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+        
+        function abrirModalInscripcion(cursoId, cursoTitulo) {
+            document.getElementById('cursoSeleccionadoId').value = cursoId;
+            document.getElementById('modalCursoTitulo').textContent = `Inscripción: ${cursoTitulo}`;
+            document.getElementById('inscripcionForm').reset();
+            comprobanteFile = null;
+            document.getElementById('dropComprobante').classList.remove('has-file');
+            document.getElementById('comprobanteFileName').textContent = 'Click para subir comprobante';
+            toggleMetodoPago();
+            document.getElementById('inscripcionModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        
+        function cerrarModalInscripcion() {
+            document.getElementById('inscripcionModal').classList.add('hidden');
+        }
+        
+        function toggleMetodoPago() {
+            const metodo = document.getElementById('leadMetodoPago').value;
+            document.getElementById('divDatosBancarios').classList.toggle('hidden', metodo !== 'transferencia');
+            document.getElementById('divMercadoPago').classList.toggle('hidden', metodo !== 'mercadopago');
+        }
+        
+        function handleComprobante(input) {
+            if (input.files && input.files[0]) {
+                comprobanteFile = input.files[0];
+                document.getElementById('dropComprobante').classList.add('has-file');
+                document.getElementById('comprobanteFileName').textContent = input.files[0].name;
+            }
+        }
+        
+        document.getElementById('inscripcionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const cursoId = document.getElementById('cursoSeleccionadoId').value;
+            const nombre = document.getElementById('leadNombre').value.trim();
+            const email = document.getElementById('leadEmail').value.trim();
+            const telefono = document.getElementById('leadTelefono').value.trim();
+            const metodo = document.getElementById('leadMetodoPago').value;
+            
+            if (!nombre || !email || !telefono || !metodo) {
+                showToast('Completa todos los campos', 'error');
+                return;
+            }
+            
+            if (metodo === 'transferencia' && !comprobanteFile) {
+                showToast('Debes subir el comprobante de pago', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('btnEnviarLead');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-4 h-4"></div> Procesando...';
+            
+            try {
+                let comprobanteUrl = null;
+                
+                if (metodo === 'transferencia' && comprobanteFile) {
+                    const institutoId = tenantConfig.instituto.id;
+                    const ext = comprobanteFile.name.split('.').pop();
+                    const path = `comprobantes/${institutoId}/${Date.now()}_${Math.random().toString(36).substring(2,8)}.${ext}`;
+                    const { error: uploadError } = await window.supabase.storage.from(STORAGE_BUCKET).upload(path, comprobanteFile, { cacheControl: '3600', contentType: comprobanteFile.type });
+                    if (uploadError) throw uploadError;
+                    const { data } = window.supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+                    comprobanteUrl = data.publicUrl;
+                }
+                
+                const leadData = {
+                    instituto_id: tenantConfig.instituto.id,
+                    nombre_completo: nombre,
+                    email: email,
+                    curso_interes: cursoId,
+                    origen: 'portal_web',
+                    estado: metodo === 'transferencia' ? 'pago_pendiente' : 'nuevo',
+                    metodo_pago: metodo,
+                    comprobante_url: comprobanteUrl,
+                    telefono: telefono
+                };
+                
+                const { error: insertError } = await window.supabase.from('crm_leads').insert([leadData]);
+                if (insertError) throw insertError;
+                
+                cerrarModalInscripcion();
+                showToast(metodo === 'transferencia' ? '¡Inscripción recibida! Verificaremos el pago en breve.' : 'Redirigiendo a pasarela...', 'success');
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Enviar Inscripción';
+                lucide.createIcons();
+            }
         });
         
-        // Registrar Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('✅ SW registrado en portal:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('⚠️ Error registrando SW:', error);
-                    });
-            });
-        }
+        document.getElementById('inscripcionModal').addEventListener('click', function(e) {
+            if (e.target === this) cerrarModalInscripcion();
+        });
         
-        console.log('🏛️ Portal Hub Premium ASARI - Listo');
+        window.addEventListener('DOMContentLoaded', inicializar);
     </script>
 </body>
 </html>
