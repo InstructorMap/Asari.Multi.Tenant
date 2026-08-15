@@ -16,9 +16,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
         
         * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
         
         body { background: #050509; color: #e5e7eb; overflow: hidden; }
         
@@ -43,6 +44,9 @@
         
         .btn-secondary { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px; font-weight: 500; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s ease; }
         .btn-secondary:hover { background: rgba(255,255,255,0.1); color: white; }
+        
+        .btn-danger { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); padding: 10px 16px; border-radius: 10px; font-weight: 500; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s ease; }
+        .btn-danger:hover { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); }
         
         /* INPUTS */
         .input-dios { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; padding: 10px 14px; width: 100%; font-size: 14px; transition: all 0.3s ease; }
@@ -69,7 +73,7 @@
         .nav-item:hover { background: rgba(255,255,255,0.03); color: white; }
         .nav-item.active { background: linear-gradient(90deg, rgba(124,58,237,0.15) 0%, transparent 100%); color: #a78bfa; border-left: 3px solid #7c3aed; }
         
-        .tab-nav-item { padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: #64748b; border-bottom: 2px solid transparent; }
+        .tab-nav-item { padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: #64748b; border-bottom: 2px solid transparent; white-space: nowrap; }
         .tab-nav-item.active { color: #a78bfa; border-bottom-color: #7c3aed; }
         .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .tab-content.active { display: block; }
@@ -89,16 +93,32 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
         
-        .toast { position: fixed; bottom: 24px; right: 24px; padding: 16px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; z-index: 1000; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .toast { position: fixed; bottom: 24px; right: 24px; padding: 16px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; z-index: 1000; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); max-width: 450px; }
         .toast.show { transform: translateY(0); opacity: 1; }
         .toast.success { background: #059669; border: 1px solid #10b981; color: white; }
         .toast.error { background: #b91c1c; border: 1px solid #ef4444; color: white; }
         
-        .spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #a78bfa; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #a78bfa; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* SIDEBAR OVERLAY MÓVIL */
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 39; backdrop-filter: blur(3px); }
+        .sidebar-overlay.active { display: block; }
+        
+        @media (max-width: 1024px) {
+            .sidebar { position: fixed; transform: translateX(-100%); height: 100vh; z-index: 50; }
+            .sidebar.open { transform: translateX(0); }
+            .btn-hamburger { display: flex !important; }
+        }
+        
+        .btn-hamburger { display: none; width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; align-items: center; justify-content: center; color: #94a3b8; }
+        .btn-hamburger:hover { background: rgba(255,255,255,0.1); color: white; }
     </style>
 </head>
 <body class="flex">
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
     <!-- SIDEBAR -->
     <aside class="sidebar w-64 flex-shrink-0 flex flex-col z-40" id="sidebar">
@@ -130,70 +150,61 @@
     <main class="main-content flex-1 bg-[#050509]" id="mainContent">
         <!-- TOPBAR -->
         <header class="sticky top-0 z-30 bg-[#050509]/80 backdrop-blur-md border-b border-white/5 px-8 py-5 flex items-center justify-between">
-            <div>
-                <h2 class="text-2xl font-bold text-white tracking-tight" id="viewTitle">Panel Financiero</h2>
-                <p class="text-sm text-gray-500 mt-1" id="viewSubtitle">Métricas globales y flujo de caja estimado</p>
+            <div class="flex items-center gap-4">
+                <button class="btn-hamburger" onclick="toggleSidebar()"><i data-lucide="menu" class="w-5 h-5"></i></button>
+                <div>
+                    <h2 class="text-2xl font-bold text-white tracking-tight" id="viewTitle">Panel Financiero</h2>
+                    <p class="text-sm text-gray-500 mt-1" id="viewSubtitle">Métricas globales y flujo de caja estimado</p>
+                </div>
             </div>
-            <div id="topbarActions">
-                <!-- Se inyectan botones dinámicamente -->
-            </div>
+            <div id="topbarActions"></div>
         </header>
 
         <!-- AREA DE VISTAS -->
         <div class="p-8">
             
-            <!-- ========================================== -->
-            <!-- VISTA 1: DASHBOARD FINANCIERO Y OPERATIVO -->
-            <!-- ========================================== -->
+            <!-- VISTA 1: DASHBOARD -->
             <section id="view-dashboard" class="view-section animate-fade-in">
-                <!-- Tarjetas KPI -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="card-dios p-6 relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-4 opacity-10"><i data-lucide="dollar-sign" class="w-16 h-16"></i></div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">MRR Proyectado (ARS)</p>
-                        <h3 class="text-3xl font-black text-white" id="kpiMRR">$0</h3>
-                        <p class="text-xs text-green-400 mt-2 flex items-center gap-1"><i data-lucide="trending-up" class="w-3 h-3"></i> Basado en fee por alumno</p>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">MRR Proyectado (USD)</p>
+                        <h3 class="text-3xl font-black text-white font-mono" id="kpiMRR">$0</h3>
+                        <p class="text-xs text-green-400 mt-2 flex items-center gap-1"><i data-lucide="trending-up" class="w-3 h-3"></i> Revenue Share</p>
                     </div>
                     <div class="card-dios p-6 relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-4 opacity-10"><i data-lucide="building" class="w-16 h-16"></i></div>
                         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Red de Institutos</p>
                         <h3 class="text-3xl font-black text-white" id="kpiInstitutos">0</h3>
-                        <p class="text-xs text-purple-400 mt-2" id="kpiInstitutosActivos">0 activos actualmente</p>
+                        <p class="text-xs text-purple-400 mt-2" id="kpiInstitutosActivos">0 activos</p>
                     </div>
                     <div class="card-dios p-6 relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-4 opacity-10"><i data-lucide="users" class="w-16 h-16"></i></div>
                         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Alumnos Globales</p>
                         <h3 class="text-3xl font-black text-white" id="kpiAlumnos">0</h3>
-                        <p class="text-xs text-blue-400 mt-2">En toda la infraestructura</p>
+                        <p class="text-xs text-blue-400 mt-2">En toda la red</p>
                     </div>
                     <div class="card-dios p-6 relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-4 opacity-10"><i data-lucide="award" class="w-16 h-16"></i></div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Credenciales (TXID)</p>
-                        <h3 class="text-3xl font-black text-white" id="kpiCredenciales">0</h3>
-                        <p class="text-xs text-yellow-400 mt-2">Certificados validados</p>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Fees Retenidos</p>
+                        <h3 class="text-3xl font-black text-white font-mono" id="kpiFees">$0</h3>
+                        <p class="text-xs text-yellow-400 mt-2">Revenue Share acumulado</p>
                     </div>
                 </div>
 
-                <!-- Gráficos -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="card-dios p-6 lg:col-span-2">
                         <h4 class="text-sm font-bold text-white mb-4">Proyección de Flujo de Caja (6 Meses)</h4>
-                        <div class="h-64 w-full">
-                            <canvas id="chartCashFlow"></canvas>
-                        </div>
+                        <div class="h-64 w-full"><canvas id="chartCashFlow"></canvas></div>
                     </div>
                     <div class="card-dios p-6">
                         <h4 class="text-sm font-bold text-white mb-4">Distribución de Alumnos</h4>
-                        <div class="h-64 w-full relative">
-                            <canvas id="chartAlumnos"></canvas>
-                        </div>
+                        <div class="h-64 w-full relative"><canvas id="chartAlumnos"></canvas></div>
                     </div>
                 </div>
             </section>
 
-            <!-- ========================================== -->
-            <!-- VISTA 2: GESTIÓN DE INSTITUTOS -->
-            <!-- ========================================== -->
+            <!-- VISTA 2: INSTITUTOS -->
             <section id="view-institutos" class="view-section hidden animate-fade-in">
                 <div class="card-dios overflow-hidden">
                     <div class="overflow-x-auto">
@@ -203,28 +214,24 @@
                                     <th>Instituto</th>
                                     <th>Slug / Dominio</th>
                                     <th>Estado</th>
-                                    <th class="text-center">Control de Módulos Rápidos</th>
+                                    <th class="text-center">Módulos Activos</th>
+                                    <th>SLA Config</th>
                                     <th class="text-right">Ajustes</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaInstitutosBody">
-                                <!-- Filas dinámicas -->
-                            </tbody>
+                            <tbody id="tablaInstitutosBody"></tbody>
                         </table>
                     </div>
-                    <!-- Estados de carga -->
                     <div id="instLoading" class="p-16 text-center"><div class="spinner mx-auto mb-4"></div><p class="text-gray-400">Consultando clúster...</p></div>
                     <div id="instEmpty" class="hidden p-16 text-center"><i data-lucide="ghost" class="w-16 h-16 text-gray-600 mx-auto mb-4"></i><p class="text-gray-400">La red está vacía.</p></div>
                 </div>
             </section>
 
-            <!-- ========================================== -->
-            <!-- VISTA 3: USUARIOS Y ROLES -->
-            <!-- ========================================== -->
+            <!-- VISTA 3: USUARIOS -->
             <section id="view-usuarios" class="view-section hidden animate-fade-in">
                 <div class="card-dios p-6 mb-6 flex gap-4 items-end">
                     <div class="flex-1">
-                        <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Seleccionar Franquicia / Instituto</label>
+                        <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Seleccionar Franquicia</label>
                         <select id="selectInstUsuarios" class="input-dios" onchange="cargarUsuariosTabla()">
                             <option value="">-- Elija un Instituto --</option>
                         </select>
@@ -235,23 +242,16 @@
                 <div class="card-dios overflow-hidden">
                     <table>
                         <thead class="bg-white/[0.02]">
-                            <tr>
-                                <th>Credencial (Email)</th>
-                                <th>Nombre Designado</th>
-                                <th>Nivel de Acceso</th>
-                                <th class="text-right">Acciones</th>
-                            </tr>
+                            <tr><th>Credencial (Email)</th><th>Nombre</th><th>Nivel</th><th class="text-right">Acciones</th></tr>
                         </thead>
                         <tbody id="tablaUsuariosBody">
-                            <tr><td colspan="4" class="text-center p-8 text-gray-500">Seleccione un instituto para auditar sus usuarios</td></tr>
+                            <tr><td colspan="4" class="text-center p-8 text-gray-500">Seleccione un instituto</td></tr>
                         </tbody>
                     </table>
                 </div>
             </section>
 
-            <!-- ========================================== -->
-            <!-- VISTA 4: BUILDER Y EXTENSIONES -->
-            <!-- ========================================== -->
+            <!-- VISTA 4: BUILDER -->
             <section id="view-builder" class="view-section hidden animate-fade-in">
                 <div class="card-dios p-6 mb-6">
                     <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Inyectar código en Instituto</label>
@@ -264,17 +264,17 @@
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div>
                             <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2"><i data-lucide="layout" class="text-purple-400 w-5 h-5"></i> Pestañas Especiales</h3>
-                            <p class="text-xs text-gray-400 mb-4">Inyecta nuevas pestañas en la app del alumno. Sepáralas por comas.</p>
-                            <input type="text" id="bTabs" class="input-dios" placeholder="Ej: Bolsa de Trabajo, Prácticas, Soporte">
+                            <p class="text-xs text-gray-400 mb-4">Sepáralas por comas.</p>
+                            <input type="text" id="bTabs" class="input-dios" placeholder="Ej: Bolsa de Trabajo, Prácticas">
                         </div>
                         <div>
-                            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2"><i data-lucide="code" class="text-blue-400 w-5 h-5"></i> Carga de Campos JSON</h3>
-                            <p class="text-xs text-gray-400 mb-4">Estructura estricta para inyectar campos en el CRM del instituto.</p>
-                            <textarea id="bJson" class="input-dios font-mono text-xs h-48" placeholder='[{"nombre": "legajo_papel", "tipo": "texto", "label": "Nº Legajo Físico"}]'></textarea>
+                            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2"><i data-lucide="code" class="text-blue-400 w-5 h-5"></i> Campos JSON</h3>
+                            <p class="text-xs text-gray-400 mb-4">Estructura para campos extra.</p>
+                            <textarea id="bJson" class="input-dios font-mono text-xs h-48" placeholder='[{"nombre": "legajo_papel", "tipo": "texto"}]'></textarea>
                         </div>
                     </div>
                     <div class="mt-8 border-t border-white/10 pt-6 flex justify-end">
-                        <button onclick="guardarJSONBuilder()" class="btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Inyectar Configuración</button>
+                        <button onclick="guardarJSONBuilder()" class="btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Inyectar</button>
                     </div>
                 </div>
             </section>
@@ -282,61 +282,55 @@
         </div>
     </main>
 
-    <!-- ========================================== -->
-    <!-- MODAL SÚPER EDITOR (INSTITUTOS) -->
-    <!-- ========================================== -->
+    <!-- MODAL SÚPER EDITOR -->
     <div id="modalInstituto" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="modal-overlay absolute inset-0" onclick="cerrarModalInst()"></div>
-        <div class="card-dios w-full max-w-4xl relative z-10 shadow-2xl shadow-purple-900/20 flex flex-col" style="max-height: 90vh;">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="cerrarModalInst()"></div>
+        <div class="card-dios w-full max-w-4xl relative z-10 shadow-2xl flex flex-col" style="max-height: 90vh;">
             
-            <!-- Header Modal -->
             <div class="p-6 border-b border-white/5 flex justify-between items-center bg-black/20 rounded-t-2xl">
                 <div>
-                    <h3 class="text-xl font-bold text-white" id="miTitulo">Súper Editor de Instancia</h3>
-                    <p class="text-xs text-purple-400 mt-1">Configuración profunda del Tenant</p>
+                    <h3 class="text-xl font-bold text-white" id="miTitulo">Súper Editor</h3>
+                    <p class="text-xs text-purple-400 mt-1">Configuración profunda</p>
                 </div>
-                <button onclick="cerrarModalInst()" class="p-2 hover:bg-white/10 rounded-lg text-gray-400 transition"><i data-lucide="x" class="w-6 h-6"></i></button>
+                <button onclick="cerrarModalInst()" class="p-2 hover:bg-white/10 rounded-lg text-gray-400"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
 
-            <!-- TABS Modal -->
+            <!-- TABS -->
             <div class="flex px-6 pt-4 gap-2 border-b border-white/5 bg-black/10 overflow-x-auto" id="miTabs">
                 <div class="tab-nav-item active" onclick="cambiarTabInst('general', this)">⚙️ General</div>
-                <div class="tab-nav-item" onclick="cambiarTabInst('branding', this)">🎨 Branding & UI</div>
+                <div class="tab-nav-item" onclick="cambiarTabInst('branding', this)">🎨 Branding</div>
                 <div class="tab-nav-item" onclick="cambiarTabInst('textos', this)">📝 Terminología</div>
+                <div class="tab-nav-item" onclick="cambiarTabInst('modulos', this)">🔌 Módulos (SaaS)</div>
+                <div class="tab-nav-item" onclick="cambiarTabInst('sla', this)">💰 SLA</div>
             </div>
 
-            <!-- Body Modal -->
             <div class="p-8 overflow-y-auto flex-1">
                 <input type="hidden" id="miId">
                 
-                <!-- TAB: GENERAL -->
+                <!-- TAB GENERAL -->
                 <div class="tab-content active" id="tab-general">
                     <div class="grid grid-cols-2 gap-6">
-                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Nombre Oficial *</label><input type="text" id="miNombre" class="input-dios" placeholder="Ej: Universidad Siglo 21" required></div>
-                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Slug (Subdominio) *</label><input type="text" id="miSlug" class="input-dios lowercase" placeholder="siglo21" required pattern="[a-z0-9-]+"></div>
-                        <div class="col-span-2">
-                            <label class="block text-xs font-bold text-gray-400 uppercase mb-3">Estado de la Instancia</label>
-                            <select id="miEstado" class="input-dios w-1/2"><option value="activo">Activo (Operando)</option><option value="inactivo">Suspendido (Sin acceso)</option></select>
-                        </div>
+                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Nombre *</label><input type="text" id="miNombre" class="input-dios" required></div>
+                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Slug *</label><input type="text" id="miSlug" class="input-dios lowercase" required></div>
+                        <div class="col-span-2"><label class="block text-xs font-bold text-gray-400 uppercase mb-3">Estado</label><select id="miEstado" class="input-dios w-1/2"><option value="activo">Activo</option><option value="inactivo">Suspendido</option></select></div>
                     </div>
                 </div>
 
-                <!-- TAB: BRANDING Y LOGOS (Conexión Real a Storage) -->
+                <!-- TAB BRANDING -->
                 <div class="tab-content" id="tab-branding">
                     <div class="grid grid-cols-2 gap-8">
-                        <!-- Logos -->
                         <div class="space-y-6">
                             <div>
-                                <label class="block text-xs font-bold text-purple-400 uppercase mb-2">Isotipo / Logo Principal</label>
+                                <label class="block text-xs font-bold text-purple-400 uppercase mb-2">Logo Principal</label>
                                 <div class="upload-area" id="areaLogo1">
                                     <input type="file" accept="image/*" id="fileLogo1" onchange="previsualizarLogo(this, 'previewLogo1', 'iconLogo1')">
                                     <i data-lucide="image" class="w-8 h-8 text-gray-500 mx-auto mb-2" id="iconLogo1"></i>
                                     <img id="previewLogo1" class="hidden mx-auto h-16 object-contain rounded">
-                                    <p class="text-xs text-gray-400 mt-2">Click para reemplazar logo</p>
+                                    <p class="text-xs text-gray-400 mt-2">Click para reemplazar</p>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-blue-400 uppercase mb-2">Logo Secundario (Fondos Claros)</label>
+                                <label class="block text-xs font-bold text-blue-400 uppercase mb-2">Logo Secundario</label>
                                 <div class="upload-area" id="areaLogo2">
                                     <input type="file" accept="image/*" id="fileLogo2" onchange="previsualizarLogo(this, 'previewLogo2', 'iconLogo2')">
                                     <i data-lucide="image" class="w-8 h-8 text-gray-500 mx-auto mb-2" id="iconLogo2"></i>
@@ -345,11 +339,10 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Colores -->
                         <div class="space-y-6 bg-white/[0.02] p-6 rounded-xl border border-white/5">
-                            <h4 class="text-sm font-bold text-white mb-4">Esquema de Colores</h4>
+                            <h4 class="text-sm font-bold text-white mb-4">Colores</h4>
                             <div>
-                                <label class="block text-xs text-gray-400 mb-2">Color Primario (Botones y Acentos)</label>
+                                <label class="block text-xs text-gray-400 mb-2">Primario</label>
                                 <div class="flex items-center gap-3">
                                     <input type="color" id="miColor1" class="w-12 h-12 rounded cursor-pointer border-none bg-transparent" value="#7c3aed">
                                     <code class="text-xs text-gray-500 bg-black/50 px-2 py-1 rounded" id="hexColor1">#7c3aed</code>
@@ -357,7 +350,7 @@
                             </div>
                             <hr class="border-white/5">
                             <div>
-                                <label class="block text-xs text-gray-400 mb-2">Color Secundario (Textos y Fondos)</label>
+                                <label class="block text-xs text-gray-400 mb-2">Secundario</label>
                                 <div class="flex items-center gap-3">
                                     <input type="color" id="miColor2" class="w-12 h-12 rounded cursor-pointer border-none bg-transparent" value="#ffffff">
                                     <code class="text-xs text-gray-500 bg-black/50 px-2 py-1 rounded" id="hexColor2">#ffffff</code>
@@ -367,48 +360,87 @@
                     </div>
                 </div>
 
-                <!-- TAB: TERMINOLOGÍA -->
+                <!-- TAB TERMINOLOGÍA -->
                 <div class="tab-content" id="tab-textos">
-                    <p class="text-sm text-gray-400 mb-6">Adapta las palabras del sistema para que coincidan con la cultura de la institución.</p>
                     <div class="grid grid-cols-2 gap-6">
-                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Estudiante se llama:</label><input type="text" id="miTermAlumno" class="input-dios" placeholder="Ej: Alumno, Socio, Afiliado"></div>
-                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Profesor se llama:</label><input type="text" id="miTermDocente" class="input-dios" placeholder="Ej: Docente, Instructor, Disertante"></div>
-                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Billetera se llama:</label><input type="text" id="miTermWallet" class="input-dios" placeholder="Ej: Credencial Digital, Mi Portal"></div>
-                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Matrícula se llama:</label><input type="text" id="miTermMatricula" class="input-dios" placeholder="Ej: Legajo, DNI, Registro"></div>
+                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Alumno</label><input type="text" id="miTermAlumno" class="input-dios"></div>
+                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Docente</label><input type="text" id="miTermDocente" class="input-dios"></div>
+                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Billetera</label><input type="text" id="miTermWallet" class="input-dios"></div>
+                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Matrícula</label><input type="text" id="miTermMatricula" class="input-dios"></div>
+                    </div>
+                </div>
+
+                <!-- ✅ TAB MÓDULOS (SaaS TIERING) - NUEVO -->
+                <div class="tab-content" id="tab-modulos">
+                    <p class="text-xs text-gray-500 mb-4">Controla qué secciones ve el Director</p>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                            <div><p class="font-medium">CRM / Alumnos</p><p class="text-xs text-gray-500">Padrón de alumnos</p></div>
+                            <label class="toggle-switch"><input type="checkbox" id="modCrm" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                            <div><p class="font-medium">Sedes y Cobros</p><p class="text-xs text-gray-500">Sucursales</p></div>
+                            <label class="toggle-switch"><input type="checkbox" id="modSedes" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                            <div><p class="font-medium">Campus Virtual</p><p class="text-xs text-gray-500">Cursos y videos</p></div>
+                            <label class="toggle-switch"><input type="checkbox" id="modCampus" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                            <div><p class="font-medium">Certificaciones</p><p class="text-xs text-gray-500">Emisión TXID</p></div>
+                            <label class="toggle-switch"><input type="checkbox" id="modCertificados" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                            <div><p class="font-medium">Portal & CMS</p><p class="text-xs text-gray-500">Publicaciones</p></div>
+                            <label class="toggle-switch"><input type="checkbox" id="modPortal" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                            <div><p class="font-medium">Reportes</p><p class="text-xs text-gray-500">Finanzas y CSV</p></div>
+                            <label class="toggle-switch"><input type="checkbox" id="modReportes" checked><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                            <div><p class="font-medium">Billetera (Wallet)</p><p class="text-xs text-gray-500">Credencial digital</p></div>
+                            <label class="toggle-switch"><input type="checkbox" id="modWallet" checked><span class="toggle-slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✅ TAB SLA - NUEVO -->
+                <div class="tab-content" id="tab-sla">
+                    <p class="text-xs text-gray-500 mb-4">Modelo de negocio de esta instancia</p>
+                    <div class="space-y-4">
+                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Costo Alta Alumno (USD)</label><input type="number" id="slaAltaAlumno" class="input-dios" min="0" step="0.01" value="10"></div>
+                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Fee Certificación (%)</label><input type="number" id="slaFeeCert" class="input-dios" min="0" max="100" step="0.1" value="20"></div>
+                        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Abono Mensual (USD)</label><input type="number" id="slaAbono" class="input-dios" min="0" step="0.01" value="0"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Footer Modal -->
             <div class="p-6 border-t border-white/5 bg-black/20 rounded-b-2xl flex justify-end gap-4">
                 <button onclick="cerrarModalInst()" class="btn-secondary">Cancelar</button>
-                <button onclick="guardarInstitutoFull()" id="btnGuardarInst" class="btn-primary"><i data-lucide="hard-drive" class="w-4 h-4"></i> Guardar Configuración</button>
+                <button onclick="guardarInstitutoFull()" id="btnGuardarInst" class="btn-primary"><i data-lucide="hard-drive" class="w-4 h-4"></i> Guardar</button>
             </div>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- MODAL CREAR USUARIO (BÓVEDA) -->
-    <!-- ========================================== -->
+    <!-- MODAL USUARIO -->
     <div id="modalUsuario" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="modal-overlay absolute inset-0" onclick="cerrarModalUser()"></div>
-        <div class="card-dios w-full max-w-md relative z-10 p-8 shadow-2xl">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="cerrarModalUser()"></div>
+        <div class="card-dios w-full max-w-md relative z-10 p-8">
             <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2"><i data-lucide="user-plus" class="text-blue-400"></i> Alta de Credencial</h3>
-            
             <div class="space-y-5">
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Instituto Destino</label><select id="muInstituto" class="input-dios"></select></div>
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Email de Acceso</label><input type="email" id="muEmail" class="input-dios" placeholder="director@instituto.com"></div>
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Contraseña Segura</label><input type="text" id="muPass" class="input-dios" placeholder="Min. 6 caracteres"></div>
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Nombre Completo</label><input type="text" id="muNombre" class="input-dios" placeholder="Juan Pérez"></div>
-                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Nivel de Privilegio</label>
+                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Instituto</label><select id="muInstituto" class="input-dios"></select></div>
+                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Email</label><input type="email" id="muEmail" class="input-dios"></div>
+                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Contraseña</label><input type="text" id="muPass" class="input-dios"></div>
+                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Nombre</label><input type="text" id="muNombre" class="input-dios"></div>
+                <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Rol</label>
                     <select id="muRol" class="input-dios">
-                        <option value="director">Director (Nivel 2 - Acceso Total CRM)</option>
-                        <option value="asesor">Asesor (Nivel 1 - Operativo)</option>
-                        <option value="profesor">Profesor (Nivel 1 - Solo Lectura)</option>
+                        <option value="director">Director</option>
+                        <option value="asesor">Asesor</option>
+                        <option value="profesor">Profesor</option>
                     </select>
                 </div>
             </div>
-            
             <div class="mt-8 flex justify-end gap-3">
                 <button onclick="cerrarModalUser()" class="btn-secondary">Cancelar</button>
                 <button onclick="crearUsuarioSilencioso()" id="btnGuardarUser" class="btn-primary">Ejecutar Alta</button>
@@ -419,47 +451,36 @@
     <!-- TOAST -->
     <div id="toastMsg" class="toast"><i data-lucide="info" class="w-5 h-5"></i><span id="toastText">Mensaje</span></div>
 
-    <!-- ========================================== -->
-    <!-- LÓGICA CORE Y SUPABASE -->
-    <!-- ========================================== -->
-    <!-- IMPORTANTE: Usamos el archivo base de Supabase -->
     <script src="supabase-config.js?v=5"></script>
 
     <script>
         lucide.createIcons();
 
-        // VARIABLES GLOBALES
         let institutosData = [];
         let configData = {};
         
-        // Llaves para Auth Silencioso (Asegúrate de que no pidan confirmación de email en tu panel de Supabase)
-        // NOTA: En producción, deberías inyectar esto desde supabase-config o variables de entorno.
-        const SILENT_URL = window.supabaseUrl || 'https://wdewtjdimbecdfyntcll.supabase.co'; 
-        const SILENT_KEY = window.supabaseAnonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
+        const SILENT_URL = 'https://wdewtjdimbecdfyntcll.supabase.co';
+        const SILENT_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
 
-        // Gráficos
         let chartFlujo = null;
         let chartPie = null;
 
-        // ============================================
-        // SISTEMA DE TOAST
-        // ============================================
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
         function showToast(msg, type = 'success') {
             const t = document.getElementById('toastMsg');
             const icon = t.querySelector('i');
             t.querySelector('span').textContent = msg;
-            
             if(type === 'success') { t.className = 'toast show success'; icon.setAttribute('data-lucide', 'check-circle'); }
             else { t.className = 'toast show error'; icon.setAttribute('data-lucide', 'alert-triangle'); }
-            
             lucide.createIcons();
             clearTimeout(window._tt);
             window._tt = setTimeout(() => { t.classList.remove('show'); }, 3500);
         }
 
-        // ============================================
-        // NAVEGACIÓN Y SESIÓN
-        // ============================================
         function verificarSesionAdmin() {
             const s = localStorage.getItem('asari_admin_session');
             if(!s) { window.location.href = 'admin-login.html'; return false; }
@@ -475,39 +496,32 @@
         function navegarA(vista, elem) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById(`view-${vista}`).classList.remove('hidden');
-            
             document.querySelectorAll('.sidebar .nav-item').forEach(el => el.classList.remove('active'));
             elem.classList.add('active');
-
+            
             const titles = {
                 dashboard: ['Panel Financiero', 'Métricas globales y proyecciones'],
-                institutos: ['Red de Institutos', 'Control absoluto de inquilinos (Tenants)'],
-                usuarios: ['Gestión de Accesos', 'Cuentas de directivos y staff'],
-                builder: ['Constructor JSON', 'Inyección de módulos personalizados']
+                institutos: ['Red de Institutos', 'Control de inquilinos'],
+                usuarios: ['Gestión de Accesos', 'Cuentas de staff'],
+                builder: ['Constructor JSON', 'Inyección de módulos']
             };
             document.getElementById('viewTitle').textContent = titles[vista][0];
             document.getElementById('viewSubtitle').textContent = titles[vista][1];
-
-            // Acciones Topbar
+            
             const act = document.getElementById('topbarActions');
             if(vista === 'institutos') act.innerHTML = `<button onclick="abrirModalInst()" class="btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Crear Franquicia</button>`;
             else if(vista === 'usuarios') act.innerHTML = `<button onclick="abrirModalUser()" class="btn-primary"><i data-lucide="shield" class="w-4 h-4"></i> Otorgar Credencial</button>`;
             else act.innerHTML = '';
             lucide.createIcons();
-
-            // Ejecutar lógicas
+            
             if(vista === 'dashboard') cargarDashboard();
             if(vista === 'institutos') cargarTablaInstitutos();
             if(vista === 'usuarios' || vista === 'builder') popularSelectInstitutos();
         }
 
-        // ============================================
-        // CARGA CENTRAL DE DATOS (NÚCLEO)
-        // ============================================
         async function fetchTodo() {
             const { data: inst } = await window.supabase.from('sys_institutos').select('*').order('created_at', {ascending: false});
             institutosData = inst || [];
-            
             if(institutosData.length > 0) {
                 const ids = institutosData.map(i => i.id);
                 const { data: conf } = await window.supabase.from('sys_configuracion').select('*').in('instituto_id', ids);
@@ -516,51 +530,31 @@
             }
         }
 
-        // ============================================
-        // VISTA 1: DASHBOARD Y GRÁFICOS
-        // ============================================
         async function cargarDashboard() {
             await fetchTodo();
-            
-            // Simulación de consulta a Padrón Global (Para obtener total alumnos)
             const { count: alumnosTotal } = await window.supabase.from('padron_global').select('*', { count: 'exact', head: true });
+            const { data: certificados } = await window.supabase.from('sys_certificados').select('fee_asari_retenido');
+            
             const totalA = alumnosTotal || 0;
-            
             const activos = institutosData.filter(i => i.estado === 'activo').length;
-            let totalModulos = 0;
+            const totalFees = (certificados || []).reduce((sum, c) => sum + (c.fee_asari_retenido || 0), 0);
+            const mrr = totalA * 10; // $10 USD por alumno
             
-            // Estructura para gráfico de torta
-            let alumnosPorInstituto = {};
-            // En la realidad harías un GROUP BY, aquí lo simulamos dividiendo el total (o consultando real si tuviéramos tiempo)
-            // Haremos una división equitativa para el gráfico visual
-            
-            institutosData.forEach(i => {
-                if(i.modulos_activos?.campus) totalModulos++;
-                if(i.modulos_activos?.wallet) totalModulos++;
-                if(i.modulos_activos?.validador) totalModulos++;
-                
-                alumnosPorInstituto[i.nombre] = Math.floor(Math.random() * 500) + 50; // Mock visual
-            });
-
-            // Flujo de Caja Estimado: Alumnos Totales * $10.000 ARS (Fee sugerido en tu auditoría)
-            const feeARS = 10000;
-            const mrr = totalA * feeARS;
-            
-            document.getElementById('kpiMRR').textContent = `$${mrr.toLocaleString('es-AR')}`;
+            document.getElementById('kpiMRR').textContent = `$${mrr.toLocaleString()}`;
             document.getElementById('kpiInstitutos').textContent = institutosData.length;
-            document.getElementById('kpiInstitutosActivos').textContent = `${activos} operando`;
+            document.getElementById('kpiInstitutosActivos').textContent = `${activos} activos`;
             document.getElementById('kpiAlumnos').textContent = totalA;
-            document.getElementById('kpiCredenciales').textContent = totalA > 0 ? totalA - 10 : 0; // Simulamos certificados
-
-            renderizarGraficos(alumnosPorInstituto, mrr);
+            document.getElementById('kpiFees').textContent = `$${totalFees.toFixed(2)}`;
+            
+            const distribucion = {};
+            institutosData.forEach(i => { distribucion[i.nombre] = Math.floor(Math.random() * 500) + 50; });
+            renderizarGraficos(distribucion, mrr);
         }
 
         function renderizarGraficos(distribucion, mrrActual) {
-            // Destruir gráficos previos si existen para evitar solapamiento
             if(chartFlujo) chartFlujo.destroy();
             if(chartPie) chartPie.destroy();
-
-            // Gráfico 1: Proyección a 6 meses (Crecimiento del 15% mensual)
+            
             const ctxFlujo = document.getElementById('chartCashFlow').getContext('2d');
             const proyecciones = [mrrActual];
             for(let i=1; i<6; i++) proyecciones.push(Math.round(proyecciones[i-1] * 1.15));
@@ -568,86 +562,48 @@
             chartFlujo = new Chart(ctxFlujo, {
                 type: 'line',
                 data: {
-                    labels: ['Mes Actual', '+1 Mes', '+2 Meses', '+3 Meses', '+4 Meses', '+5 Meses'],
+                    labels: ['Mes 1','Mes 2','Mes 3','Mes 4','Mes 5','Mes 6'],
                     datasets: [{
-                        label: 'MRR Proyectado (ARS)',
+                        label: 'MRR USD',
                         data: proyecciones,
                         borderColor: '#7c3aed',
-                        backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                        backgroundColor: 'rgba(124,58,237,0.1)',
                         borderWidth: 3,
                         tension: 0.4,
-                        fill: true,
-                        pointBackgroundColor: '#ffffff',
-                        pointBorderColor: '#7c3aed',
-                        pointBorderWidth: 2,
-                        pointRadius: 4
+                        fill: true
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', callback: (value) => '$' + value/1000 + 'k' } },
-                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }, x: { grid: { display: false }, ticks: { color: '#94a3b8' } } } }
             });
-
-            // Gráfico 2: Torta de Distribución
+            
             const ctxPie = document.getElementById('chartAlumnos').getContext('2d');
             const labels = Object.keys(distribucion).slice(0,5);
             const data = Object.values(distribucion).slice(0,5);
             
             chartPie = new Chart(ctxPie, {
                 type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: ['#7c3aed', '#3b82f6', '#10b981', '#f59e0b', '#ec4899'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '75%',
-                    plugins: {
-                        legend: { position: 'right', labels: { color: '#e5e7eb', boxWidth: 12, font: { size: 11 } } }
-                    }
-                }
+                data: { labels, datasets: [{ data, backgroundColor: ['#7c3aed','#3b82f6','#10b981','#f59e0b','#ec4899'], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels: { color: '#e5e7eb', boxWidth: 12, font: { size: 10 } } } } }
             });
         }
 
-        // ============================================
-        // VISTA 2: RED DE INSTITUTOS (TABLA MODERNA)
-        // ============================================
         async function cargarTablaInstitutos() {
             const tbody = document.getElementById('tablaInstitutosBody');
             document.getElementById('instLoading').classList.remove('hidden');
             tbody.innerHTML = '';
-            
             await fetchTodo();
             document.getElementById('instLoading').classList.add('hidden');
             
             if(institutosData.length === 0) { document.getElementById('instEmpty').classList.remove('hidden'); return; }
             document.getElementById('instEmpty').classList.add('hidden');
-
+            
             tbody.innerHTML = institutosData.map(inst => {
                 const conf = configData[inst.id] || {};
                 const logo = conf.branding?.logo_principal;
                 const mods = inst.modulos_activos || {};
+                const sla = conf.sla_precios || {};
+                const modsCount = Object.values(mods).filter(Boolean).length;
                 
-                // Switch HTML interactivos directos en tabla
-                const makeToggle = (key, label) => `
-                    <label class="toggle-switch transform scale-75" title="${label}">
-                        <input type="checkbox" ${mods[key] ? 'checked' : ''} onchange="toggleModuloDB('${inst.id}', '${key}', this.checked)">
-                        <span class="toggle-slider"></span>
-                    </label>
-                `;
-
                 return `
                 <tr>
                     <td>
@@ -655,25 +611,13 @@
                             <div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center overflow-hidden border border-white/10">
                                 ${logo ? `<img src="${logo}" class="w-full h-full object-cover">` : `<i data-lucide="building" class="w-5 h-5 text-gray-500"></i>`}
                             </div>
-                            <div>
-                                <p class="font-bold text-white text-sm">${inst.nombre}</p>
-                                <p class="text-[10px] text-gray-500 uppercase tracking-wider">${inst.id.split('-')[0]}</p>
-                            </div>
+                            <div><p class="font-bold text-white text-sm">${inst.nombre}</p></div>
                         </div>
                     </td>
-                    <td><code class="text-xs bg-purple-500/10 text-purple-300 px-2 py-1 rounded border border-purple-500/20">${inst.slug_dominio}</code></td>
-                    <td>
-                        <button onclick="toggleEstadoDB('${inst.id}')" class="badge ${inst.estado === 'activo' ? 'badge-active' : 'badge-inactive'} hover:opacity-80 transition">
-                            ${inst.estado} <i data-lucide="refresh-ccw" class="w-3 h-3 inline ml-1"></i>
-                        </button>
-                    </td>
-                    <td>
-                        <div class="flex justify-center gap-2">
-                            ${makeToggle('campus', 'Campus')}
-                            ${makeToggle('wallet', 'Billetera')}
-                            ${makeToggle('validador', 'Validador')}
-                        </div>
-                    </td>
+                    <td><code class="text-xs bg-purple-500/10 text-purple-300 px-2 py-1 rounded">${inst.slug_dominio}</code></td>
+                    <td><button onclick="toggleEstadoDB('${inst.id}')" class="badge ${inst.estado === 'activo' ? 'badge-active' : 'badge-inactive'}">${inst.estado}</button></td>
+                    <td><span class="text-xs bg-blue-500/10 text-blue-300 px-3 py-1 rounded-full">${modsCount} activos</span></td>
+                    <td class="text-xs text-gray-400">Alta: $${sla.alta_alumno||10} | Fee: ${sla.fee_emision_porcentaje||20}%</td>
                     <td class="text-right">
                         <button onclick="abrirModalInst('${inst.id}')" class="btn-secondary px-3 py-1.5"><i data-lucide="settings-2" class="w-4 h-4"></i></button>
                         <button onclick="eliminarInstDB('${inst.id}', '${inst.nombre}')" class="btn-danger px-3 py-1.5 ml-1"><i data-lucide="trash" class="w-4 h-4"></i></button>
@@ -683,108 +627,108 @@
             lucide.createIcons();
         }
 
-        // ============================================
-        // ACCIONES DIRECTAS EN TABLA
-        // ============================================
-        async function toggleModuloDB(id, modulo, estado) {
-            const inst = institutosData.find(i => i.id === id);
-            const nuevosMods = { ...inst.modulos_activos, [modulo]: estado };
-            await window.supabase.from('sys_institutos').update({ modulos_activos: nuevosMods }).eq('id', id);
-            showToast(`Módulo ${modulo} ${estado ? 'encendido' : 'apagado'}`, 'success');
-        }
-
         async function toggleEstadoDB(id) {
             const inst = institutosData.find(i => i.id === id);
             const nuevo = inst.estado === 'activo' ? 'inactivo' : 'activo';
             await window.supabase.from('sys_institutos').update({ estado: nuevo }).eq('id', id);
             await cargarTablaInstitutos();
-            showToast(`Instituto ahora está ${nuevo}`, 'success');
+            showToast(`Instituto ahora está ${nuevo}`);
         }
 
         async function eliminarInstDB(id, nombre) {
-            if(!confirm(`⚠️ PELIGRO ⚠️\n¿Eliminar permanentemente a ${nombre} y toda su configuración?`)) return;
+            if(!confirm(`¿Eliminar ${nombre}?`)) return;
             await window.supabase.from('sys_institutos').delete().eq('id', id);
             await cargarTablaInstitutos();
-            showToast('Instituto purgado de la red', 'success');
+            showToast('Instituto purgado');
         }
 
-        // ============================================
-        // MODAL SÚPER EDITOR DE INSTITUTOS
-        // ============================================
         function cambiarTabInst(tab, el) {
-            document.querySelectorAll('#miTabs .tab-nav-item').forEach(t => t.classList.remove('active', 'text-white'));
-            el.classList.add('active', 'text-white');
+            document.querySelectorAll('#miTabs .tab-nav-item').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.getElementById(`tab-${tab}`).classList.add('active');
         }
 
         function abrirModalInst(id = null) {
             document.getElementById('modalInstituto').classList.remove('hidden');
-            cambiarTabInst('general', document.querySelector('#miTabs .tab-nav-item')); // reset tab
-
-            if(!id) {
-                // Modo CREAR
-                document.getElementById('miTitulo').textContent = 'Crear Nueva Franquicia';
-                document.getElementById('miId').value = '';
-                document.getElementById('miNombre').value = '';
-                document.getElementById('miSlug').value = '';
-                document.getElementById('miEstado').value = 'activo';
-                
-                document.getElementById('previewLogo1').classList.add('hidden');
-                document.getElementById('iconLogo1').classList.remove('hidden');
-                document.getElementById('previewLogo2').classList.add('hidden');
-                document.getElementById('iconLogo2').classList.remove('hidden');
-                
-                document.getElementById('miColor1').value = '#7c3aed'; document.getElementById('hexColor1').textContent = '#7c3aed';
-                document.getElementById('miColor2').value = '#ffffff'; document.getElementById('hexColor2').textContent = '#ffffff';
-                
-                document.getElementById('miTermAlumno').value = 'Alumno';
-                document.getElementById('miTermDocente').value = 'Instructor';
-                document.getElementById('miTermWallet').value = 'Billetera Virtual';
-                document.getElementById('miTermMatricula').value = 'Nº Registro';
-            } else {
-                // Modo EDITAR
+            cambiarTabInst('general', document.querySelector('#miTabs .tab-nav-item'));
+            
+            // Reset
+            document.getElementById('miId').value = '';
+            document.getElementById('miNombre').value = '';
+            document.getElementById('miSlug').value = '';
+            document.getElementById('miEstado').value = 'activo';
+            document.getElementById('miColor1').value = '#7c3aed';
+            document.getElementById('miColor2').value = '#ffffff';
+            document.getElementById('hexColor1').textContent = '#7c3aed';
+            document.getElementById('hexColor2').textContent = '#ffffff';
+            document.getElementById('miTermAlumno').value = 'Alumno';
+            document.getElementById('miTermDocente').value = 'Instructor';
+            document.getElementById('miTermWallet').value = 'Billetera Virtual';
+            document.getElementById('miTermMatricula').value = 'Nº Registro';
+            
+            // Toggles default
+            ['modCrm','modSedes','modCampus','modCertificados','modPortal','modReportes','modWallet'].forEach(id => document.getElementById(id).checked = true);
+            
+            // SLA default
+            document.getElementById('slaAltaAlumno').value = 10;
+            document.getElementById('slaFeeCert').value = 20;
+            document.getElementById('slaAbono').value = 0;
+            
+            // Logos reset
+            document.getElementById('previewLogo1').classList.add('hidden');
+            document.getElementById('iconLogo1').classList.remove('hidden');
+            document.getElementById('previewLogo2').classList.add('hidden');
+            document.getElementById('iconLogo2').classList.remove('hidden');
+            
+            if(id) {
                 const inst = institutosData.find(i => i.id === id);
                 const conf = configData[id] || {};
                 const b = conf.branding || {};
                 const t = conf.terminologia || {};
-
+                const sla = conf.sla_precios || {};
+                
                 document.getElementById('miTitulo').textContent = `Auditar: ${inst.nombre}`;
                 document.getElementById('miId').value = inst.id;
                 document.getElementById('miNombre').value = inst.nombre;
                 document.getElementById('miSlug').value = inst.slug_dominio;
                 document.getElementById('miEstado').value = inst.estado;
-
-                if(b.logo_principal) {
-                    document.getElementById('previewLogo1').src = b.logo_principal;
-                    document.getElementById('previewLogo1').classList.remove('hidden');
-                    document.getElementById('iconLogo1').classList.add('hidden');
-                }
-                if(b.logo_secundario) {
-                    document.getElementById('previewLogo2').src = b.logo_secundario;
-                    document.getElementById('previewLogo2').classList.remove('hidden');
-                    document.getElementById('iconLogo2').classList.add('hidden');
-                }
-
+                
+                if(b.logo_principal) { document.getElementById('previewLogo1').src = b.logo_principal; document.getElementById('previewLogo1').classList.remove('hidden'); document.getElementById('iconLogo1').classList.add('hidden'); }
+                if(b.logo_secundario) { document.getElementById('previewLogo2').src = b.logo_secundario; document.getElementById('previewLogo2').classList.remove('hidden'); document.getElementById('iconLogo2').classList.add('hidden'); }
+                
                 document.getElementById('miColor1').value = b.colores?.primario || '#7c3aed';
-                document.getElementById('hexColor1').textContent = b.colores?.primario || '#7c3aed';
                 document.getElementById('miColor2').value = b.colores?.secundario || '#ffffff';
+                document.getElementById('hexColor1').textContent = b.colores?.primario || '#7c3aed';
                 document.getElementById('hexColor2').textContent = b.colores?.secundario || '#ffffff';
-
+                
                 document.getElementById('miTermAlumno').value = t.alumno || '';
                 document.getElementById('miTermDocente').value = t.docente || '';
                 document.getElementById('miTermWallet').value = t.wallet || '';
                 document.getElementById('miTermMatricula').value = t.matricula || '';
+                
+                const mods = inst.modulos_activos || {};
+                document.getElementById('modCrm').checked = mods.crm !== false;
+                document.getElementById('modSedes').checked = mods.sedes !== false;
+                document.getElementById('modCampus').checked = mods.campus !== false;
+                document.getElementById('modCertificados').checked = mods.certificados !== false;
+                document.getElementById('modPortal').checked = mods.portal !== false;
+                document.getElementById('modReportes').checked = mods.reportes !== false;
+                document.getElementById('modWallet').checked = mods.wallet !== false;
+                
+                document.getElementById('slaAltaAlumno').value = sla.alta_alumno || 10;
+                document.getElementById('slaFeeCert').value = sla.fee_emision_porcentaje || 20;
+                document.getElementById('slaAbono').value = sla.abono_mensual || 0;
+            } else {
+                document.getElementById('miTitulo').textContent = 'Crear Nueva Franquicia';
             }
         }
 
         function cerrarModalInst() { document.getElementById('modalInstituto').classList.add('hidden'); }
 
-        // Actualizar visual de color hex
         document.getElementById('miColor1').addEventListener('input', (e) => document.getElementById('hexColor1').textContent = e.target.value);
         document.getElementById('miColor2').addEventListener('input', (e) => document.getElementById('hexColor2').textContent = e.target.value);
 
-        // Preview File Local
         function previsualizarLogo(input, imgId, iconId) {
             if(input.files && input.files[0]) {
                 const r = new FileReader();
@@ -797,7 +741,6 @@
             }
         }
 
-        // Subida Real a Supabase Storage
         async function subirArchivoStorage(file, ruta) {
             if(!file) return null;
             const ext = file.name.split('.').pop();
@@ -808,41 +751,51 @@
             return data.publicUrl;
         }
 
-        // GUARDAR TODO EL INSTITUTO (Magia Backend)
         async function guardarInstitutoFull() {
             const id = document.getElementById('miId').value;
             const nom = document.getElementById('miNombre').value.trim();
             const slug = document.getElementById('miSlug').value.trim();
             const est = document.getElementById('miEstado').value;
-
+            
             if(!nom || !slug) return showToast('Nombre y Slug requeridos', 'error');
-
+            
             const btn = document.getElementById('btnGuardarInst');
             btn.innerHTML = `<div class="spinner w-4 h-4 border-2 mr-2"></div> Sincronizando...`;
             btn.disabled = true;
-
+            
             try {
+                const modulos_activos = {
+                    crm: document.getElementById('modCrm').checked,
+                    sedes: document.getElementById('modSedes').checked,
+                    campus: document.getElementById('modCampus').checked,
+                    certificados: document.getElementById('modCertificados').checked,
+                    portal: document.getElementById('modPortal').checked,
+                    reportes: document.getElementById('modReportes').checked,
+                    wallet: document.getElementById('modWallet').checked
+                };
+                
+                const sla_precios = {
+                    alta_alumno: parseFloat(document.getElementById('slaAltaAlumno').value) || 0,
+                    fee_emision_porcentaje: parseFloat(document.getElementById('slaFeeCert').value) || 0,
+                    abono_mensual: parseFloat(document.getElementById('slaAbono').value) || 0
+                };
+                
                 let instId = id;
-                // 1. Guardar Instituto
                 if(id) {
-                    await window.supabase.from('sys_institutos').update({ nombre: nom, slug_dominio: slug, estado: est }).eq('id', id);
+                    await window.supabase.from('sys_institutos').update({ nombre: nom, slug_dominio: slug, estado: est, modulos_activos }).eq('id', id);
                 } else {
-                    const { data, error } = await window.supabase.from('sys_institutos').insert([{ nombre: nom, slug_dominio: slug, estado: est, modulos_activos: {campus:true, wallet:true, validador:true} }]).select().single();
+                    const { data, error } = await window.supabase.from('sys_institutos').insert([{ nombre: nom, slug_dominio: slug, estado: est, modulos_activos }]).select().single();
                     if(error) throw error;
                     instId = data.id;
                 }
-
-                // 2. Subir Archivos si existen
+                
                 const file1 = document.getElementById('fileLogo1').files[0];
                 const file2 = document.getElementById('fileLogo2').files[0];
-                
                 let url1 = configData[instId]?.branding?.logo_principal || null;
                 let url2 = configData[instId]?.branding?.logo_secundario || null;
-
                 if(file1) url1 = await subirArchivoStorage(file1, `logos/${instId}/principal`);
                 if(file2) url2 = await subirArchivoStorage(file2, `logos/${instId}/secundario`);
-
-                // 3. Empaquetar y Guardar Configuración
+                
                 const payloadConfig = {
                     instituto_id: instId,
                     branding: {
@@ -855,30 +808,27 @@
                         docente: document.getElementById('miTermDocente').value,
                         wallet: document.getElementById('miTermWallet').value,
                         matricula: document.getElementById('miTermMatricula').value
-                    }
+                    },
+                    sla_precios
                 };
-
+                
                 await window.supabase.from('sys_configuracion').upsert(payloadConfig, { onConflict: 'instituto_id' });
-
+                
                 cerrarModalInst();
                 await cargarTablaInstitutos();
-                showToast('Despliegue del instituto exitoso', 'success');
-
+                showToast('Despliegue exitoso');
             } catch(e) {
-                showToast('Fallo en sincronización: ' + e.message, 'error');
+                showToast('Fallo: ' + e.message, 'error');
             } finally {
-                btn.innerHTML = `<i data-lucide="hard-drive" class="w-4 h-4"></i> Guardar Configuración`;
+                btn.innerHTML = `<i data-lucide="hard-drive" class="w-4 h-4"></i> Guardar`;
                 btn.disabled = false;
                 lucide.createIcons();
             }
         }
 
-        // ============================================
-        // VISTA 3: USUARIOS Y ROLES (SILENT CREATION)
-        // ============================================
         async function popularSelectInstitutos() {
             if(institutosData.length === 0) await fetchTodo();
-            const options = `<option value="">-- Seleccione Franquicia --</option>` + institutosData.map(i => `<option value="${i.id}">${i.nombre}</option>`).join('');
+            const options = `<option value="">-- Seleccione --</option>` + institutosData.map(i => `<option value="${i.id}">${i.nombre}</option>`).join('');
             document.getElementById('selectInstUsuarios').innerHTML = options;
             document.getElementById('selectInstBuilder').innerHTML = options;
         }
@@ -886,32 +836,25 @@
         async function cargarUsuariosTabla() {
             const instId = document.getElementById('selectInstUsuarios').value;
             const tbody = document.getElementById('tablaUsuariosBody');
-            
-            if(!instId) { tbody.innerHTML = `<tr><td colspan="4" class="text-center p-8 text-gray-500">Seleccione un instituto arriba</td></tr>`; return; }
-            
+            if(!instId) { tbody.innerHTML = `<tr><td colspan="4" class="text-center p-8 text-gray-500">Seleccione un instituto</td></tr>`; return; }
             tbody.innerHTML = `<tr><td colspan="4" class="text-center p-8"><div class="spinner mx-auto"></div></td></tr>`;
-            
             const { data } = await window.supabase.from('sys_roles_usuarios').select('*').eq('instituto_id', instId);
-            
-            if(!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center p-8 text-gray-500">Instituto sin personal asignado</td></tr>`;
-                return;
-            }
-
+            if(!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="text-center p-8 text-gray-500">Sin personal</td></tr>`; return; }
             tbody.innerHTML = data.map(u => `
                 <tr>
-                    <td class="font-medium text-white"><i data-lucide="mail" class="w-3 h-3 inline text-gray-500 mr-2"></i>${u.user_email}</td>
-                    <td class="text-gray-400">${u.nombre_completo || 'No especificado'}</td>
+                    <td class="font-medium text-white">${u.user_email}</td>
+                    <td class="text-gray-400">${u.nombre_completo || '-'}</td>
                     <td><span class="badge bg-blue-500/10 text-blue-400 border border-blue-500/20">${u.rol_nivel}</span></td>
-                    <td class="text-right">
-                        <button onclick="revocarUsuario('${u.id}')" class="btn-danger px-3 py-1"><i data-lucide="shield-off" class="w-4 h-4"></i> Revocar</button>
-                    </td>
+                    <td class="text-right"><button onclick="revocarUsuario('${u.id}')" class="btn-danger px-3 py-1"><i data-lucide="shield-off" class="w-4 h-4"></i></button></td>
                 </tr>
             `).join('');
             lucide.createIcons();
         }
 
-        function abrirModalUser() { document.getElementById('modalUsuario').classList.remove('hidden'); document.getElementById('muInstituto').innerHTML = document.getElementById('selectInstUsuarios').innerHTML; }
+        function abrirModalUser() {
+            document.getElementById('modalUsuario').classList.remove('hidden');
+            document.getElementById('muInstituto').innerHTML = document.getElementById('selectInstUsuarios').innerHTML;
+        }
         function cerrarModalUser() { document.getElementById('modalUsuario').classList.add('hidden'); }
 
         async function crearUsuarioSilencioso() {
@@ -920,37 +863,28 @@
             const nom = document.getElementById('muNombre').value.trim();
             const rol = document.getElementById('muRol').value;
             const instId = document.getElementById('muInstituto').value;
-
+            
             if(!email || !pass || !instId) return showToast('Complete Email, Contraseña e Instituto', 'error');
-
+            
             const btn = document.getElementById('btnGuardarUser');
             btn.innerHTML = `<div class="spinner w-4 h-4 border-2"></div>`;
             btn.disabled = true;
-
+            
             try {
-                // 1. Crear en Auth Bóveda usando API REST (para no perder sesión actual)
                 const res = await fetch(`${SILENT_URL}/auth/v1/signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'apikey': SILENT_KEY },
-                    body: JSON.stringify({ email: email, password: pass, data: { nombre_completo: nom } })
+                    body: JSON.stringify({ email, password: pass, data: { nombre_completo: nom } })
                 });
-                
                 const authData = await res.json();
-                if (!res.ok && res.status !== 422) throw new Error(authData.msg || 'Error en Bóveda Supabase');
-
-                // 2. Asignar Rol en la tabla pública
+                if (!res.ok && res.status !== 422) throw new Error(authData.msg || 'Error');
+                
                 await window.supabase.from('sys_roles_usuarios').upsert({
-                    user_email: email,
-                    instituto_id: instId,
-                    rol_nivel: rol,
-                    nombre_completo: nom
+                    user_email: email, instituto_id: instId, rol_nivel: rol, nombre_completo: nom
                 }, { onConflict: 'user_email,instituto_id' });
-
+                
                 cerrarModalUser();
-                document.getElementById('selectInstUsuarios').value = instId;
-                await cargarUsuariosTabla();
-                showToast(`Credencial otorgada a ${email}`, 'success');
-
+                showToast(`Credencial otorgada a ${email}`);
             } catch(e) {
                 showToast(e.message, 'error');
             } finally {
@@ -960,23 +894,18 @@
         }
 
         async function revocarUsuario(id) {
-            if(!confirm('¿Quitar acceso a este usuario?')) return;
+            if(!confirm('¿Quitar acceso?')) return;
             await window.supabase.from('sys_roles_usuarios').delete().eq('id', id);
             await cargarUsuariosTabla();
-            showToast('Acceso revocado', 'success');
+            showToast('Acceso revocado');
         }
 
-        // ============================================
-        // VISTA 4: BUILDER (JSON CUSTOM UI)
-        // ============================================
         async function cargarJSONBuilder() {
             const instId = document.getElementById('selectInstBuilder').value;
             const cont = document.getElementById('builderFormContainer');
             if(!instId) { cont.style.display = 'none'; return; }
-            
             const conf = configData[instId] || {};
             const ui = conf.custom_ui || { tabs: [], campos_extra: [] };
-            
             document.getElementById('bTabs').value = (ui.tabs || []).join(', ');
             document.getElementById('bJson').value = JSON.stringify(ui.campos_extra || [], null, 2);
             cont.style.display = 'block';
@@ -986,28 +915,15 @@
             const instId = document.getElementById('selectInstBuilder').value;
             const tabs = document.getElementById('bTabs').value.split(',').map(s=>s.trim()).filter(Boolean);
             let campos = [];
-            
-            try { campos = JSON.parse(document.getElementById('bJson').value); } 
-            catch(e) { return showToast('El JSON de campos es inválido', 'error'); }
-
-            try {
-                await window.supabase.from('sys_configuracion').update({
-                    custom_ui: { tabs: tabs, campos_extra: campos }
-                }).eq('instituto_id', instId);
-                
-                // Actualizar caché local
-                if(configData[instId]) configData[instId].custom_ui = { tabs, campos_extra: campos };
-                showToast('Inyección JSON exitosa', 'success');
-            } catch(e) { showToast('Error en inyección', 'error'); }
+            try { campos = JSON.parse(document.getElementById('bJson').value); } catch(e) { return showToast('JSON inválido', 'error'); }
+            await window.supabase.from('sys_configuracion').update({ custom_ui: { tabs, campos_extra: campos } }).eq('instituto_id', instId);
+            showToast('Inyección exitosa');
         }
 
-        // ============================================
-        // ARRANQUE
-        // ============================================
         window.onload = () => {
             if(verificarSesionAdmin()) {
                 lucide.createIcons();
-                cargarDashboard(); // Carga la primera vista por defecto
+                cargarDashboard();
             }
         }
     </script>
