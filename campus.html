@@ -200,6 +200,69 @@
             color: rgba(255, 255, 255, 0.5);
         }
         
+        /* 🆕 NUEVO: Botón Completar */
+        .btn-completar {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+        .btn-completar:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4); }
+        .btn-completar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        
+        /* 🆕 NUEVO: Botones híbridos */
+        .btn-descargar {
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-descargar:hover { background: rgba(59, 130, 246, 0.25); }
+        
+        .btn-enlace {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fcd34d;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-enlace:hover { background: rgba(245, 158, 11, 0.25); }
+        
         .modules-section {
             margin-top: 28px;
         }
@@ -280,6 +343,12 @@
             color: rgba(255, 255, 255, 0.7);
         }
         
+        /* 🆕 NUEVO: Badge de completado */
+        .module-completed {
+            flex-shrink: 0;
+            color: #10b981;
+        }
+        
         .empty-state {
             text-align: center;
             padding: 48px 24px;
@@ -299,6 +368,101 @@
             justify-content: center;
             margin: 0 auto 16px;
         }
+        
+        /* 🆕 NUEVO: Tutor IA */
+        .tutor-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 16px;
+            z-index: 25;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse-tutor 2s infinite;
+        }
+        .tutor-btn:hover { transform: scale(1.1); }
+        @keyframes pulse-tutor { 0%,100% { box-shadow: 0 8px 25px rgba(124,58,237,0.4); } 50% { box-shadow: 0 8px 40px rgba(124,58,237,0.7); } }
+        
+        #tutorModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        #tutorModal.open { display: flex; }
+        .tutor-panel {
+            background: #1e293b;
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-width: 480px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .tutor-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .tutor-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .tutor-msg {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .tutor-msg.system {
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            color: #cbd5e1;
+            align-self: flex-start;
+        }
+        .tutor-msg.user {
+            background: #7c3aed;
+            color: white;
+            align-self: flex-end;
+        }
+        .tutor-input-area {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            gap: 10px;
+        }
+        .tutor-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+        .tutor-input:focus { border-color: #7c3aed; }
         
         .tab-bar {
             position: fixed;
@@ -355,7 +519,7 @@
         
         .toast {
             position: fixed;
-            bottom: 100px;
+            bottom: 170px;
             left: 50%;
             transform: translateX(-50%);
             padding: 12px 24px;
@@ -474,7 +638,8 @@
             <div class="video-section" id="videoSection">
                 <p class="section-title">Clase actual</p>
                 
-                <div class="video-container" id="videoContainer">
+                <!-- 🆕 REPRODUCTOR HÍBRIDO -->
+                <div class="video-container" id="videoContainer" style="display:none;">
                     <iframe 
                         id="mainVideo"
                         src=""
@@ -484,10 +649,27 @@
                     </iframe>
                 </div>
                 
+                <div id="archivoContainer" style="display:none;">
+                    <a href="#" target="_blank" id="btnDescargarArchivo" class="btn-descargar">
+                        <i data-lucide="download" class="w-5 h-5"></i> Descargar Material
+                    </a>
+                </div>
+                
+                <div id="urlContainer" style="display:none;">
+                    <a href="#" target="_blank" id="btnAbrirEnlace" class="btn-enlace">
+                        <i data-lucide="external-link" class="w-5 h-5"></i> Abrir Enlace Externo
+                    </a>
+                </div>
+                
                 <div class="video-info" id="videoInfo" style="display: none;">
                     <h3 class="video-title" id="currentVideoTitle">Selecciona un módulo</h3>
                     <p class="video-duration" id="currentVideoDuration"></p>
                 </div>
+                
+                <!-- 🆕 BOTÓN COMPLETAR -->
+                <button class="btn-completar" id="btnCompletar" onclick="marcarCompletado()" style="display:none;">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i> Marcar como Completado
+                </button>
             </div>
             
             <div class="modules-section">
@@ -513,6 +695,31 @@
             
         </main>
         
+        <!-- 🆕 BOTÓN TUTOR IA -->
+        <button class="tutor-btn" onclick="abrirTutor()" aria-label="Tutor IA">
+            <span class="text-2xl">🤖</span>
+        </button>
+        
+        <!-- 🆕 MODAL TUTOR -->
+        <div id="tutorModal">
+            <div class="tutor-panel">
+                <div class="tutor-header">
+                    <div>
+                        <h3 class="text-white font-bold">🤖 Tutor ASARI</h3>
+                        <p class="text-xs text-gray-500">Asistente inteligente</p>
+                    </div>
+                    <button onclick="cerrarTutor()" class="btn-icon"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
+                <div class="tutor-messages" id="tutorMessages">
+                    <div class="tutor-msg system">Hola, soy el tutor inteligente de este curso. ¿En qué puedo ayudarte?</div>
+                </div>
+                <div class="tutor-input-area">
+                    <input type="text" class="tutor-input" id="tutorInput" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter')enviarMensajeTutor()">
+                    <button class="btn-icon" onclick="enviarMensajeTutor()"><i data-lucide="send" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+        </div>
+        
         <nav class="tab-bar">
             <a href="wallet.html" class="tab-item">
                 <i data-lucide="wallet" class="w-5 h-5"></i>
@@ -536,7 +743,7 @@
 
     <div id="toast" class="toast hidden"></div>
 
-    <script src="supabase-config.js?v=3"></script>
+    <script src="supabase-config.js?v=5"></script>
 
     <script>
         lucide.createIcons();
@@ -556,6 +763,9 @@
         
         let modulosData = [];
         let activeModuleId = null;
+        // 🆕 NUEVO: Variables para progreso y curso
+        let progresoData = [];
+        let activeCursoId = null;
         
         // ============================================
         // VERIFICACIÓN DE SESIÓN
@@ -633,7 +843,7 @@
         }
         
         // ============================================
-        // CARGAR NOMBRE DEL ESTUDIANTE DESDE PADRÓN
+        // CARGAR NOMBRE DEL ESTUDIANTE
         // ============================================
         async function cargarNombreEstudiante() {
             try {
@@ -657,11 +867,25 @@
                 if (data?.nombre_completo) {
                     const nombrePila = data.nombre_completo.split(' ')[0];
                     studentName.textContent = nombrePila;
-                    console.log('👋 Nombre del estudiante cargado:', nombrePila);
                 }
             } catch (error) {
-                console.warn('No se pudo cargar el nombre del estudiante:', error.message);
+                console.warn('No se pudo cargar el nombre:', error.message);
             }
+        }
+        
+        // 🆕 NUEVO: Cargar progreso del alumno
+        async function cargarProgreso() {
+            const userEmail = window.__CURRENT_USER__?.email;
+            const institutoId = window.__TENANT_CONFIG__?.instituto?.id;
+            if (!userEmail || !institutoId) return;
+            
+            const { data } = await window.supabase
+                .from('campus_progreso')
+                .select('*')
+                .eq('alumno_email', userEmail)
+                .eq('instituto_id', institutoId);
+            
+            progresoData = data || [];
         }
         
         // ============================================
@@ -671,10 +895,7 @@
             const tenantConfig = window.__TENANT_CONFIG__;
             const institutoId = tenantConfig?.instituto?.id;
             
-            if (!institutoId) {
-                console.error('No hay instituto configurado');
-                return;
-            }
+            if (!institutoId) return;
             
             try {
                 modulesList.innerHTML = `
@@ -694,65 +915,54 @@
                 
                 modulosData = data || [];
                 
-                console.log(`📚 ${modulosData.length} módulos cargados desde Supabase`);
+                // 🆕 NUEVO: Cargar progreso
+                await cargarProgreso();
                 
                 if (modulosData.length === 0) {
                     mostrarEstadoVacio();
                 } else {
                     renderizarModulos();
-                    
-                    // Auto-reproducir el primer módulo (menor orden)
                     const primerModulo = modulosData[0];
                     playModule(primerModulo.id);
                 }
                 
             } catch (error) {
                 console.error('Error cargando módulos:', error);
-                modulesList.innerHTML = `
-                    <div style="text-align: center; padding: 32px;">
-                        <i data-lucide="alert-triangle" class="w-8 h-8" style="color: #ef4444; margin: 0 auto 12px; display: block;"></i>
-                        <p style="font-size: 14px; color: #fca5a5;">Error al cargar los módulos</p>
-                        <p style="font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px;">${error.message}</p>
-                        <button onclick="cargarModulosDeBD()" style="margin-top: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: white; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer;">
-                            <i data-lucide="refresh-cw" class="w-3 h-3 inline mr-1"></i> Reintentar
-                        </button>
-                    </div>
-                `;
+                modulesList.innerHTML = `<div style="text-align:center;padding:32px;"><i data-lucide="alert-triangle" class="w-8 h-8 text-red-400 mx-auto mb-2"></i><p class="text-red-400">Error al cargar</p></div>`;
                 lucide.createIcons();
             }
         }
         
-        // ============================================
-        // MOSTRAR ESTADO VACÍO
-        // ============================================
         function mostrarEstadoVacio() {
             modulesList.innerHTML = '';
             emptyState.style.display = 'block';
             document.getElementById('videoContainer').style.display = 'none';
             videoInfo.style.display = 'none';
+            document.getElementById('btnCompletar').style.display = 'none';
         }
         
         // ============================================
-        // RENDERIZAR LISTA DE MÓDULOS
+        // RENDERIZAR LISTA DE MÓDULOS (con progreso)
         // ============================================
         function renderizarModulos() {
             emptyState.style.display = 'none';
-            document.getElementById('videoContainer').style.display = 'block';
             videoInfo.style.display = 'block';
             
             modulesList.innerHTML = modulosData.map(modulo => {
                 const isActive = modulo.id === activeModuleId;
+                const completado = progresoData.some(p => p.modulo_id === modulo.id && p.estado === 'completado');
+                const iconoTipo = modulo.contenido_tipo === 'video' ? 'play' : (modulo.contenido_tipo === 'archivo' ? 'file' : 'link');
                 
                 return `
-                    <div class="module-item ${isActive ? 'active' : ''}" onclick="playModule('${modulo.id}')" data-module-id="${modulo.id}">
+                    <div class="module-item ${isActive ? 'active' : ''}" onclick="playModule('${modulo.id}')">
                         <div class="module-order">${modulo.orden}</div>
                         <div class="module-info">
                             <p class="module-name">${modulo.titulo || 'Sin título'}</p>
-                            <p class="module-meta">Duración: ${modulo.duracion || 'No especificada'}</p>
+                            <p class="module-meta">${modulo.duracion || ''} • ${modulo.contenido_tipo}</p>
                         </div>
-                        <div class="module-play-icon">
-                            <i data-lucide="${isActive ? 'play-circle' : 'play'}" class="w-6 h-6"></i>
-                        </div>
+                        ${completado 
+                            ? '<div class="module-completed"><i data-lucide="check-circle" class="w-5 h-5"></i></div>' 
+                            : `<div class="module-play-icon"><i data-lucide="${iconoTipo}" class="w-6 h-6"></i></div>`}
                     </div>
                 `;
             }).join('');
@@ -761,7 +971,7 @@
         }
         
         // ============================================
-        // REPRODUCIR MÓDULO
+        // 🆕 NUEVO: PLAY MODULE HÍBRIDO
         // ============================================
         function playModule(moduleId) {
             const modulo = modulosData.find(m => m.id === moduleId);
@@ -770,30 +980,110 @@
                 return;
             }
             
-            if (!modulo.video_url) {
-                showToast('Este módulo no tiene video asignado', 'info');
+            activeModuleId = moduleId;
+            activeCursoId = modulo.curso_id || null;
+            
+            // Ocultar todos los contenedores primero
+            document.getElementById('videoContainer').style.display = 'none';
+            document.getElementById('archivoContainer').style.display = 'none';
+            document.getElementById('urlContainer').style.display = 'none';
+            document.getElementById('btnCompletar').style.display = 'none';
+            
+            currentVideoTitle.textContent = modulo.titulo || 'Sin título';
+            currentVideoDuration.textContent = `Duración: ${modulo.duracion || 'No especificada'}`;
+            videoInfo.style.display = 'block';
+            document.getElementById('btnCompletar').style.display = 'flex';
+            
+            // Mostrar según tipo de contenido
+            if (modulo.contenido_tipo === 'video' && modulo.video_url) {
+                document.getElementById('videoContainer').style.display = 'block';
+                mainVideo.src = modulo.video_url;
+            } else if (modulo.contenido_tipo === 'archivo' && modulo.archivo_url) {
+                document.getElementById('archivoContainer').style.display = 'block';
+                document.getElementById('btnDescargarArchivo').href = modulo.archivo_url;
+            } else if (modulo.contenido_tipo === 'url' && modulo.url_externa) {
+                document.getElementById('urlContainer').style.display = 'block';
+                document.getElementById('btnAbrirEnlace').href = modulo.url_externa;
+            } else {
+                videoInfo.style.display = 'none';
+                document.getElementById('btnCompletar').style.display = 'none';
+                showToast('Este módulo no tiene contenido disponible', 'error');
                 return;
             }
             
-            // Actualizar ID activo
-            activeModuleId = moduleId;
-            
-            // Actualizar iframe
-            mainVideo.src = modulo.video_url;
-            
-            // Actualizar información del video
-            currentVideoTitle.textContent = modulo.titulo || 'Sin título';
-            currentVideoDuration.textContent = `Duración: ${modulo.duracion || 'No especificada'}`;
-            
-            // Re-renderizar lista para actualizar estado visual
             renderizarModulos();
-            
-            // Scroll suave al video
             document.getElementById('videoSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            
             showToast(`Reproduciendo: ${modulo.titulo}`, 'info');
-            console.log('▶️ Reproduciendo módulo:', modulo.titulo, '| URL:', modulo.video_url);
         }
+        
+        // ============================================
+        // 🆕 NUEVO: MARCAR COMPLETADO
+        // ============================================
+        async function marcarCompletado() {
+            const userEmail = window.__CURRENT_USER__?.email;
+            const institutoId = window.__TENANT_CONFIG__?.instituto?.id;
+            
+            if (!activeModuleId || !userEmail || !institutoId) {
+                showToast('No hay módulo seleccionado', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('btnCompletar');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="loader-spinner w-5 h-5"></div> Completando...';
+            
+            try {
+                const { error } = await window.supabase.from('campus_progreso').upsert({
+                    instituto_id: institutoId,
+                    alumno_email: userEmail,
+                    curso_id: activeCursoId,
+                    modulo_id: activeModuleId,
+                    estado: 'completado'
+                }, { onConflict: 'alumno_email,modulo_id' });
+                
+                if (error) throw error;
+                
+                await cargarProgreso();
+                renderizarModulos();
+                showToast('¡Módulo completado! 🎉', 'success');
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> Marcar como Completado';
+                lucide.createIcons();
+            }
+        }
+        
+        // ============================================
+        // 🆕 NUEVO: TUTOR IA
+        // ============================================
+        function abrirTutor() {
+            document.getElementById('tutorModal').classList.add('open');
+        }
+        function cerrarTutor() {
+            document.getElementById('tutorModal').classList.remove('open');
+        }
+        function enviarMensajeTutor() {
+            const input = document.getElementById('tutorInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            
+            const messages = document.getElementById('tutorMessages');
+            messages.innerHTML += `<div class="tutor-msg user">${msg}</div>`;
+            input.value = '';
+            
+            setTimeout(() => {
+                messages.innerHTML += `<div class="tutor-msg system">Buena pregunta. Estoy aprendiendo y pronto podré ayudarte con eso. 🤖</div>`;
+                messages.scrollTop = messages.scrollHeight;
+            }, 500);
+            
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        document.getElementById('tutorModal').addEventListener('click', function(e) {
+            if (e.target === this) cerrarTutor();
+        });
         
         // ============================================
         // TOAST NOTIFICATIONS
@@ -836,15 +1126,8 @@
         }
         
         window.addEventListener('DOMContentLoaded', inicializar);
-        
-        window.addEventListener('load', () => {
-            lucide.createIcons();
-        });
-        
-        window.addEventListener('popstate', () => {
-            history.pushState(null, '', window.location.href);
-        });
-        
+        window.addEventListener('load', () => { lucide.createIcons(); });
+        window.addEventListener('popstate', () => { history.pushState(null, '', window.location.href); });
         history.pushState(null, '', window.location.href);
         
         console.log('📚 Campus Alumno ASARI - Listo');
