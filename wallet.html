@@ -17,15 +17,10 @@
     <link rel="manifest" href="manifest.json">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
         
-        * {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { font-family: 'Inter', sans-serif; margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
         
         :root {
             --color-primary: #7c3aed;
@@ -35,1077 +30,405 @@
             --safe-area-bottom: env(safe-area-inset-bottom, 0px);
         }
         
-        body {
-            background: #0f172a;
-            color: #e2e8f0;
-            min-height: 100vh;
-            min-height: 100dvh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(99, 102, 241, 0.04) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        .app-container {
-            position: relative;
-            z-index: 1;
-            max-width: 480px;
-            margin: 0 auto;
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .app-header {
-            padding: 16px 20px;
-            padding-top: max(16px, env(safe-area-inset-top));
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .header-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            flex-shrink: 0;
-        }
-        
-        .header-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .header-logo-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-        }
-        
-        .btn-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-icon:hover {
-            background: rgba(239, 68, 68, 0.15);
-            border-color: rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-        }
-        
-        .btn-icon:active {
-            transform: scale(0.95);
-        }
-        
-        .app-content {
-            flex: 1;
-            padding: 20px;
-            padding-bottom: calc(100px + var(--safe-area-bottom));
-            overflow-y: auto;
-        }
-        
-        .greeting {
-            margin-bottom: 8px;
-            animation: fadeInUp 0.5s ease-out;
-        }
-        
-        .greeting h1 {
-            font-size: 28px;
-            font-weight: 800;
-            color: white;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-        }
-        
-        .greeting .wave {
-            display: inline-block;
-            animation: wave 1.5s ease-in-out infinite;
-            transform-origin: 70% 70%;
-        }
-        
-        @keyframes wave {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(15deg); }
-            50% { transform: rotate(-5deg); }
-            75% { transform: rotate(10deg); }
-        }
-        
-        .greeting p {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-            margin-top: 4px;
-        }
-        
-        .cards-section {
-            margin-top: 24px;
-        }
-        
-        .section-title {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 16px;
-            padding-left: 4px;
-        }
-        
-        .credential-card {
-            position: relative;
-            border-radius: 20px;
-            padding: 24px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            margin-bottom: 16px;
-        }
-        
-        .credential-card:active {
-            transform: scale(0.98);
-        }
-        
-        .credential-card.primary {
-            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-            animation: fadeInUp 0.6s ease-out;
-        }
-        
-        .credential-card.secondary {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            animation: fadeInUp 0.6s ease-out 0.1s both;
-        }
-        
-        .credential-card.tertiary {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            animation: fadeInUp 0.6s ease-out 0.2s both;
-        }
-        
-        .credential-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .card-badge {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            backdrop-filter: blur(10px);
-        }
-        
-        .card-badge.active {
-            background: rgba(16, 185, 129, 0.3);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-        }
-        
-        .card-type {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.6);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .card-name {
-            font-size: 22px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 4px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .card-detail {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .card-footer {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .card-number {
-            font-size: 13px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.7);
-            letter-spacing: 0.5px;
-        }
-        
-        .card-chip {
-            width: 40px;
-            height: 30px;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 255, 255, 0.2));
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .card-data-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 12px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .card-data-item {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 10px 12px;
-        }
-        
-        .card-data-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 4px;
-        }
-        
-        .card-data-value {
-            font-size: 13px;
-            font-weight: 600;
-            color: white;
-        }
-        
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 24px;
-            animation: fadeInUp 0.6s ease-out 0.3s both;
-        }
-        
-        .action-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 10px;
-        }
-        
-        .action-card:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.12);
-            transform: translateY(-2px);
-        }
-        
-        .action-card:active {
-            transform: scale(0.97);
-        }
-        
-        .action-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-        }
-        
-        .action-icon.purple {
-            background: rgba(124, 58, 237, 0.2);
-            color: #a78bfa;
-        }
-        
-        .action-icon.blue {
-            background: rgba(59, 130, 246, 0.2);
-            color: #93c5fd;
-        }
-        
-        .action-icon.green {
-            background: rgba(16, 185, 129, 0.2);
-            color: #6ee7b7;
-        }
-        
-        .action-icon.orange {
-            background: rgba(249, 115, 22, 0.2);
-            color: #fdba74;
-        }
-        
-        .action-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .action-sub {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-        }
-        
-        #qrModal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        #qrModal .modal-content {
-            background: white;
-            border-radius: 24px;
-            padding: 32px 24px;
-            width: 100%;
-            max-width: 360px;
-            text-align: center;
-            position: relative;
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
-        }
-        
-        #qrModal .modal-content.scale-in {
-            transform: scale(1);
-        }
-        
-        .btn-close-qr {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #f1f5f9;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #64748b;
-            transition: all 0.15s ease;
-        }
-        
-        .btn-close-qr:hover {
-            background: #e2e8f0;
-            color: #334155;
-        }
-        
-        .qr-container {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            border: 2px solid #f1f5f9;
-            display: inline-block;
-            margin: 20px 0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .qr-container canvas {
-            display: none !important;
-        }
-        
-        .qr-container img {
-            display: block !important;
-            margin: 0 auto !important;
-        }
-        
-        .tab-bar {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(30px);
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 8px 20px;
-            padding-bottom: calc(8px + var(--safe-area-bottom));
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            z-index: 20;
-        }
-        
-        .tab-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: rgba(255, 255, 255, 0.4);
-            text-decoration: none;
-            position: relative;
-        }
-        
-        .tab-item.active {
-            color: var(--color-primary-light);
-        }
-        
-        .tab-item.active::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: var(--color-primary);
-        }
-        
-        .tab-item span {
-            font-size: 10px;
-            font-weight: 600;
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
-            50% { box-shadow: 0 0 20px 4px rgba(124, 58, 237, 0.2); }
-        }
-        
-        .pulse-glow {
-            animation: pulse-glow 3s ease-in-out infinite;
-        }
-        
-        .loader-overlay {
-            position: fixed;
-            inset: 0;
-            background: #0f172a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            transition: opacity 0.3s ease;
-        }
-        
-        .loader-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .loader-spinner {
-            width: 48px;
-            height: 48px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top-color: var(--color-primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        @media (min-width: 481px) {
-            .app-container {
-                border-left: 1px solid rgba(255, 255, 255, 0.05);
-                border-right: 1px solid rgba(255, 255, 255, 0.05);
-            }
-            
-            .credential-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            }
-        }
+        body { background: #0f172a; color: #e2e8f0; min-height: 100vh; min-height: 100dvh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(99,102,241,0.04) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        
+        .app-container { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+        
+        .app-header { padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; background: rgba(15,23,42,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .header-logo { width: 40px; height: 40px; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+        .header-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .header-logo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 20px; background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary)); }
+        
+        .btn-icon { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; }
+        .btn-icon:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+        
+        .app-content { flex: 1; padding: 20px; padding-bottom: calc(100px + var(--safe-area-bottom)); overflow-y: auto; }
+        
+        .greeting h1 { font-size: 26px; font-weight: 800; color: white; letter-spacing: -0.5px; }
+        .greeting p { color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 4px; }
+        
+        .section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); margin: 24px 0 12px; padding-left: 4px; }
+        
+        .credential-card { position: relative; border-radius: 20px; padding: 24px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 16px; }
+        .credential-card.primary { background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)); }
+        .credential-card.certificado { background: linear-gradient(135deg, #1e293b, #334155); border: 1px solid rgba(255,255,255,0.08); }
+        .credential-card::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%; }
+        
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; position: relative; z-index: 1; }
+        .card-badge { padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(255,255,255,0.2); color: white; }
+        .card-badge.active { background: rgba(16,185,129,0.3); border: 1px solid rgba(16,185,129,0.4); }
+        .card-badge.revocado { background: rgba(239,68,68,0.3); border: 1px solid rgba(239,68,68,0.4); }
+        .card-type { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.6); position: relative; z-index: 1; }
+        .card-name { font-size: 20px; font-weight: 700; color: white; margin-bottom: 4px; position: relative; z-index: 1; }
+        .card-detail { font-size: 13px; color: rgba(255,255,255,0.7); position: relative; z-index: 1; }
+        .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; position: relative; z-index: 1; }
+        .card-number { font-size: 12px; color: rgba(255,255,255,0.7); }
+        .card-chip { width: 36px; height: 28px; background: rgba(255,215,0,0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        
+        .card-data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; position: relative; z-index: 1; }
+        .card-data-item { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; }
+        .card-data-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-bottom: 3px; }
+        .card-data-value { font-size: 13px; font-weight: 600; color: white; }
+        
+        /* GAMIFICACIÓN */
+        .gamificacion-card { background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(124,58,237,0.15)); border: 1px solid rgba(245,158,11,0.3); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+        .gamificacion-points { font-size: 36px; font-weight: 900; color: #fbbf24; font-family: 'JetBrains Mono', monospace; }
+        
+        .referido-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+        .referido-code { font-size: 28px; font-weight: 800; color: #a78bfa; font-family: 'JetBrains Mono', monospace; letter-spacing: 2px; }
+        
+        .btn-ver-diploma { background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        
+        .quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 24px; }
+        .action-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 18px; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .action-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+        .action-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+        .action-icon.purple { background: rgba(124,58,237,0.2); color: #a78bfa; }
+        .action-icon.blue { background: rgba(59,130,246,0.2); color: #93c5fd; }
+        .action-icon.green { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+        .action-icon.orange { background: rgba(249,115,22,0.2); color: #fdba74; }
+        .action-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
+        .action-sub { font-size: 10px; color: rgba(255,255,255,0.4); }
+        
+        #qrModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+        #qrModal .modal-content { background: white; border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 360px; text-align: center; position: relative; }
+        .qr-container { background: white; padding: 16px; border-radius: 12px; border: 2px solid #f1f5f9; display: inline-block; margin: 20px 0; }
+        .qr-container img { display: block !important; margin: 0 auto !important; }
+        
+        .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: rgba(15,23,42,0.9); backdrop-filter: blur(30px); border-top: 1px solid rgba(255,255,255,0.06); padding: 8px 20px calc(8px + var(--safe-area-bottom)); display: flex; justify-content: space-around; z-index: 20; }
+        .tab-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 10px; font-weight: 600; }
+        .tab-item.active { color: var(--color-primary-light); }
+        
+        .loader-overlay { position: fixed; inset: 0; background: #0f172a; display: flex; align-items: center; justify-content: center; z-index: 100; transition: opacity 0.3s; }
+        .loader-overlay.hidden { opacity: 0; pointer-events: none; }
+        .loader-spinner { width: 48px; height: 48px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 12px; font-size: 13px; font-weight: 600; z-index: 150; opacity: 0; transition: all 0.3s; white-space: nowrap; }
+        .toast.show { opacity: 1; }
+        .toast.success { background: #059669; color: white; }
+        .toast.error { background: #dc2626; color: white; }
+        
+        @media (min-width: 481px) { .app-container { border-left: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.05); } }
     </style>
 </head>
 <body>
-    <div class="loader-overlay" id="loader">
-        <div class="loader-spinner"></div>
-    </div>
+    <div class="loader-overlay" id="loader"><div class="loader-spinner"></div></div>
     
     <div class="app-container">
         
         <header class="app-header">
-            <div class="header-logo" id="headerLogoContainer">
-                <div class="header-logo-placeholder" id="headerLogoPlaceholder">
-                    <span>🎓</span>
-                </div>
-                <img 
-                    data-tenant-logo="principal" 
-                    src="" 
-                    alt="Logo" 
-                    id="headerLogoImg"
-                    style="display: none;"
-                    onerror="this.style.display='none'; document.getElementById('headerLogoPlaceholder').style.display='flex';"
-                    onload="this.style.display='block'; document.getElementById('headerLogoPlaceholder').style.display='none';"
-                >
+            <div class="header-logo">
+                <div class="header-logo-placeholder" id="headerLogoPlaceholder"><span>🎓</span></div>
+                <img data-tenant-logo="principal" src="" alt="Logo" id="headerLogoImg" style="display: none;" onerror="this.style.display='none';document.getElementById('headerLogoPlaceholder').style.display='flex';" onload="this.style.display='block';document.getElementById('headerLogoPlaceholder').style.display='none';">
             </div>
-            
-            <div class="hidden sm:block">
-                <span class="text-sm font-semibold text-white" id="headerInstituteName">Instituto</span>
-            </div>
-            
-            <button class="btn-icon" onclick="handleLogout()" aria-label="Cerrar Sesión" title="Cerrar Sesión">
-                <i data-lucide="log-out" class="w-5 h-5"></i>
-            </button>
+            <span class="text-sm font-semibold text-white" id="headerInstituteName">Instituto</span>
+            <button class="btn-icon" onclick="handleLogout()"><i data-lucide="log-out" class="w-5 h-5"></i></button>
         </header>
         
         <main class="app-content">
             
             <div class="greeting">
-                <h1>
-                    Hola, <span id="studentName">Estudiante</span> 
-                    <span class="wave">👋</span>
-                </h1>
+                <h1>Hola, <span id="studentName">Estudiante</span> 👋</h1>
                 <p>Tus credenciales y certificados</p>
             </div>
             
-            <div class="cards-section">
-                <p class="section-title">Credencial Principal</p>
+            <!-- GAMIFICACIÓN (CONDICIONAL - Solo visible si modulos_activos.gamificacion === true) -->
+            <div id="gamificacionContainer" class="hidden">
+                <div class="section-title">⚡ Gamificación</div>
                 
-                <div class="credential-card primary pulse-glow" onclick="expandCard(this)">
-                    <div class="card-header">
-                        <span class="card-type">Matrícula Activa</span>
-                        <span class="card-badge active" id="alumnoEstado">ACTIVO</span>
+                <div class="gamificacion-card">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-yellow-400 uppercase">ASARI Points</span>
+                        <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i>
                     </div>
-                    <h2 class="card-name" id="alumnoNombre">Cargando...</h2>
-                    <p class="card-detail" id="alumnoRol">Alumno</p>
-                    
-                    <div class="card-data-grid">
-                        <div class="card-data-item">
-                            <div class="card-data-label">Documento</div>
-                            <div class="card-data-value" id="alumnoDni">---</div>
-                        </div>
-                        <div class="card-data-item">
-                            <div class="card-data-label">Matrícula</div>
-                            <div class="card-data-value" id="alumnoMatricula">---</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card-footer" style="margin-top: 16px;">
-                        <div>
-                            <span class="card-number" id="cardMatricula">Nº ---</span>
-                        </div>
-                        <div class="card-chip">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-yellow-300"></i>
-                        </div>
-                    </div>
+                    <div class="gamificacion-points" id="puntosAsari">0</div>
+                    <p class="text-xs text-gray-400 mt-1">Puntos acumulados</p>
                 </div>
                 
-                <div class="credential-card secondary" onclick="expandCard(this)">
-                    <div class="card-header">
-                        <span class="card-type">Certificación</span>
-                        <span class="card-badge">EN CURSO</span>
+                <div class="referido-card">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-purple-400 uppercase">Programa de Referidos</span>
+                        <i data-lucide="users" class="w-5 h-5 text-purple-400"></i>
                     </div>
-                    <h2 class="card-name">Programa Académico</h2>
-                    <p class="card-detail">Curso 2026 - Primer Semestre</p>
-                    <div class="card-footer">
-                        <div>
-                            <span class="card-number">Progreso: 65%</span>
-                        </div>
-                        <div class="card-chip">
-                            <i data-lucide="graduation-cap" class="w-4 h-4 text-white/60"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="credential-card tertiary" onclick="expandCard(this)">
-                    <div class="card-header">
-                        <span class="card-type">Taller Complementario</span>
-                        <span class="card-badge" style="background: rgba(16, 185, 129, 0.3); border: 1px solid rgba(16, 185, 129, 0.4);">COMPLETADO</span>
-                    </div>
-                    <h2 class="card-name">Habilidades Digitales</h2>
-                    <p class="card-detail">Finalizado: Diciembre 2025</p>
-                    <div class="card-footer">
-                        <div>
-                            <span class="card-number">Certificado Nº 2025-089</span>
-                        </div>
-                        <div class="card-chip">
-                            <i data-lucide="award" class="w-4 h-4 text-white/60"></i>
-                        </div>
-                    </div>
+                    <div class="referido-code" id="codigoReferido">------</div>
+                    <p class="text-xs text-gray-400 mt-1 mb-3">Invita y gana puntos</p>
+                    <button class="btn-ver-diploma" onclick="copiarCodigo()"><i data-lucide="copy" class="w-4 h-4"></i> Copiar Código</button>
                 </div>
             </div>
             
+            <!-- CREDENCIAL PRINCIPAL -->
+            <div class="section-title">Credencial Principal</div>
+            <div class="credential-card primary">
+                <div class="card-header">
+                    <span class="card-type">Matrícula Activa</span>
+                    <span class="card-badge active" id="alumnoEstado">ACTIVO</span>
+                </div>
+                <h2 class="card-name" id="alumnoNombre">Cargando...</h2>
+                <p class="card-detail" id="alumnoRol">Alumno</p>
+                <div class="card-data-grid">
+                    <div class="card-data-item"><div class="card-data-label">Documento</div><div class="card-data-value" id="alumnoDni">---</div></div>
+                    <div class="card-data-item"><div class="card-data-label">Matrícula</div><div class="card-data-value" id="alumnoMatricula">---</div></div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-number" id="cardMatricula">Nº ---</span>
+                    <div class="card-chip"><i data-lucide="shield-check" class="w-4 h-4 text-yellow-300"></i></div>
+                </div>
+            </div>
+            
+            <!-- CERTIFICADOS REALES -->
+            <div class="section-title">🎖️ Mis Certificados</div>
+            <div id="certificadosContainer">
+                <p class="text-sm text-gray-500 text-center py-4">Cargando certificados...</p>
+            </div>
+            
+            <!-- ACCESOS RÁPIDOS -->
             <div class="quick-actions">
                 <div class="action-card" onclick="window.location.href='campus.html'">
-                    <div class="action-icon purple">
-                        <i data-lucide="play" class="w-6 h-6"></i>
-                    </div>
+                    <div class="action-icon purple"><i data-lucide="play" class="w-5 h-5"></i></div>
                     <span class="action-label">Campus Virtual</span>
-                    <span class="action-sub">Continuar aprendiendo</span>
                 </div>
-                
                 <div class="action-card" onclick="showQRCode()">
-                    <div class="action-icon blue">
-                        <i data-lucide="qr-code" class="w-6 h-6"></i>
-                    </div>
+                    <div class="action-icon blue"><i data-lucide="qr-code" class="w-5 h-5"></i></div>
                     <span class="action-label">Mostrar QR</span>
-                    <span class="action-sub">Para validación</span>
                 </div>
-                
                 <div class="action-card" onclick="window.location.href='validador.html'">
-                    <div class="action-icon green">
-                        <i data-lucide="shield-check" class="w-6 h-6"></i>
-                    </div>
+                    <div class="action-icon green"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
                     <span class="action-label">Validador</span>
-                    <span class="action-sub">Verificar credencial</span>
                 </div>
-                
-                <div class="action-card" onclick="alert('📚 Biblioteca - Próximamente')">
-                    <div class="action-icon orange">
-                        <i data-lucide="book-open" class="w-6 h-6"></i>
-                    </div>
+                <div class="action-card" onclick="window.location.href='biblioteca.html'">
+                    <div class="action-icon orange"><i data-lucide="book-open" class="w-5 h-5"></i></div>
                     <span class="action-label">Biblioteca</span>
-                    <span class="action-sub">Recursos digitales</span>
                 </div>
             </div>
             
         </main>
         
+        <!-- MODAL QR -->
         <div id="qrModal">
             <div class="modal-content" id="qrModalContent">
-                <button class="btn-close-qr" onclick="cerrarQR()">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-                <h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
-                    Código de Verificación
-                </h3>
-                <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">
-                    Escanea para validar esta credencial
-                </p>
-                
-                <div class="qr-container">
-                    <div id="qrcode"></div>
-                </div>
-                
-                <p style="font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;" id="qrStudentId">
-                    ID: Cargando...
-                </p>
+                <button style="position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:#f1f5f9;border:none;cursor:pointer;" onclick="cerrarQR()"><i data-lucide="x" class="w-5 h-5 text-gray-600"></i></button>
+                <h3 style="font-size:20px;font-weight:700;color:#1e293b;">Código de Verificación</h3>
+                <p style="font-size:13px;color:#94a3b8;margin-bottom:16px;">Escanea para validar</p>
+                <div class="qr-container"><div id="qrcode"></div></div>
+                <p style="font-size:11px;color:#94a3b8;" id="qrStudentId">ID: Cargando...</p>
             </div>
         </div>
         
+        <!-- TAB BAR -->
         <nav class="tab-bar">
-            <a href="#" class="tab-item active">
-                <i data-lucide="wallet" class="w-5 h-5"></i>
-                <span>Billetera</span>
-            </a>
-            <a href="campus.html" class="tab-item">
-                <i data-lucide="graduation-cap" class="w-5 h-5"></i>
-                <span>Campus</span>
-            </a>
-            <a href="#" class="tab-item" onclick="showQRCode()">
-                <i data-lucide="qr-code" class="w-5 h-5"></i>
-                <span>Mi QR</span>
-            </a>
-            <a href="#" class="tab-item" onclick="alert('👤 Perfil - Próximamente')">
-                <i data-lucide="user" class="w-5 h-5"></i>
-                <span>Perfil</span>
-            </a>
+            <a href="#" class="tab-item active"><i data-lucide="wallet" class="w-5 h-5"></i><span>Billetera</span></a>
+            <a href="campus.html" class="tab-item"><i data-lucide="graduation-cap" class="w-5 h-5"></i><span>Campus</span></a>
+            <a href="#" class="tab-item" onclick="showQRCode()"><i data-lucide="qr-code" class="w-5 h-5"></i><span>Mi QR</span></a>
+            <a href="#" class="tab-item" onclick="alert('Perfil')"><i data-lucide="user" class="w-5 h-5"></i><span>Perfil</span></a>
         </nav>
         
     </div>
+    
+    <div class="toast" id="toastMsg"><span id="toastText"></span></div>
 
-    <script src="supabase-config.js?v=3"></script>
+    <script src="supabase-config.js?v=5"></script>
 
     <script>
         lucide.createIcons();
         
         const loader = document.getElementById('loader');
-        const studentName = document.getElementById('studentName');
-        const headerLogoImg = document.getElementById('headerLogoImg');
-        const headerLogoPlaceholder = document.getElementById('headerLogoPlaceholder');
-        const headerInstituteName = document.getElementById('headerInstituteName');
-        
-        // ============================================
-        // VERIFICACIÓN DE SESIÓN
-        // ============================================
-        async function checkAuth() {
-            try {
-                const { data: { session }, error } = await window.supabase.auth.getSession();
-                
-                if (error) {
-                    console.error('Error verificando sesión:', error);
-                    redirectToLogin();
-                    return false;
-                }
-                
-                if (!session?.user) {
-                    console.warn('⚠️ No hay sesión activa');
-                    redirectToLogin();
-                    return false;
-                }
-                
-                console.log('✅ Sesión verificada:', session.user.email);
-                
-                window.__CURRENT_USER__ = {
-                    id: session.user.id,
-                    email: session.user.email,
-                    lastSignIn: session.user.last_sign_in_at,
-                    id_padron: null
-                };
-                
-                return true;
-                
-            } catch (error) {
-                console.error('Error crítico verificando sesión:', error);
-                redirectToLogin();
-                return false;
-            }
-        }
-        
-        function redirectToLogin() {
-            const tenantSlug = window.getTenantSlug ? window.getTenantSlug() : 'default';
-            const loginUrl = `login.html?instituto=${encodeURIComponent(tenantSlug)}`;
-            console.log('🔒 Redirigiendo a login:', loginUrl);
-            setTimeout(() => { window.location.href = loginUrl; }, 500);
-        }
-        
-        // ============================================
-        // CERRAR SESIÓN
-        // ============================================
-        async function handleLogout() {
-            const confirmed = confirm('¿Estás seguro de que deseas cerrar sesión?');
-            if (!confirmed) return;
-            
-            try {
-                loader.classList.remove('hidden');
-                const { error } = await window.supabase.auth.signOut();
-                if (error) throw error;
-                localStorage.removeItem('asari_user_session');
-                console.log('👋 Sesión cerrada exitosamente');
-                redirectToLogin();
-            } catch (error) {
-                console.error('Error en logout:', error);
-                alert('Hubo un error al cerrar sesión. Intenta de nuevo.');
-                loader.classList.add('hidden');
-            }
-        }
-        
-        // ============================================
-        // INICIALIZACIÓN DEL TENANT (BRANDING)
-        // ============================================
-        async function inicializarTenant() {
-            try {
-                if (typeof window.fetchTenantConfig !== 'function') {
-                    console.warn('fetchTenantConfig no disponible aún, reintentando...');
-                    setTimeout(inicializarTenant, 100);
-                    return null;
-                }
-                
-                const tenant = await window.fetchTenantConfig();
-                
-                if (tenant) {
-                    const { instituto, configuracion } = tenant;
-                    
-                    headerInstituteName.textContent = instituto.nombre;
-                    document.title = `Mi Billetera - ${instituto.nombre}`;
-                    
-                    if (configuracion?.branding?.logo_principal) {
-                        headerLogoImg.src = configuracion.branding.logo_principal;
-                        headerLogoImg.style.display = 'block';
-                        headerLogoPlaceholder.style.display = 'none';
-                    } else {
-                        headerLogoImg.style.display = 'none';
-                        headerLogoPlaceholder.style.display = 'flex';
-                        headerLogoPlaceholder.style.background = 
-                            `linear-gradient(135deg, var(--color-primary-light), var(--color-primary))`;
-                    }
-                    
-                    if (configuracion?.terminologia) {
-                        const term = configuracion.terminologia;
-                        document.querySelectorAll('[data-termino]').forEach(el => {
-                            const key = el.getAttribute('data-termino');
-                            if (term[key]) el.textContent = term[key];
-                        });
-                    }
-                    
-                    console.log('✅ Wallet inicializada para:', instituto.nombre);
-                    window.__TENANT_CONFIG__ = tenant;
-                    return tenant;
-                } else {
-                    headerInstituteName.textContent = 'Instituto';
-                    return null;
-                }
-            } catch (error) {
-                console.error('Error inicializando tenant en wallet:', error);
-                headerInstituteName.textContent = 'Instituto';
-                return null;
-            }
-        }
-        
-        // ============================================
-        // CARGAR DATOS DEL ESTUDIANTE (BLINDAJE COMPLETO)
-        // ============================================
-        async function cargarDatosEstudiante() {
-            try {
-                const userEmail = window.__CURRENT_USER__?.email;
-                const tenantConfig = window.__TENANT_CONFIG__;
-                const institutoId = tenantConfig?.instituto?.id;
-                
-                if (!userEmail || !institutoId) return;
-                
-                console.log('🔍 Buscando alumno con email (blindado):', userEmail.trim().toLowerCase());
-                
-                // BLINDAJE CONTRA ESPACIOS, MAYÚSCULAS Y DUPLICADOS
-                const { data: registros, error } = await window.supabase
-                    .from('padron_global')
-                    .select('*')
-                    .ilike('email', userEmail.trim()) // ilike ignora mayúsculas y trim quita espacios
-                    .eq('instituto_id', institutoId)
-                    .limit(1); // Garantiza que no explote si hay duplicados
-                    
-                if (error) throw error;
-                
-                const data = registros && registros.length > 0 ? registros[0] : null;
-                
-                if (data) {
-                    console.log("✅ Datos del alumno recuperados:", data);
-
-                    window.__CURRENT_USER__.id_padron = data.id;
-
-                    const elNombre = document.getElementById('alumnoNombre');
-                    const elRol = document.getElementById('alumnoRol');
-                    const elDni = document.getElementById('alumnoDni');
-                    const elMatricula = document.getElementById('alumnoMatricula');
-                    const elEstado = document.getElementById('alumnoEstado');
-                    const elCardMatricula = document.getElementById('cardMatricula');
-                    const elStudentName = document.getElementById('studentName');
-                    
-                    const nombrePila = data.nombre_completo?.split(' ')[0] || 'Estudiante';
-                    
-                    if (elStudentName) elStudentName.textContent = nombrePila;
-                    if (elNombre) elNombre.textContent = data.nombre_completo || 'Sin nombre';
-                    if (elRol) elRol.textContent = data.rol ? data.rol.toUpperCase() : 'ALUMNO';
-                    if (elDni) elDni.textContent = data.documento || '---';
-                    
-                    const matriculaReal = data.datos_dinamicos?.matricula || 'Sin Matrícula';
-                    const prefijoMatricula = tenantConfig?.configuracion?.terminologia?.matricula || 'Nº';
-                    
-                    if (elMatricula) elMatricula.textContent = matriculaReal;
-                    if (elCardMatricula) elCardMatricula.textContent = `${prefijoMatricula}: ${matriculaReal}`;
-                    
-                    if (elEstado) {
-                        const esActivo = data.estado_credencial === 'activo';
-                        elEstado.textContent = esActivo ? 'ACTIVO' : 'SUSPENDIDO';
-                        
-                        if (esActivo) {
-                            elEstado.className = 'card-badge active';
-                        } else {
-                            elEstado.className = 'card-badge';
-                            elEstado.style.background = 'rgba(239, 68, 68, 0.3)';
-                            elEstado.style.border = '1px solid rgba(239, 68, 68, 0.4)';
-                        }
-                    }
-                    
-                    console.log('✅ Datos del estudiante pintados en la tarjeta');
-                } else {
-                    console.warn('⚠️ No se encontró ningún alumno con email:', userEmail);
-                    const elNombre = document.getElementById('alumnoNombre');
-                    const elCardMatricula = document.getElementById('cardMatricula');
-                    if (elNombre) elNombre.textContent = 'Alumno no encontrado';
-                    if (elCardMatricula) elCardMatricula.textContent = 'Verifica el padrón';
-                }
-                
-            } catch (error) {
-                console.error('❌ Error cargando datos del estudiante:', error.message);
-                const elNombre = document.getElementById('alumnoNombre');
-                const elCardMatricula = document.getElementById('cardMatricula');
-                if (elNombre) elNombre.textContent = 'Error de conexión';
-                if (elCardMatricula) elCardMatricula.textContent = error.message;
-            }
-        }
-        
-        // ============================================
-        // FUNCIONES DE UI
-        // ============================================
-        function expandCard(card) {
-            card.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-            card.style.transform = 'scale(1.02)';
-            setTimeout(() => { card.style.transform = 'scale(1)'; }, 300);
-            const cardName = card.querySelector('.card-name')?.textContent || 'Credencial';
-            console.log('📇 Tarjeta seleccionada:', cardName);
-        }
-        
-        // ============================================
-        // GENERAR Y MOSTRAR CÓDIGO QR
-        // ============================================
         let qrCodeInstancia = null;
         let qrModalAbierto = false;
-
-        function showQRCode() {
-            if (qrModalAbierto) {
-                console.log('⚠️ QR Modal ya está abierto, ignorando...');
+        
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toastMsg');
+            document.getElementById('toastText').textContent = msg;
+            t.className = `toast show ${type}`;
+            clearTimeout(window._tt);
+            window._tt = setTimeout(() => { t.classList.remove('show'); }, 3000);
+        }
+        
+        async function checkAuth() {
+            const { data: { session } } = await window.supabase.auth.getSession();
+            if (!session?.user) {
+                const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+                window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`;
+                return false;
+            }
+            window.__CURRENT_USER__ = { id: session.user.id, email: session.user.email, id_padron: null };
+            return true;
+        }
+        
+        async function handleLogout() {
+            if (!confirm('¿Cerrar sesión?')) return;
+            await window.supabase.auth.signOut();
+            localStorage.removeItem('asari_user_session');
+            const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+            window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`;
+        }
+        
+        async function inicializarTenant() {
+            if (typeof window.fetchTenantConfig !== 'function') { setTimeout(inicializarTenant, 100); return null; }
+            const tenant = await window.fetchTenantConfig();
+            if (tenant) {
+                document.getElementById('headerInstituteName').textContent = tenant.instituto.nombre;
+                document.title = `Mi Billetera - ${tenant.instituto.nombre}`;
+                
+                if (tenant.configuracion?.branding?.logo_principal) {
+                    document.getElementById('headerLogoImg').src = tenant.configuracion.branding.logo_principal;
+                    document.getElementById('headerLogoImg').style.display = 'block';
+                    document.getElementById('headerLogoPlaceholder').style.display = 'none';
+                }
+                
+                window.__TENANT_CONFIG__ = tenant;
+                
+                // ============ GAMIFICACIÓN CONDICIONAL ============
+                const gamificacionActiva = tenant.instituto?.modulos_activos?.gamificacion === true;
+                if (gamificacionActiva) {
+                    document.getElementById('gamificacionContainer').classList.remove('hidden');
+                    console.log('⚡ Gamificación activada para este instituto');
+                } else {
+                    document.getElementById('gamificacionContainer').classList.add('hidden');
+                    console.log('⚡ Gamificación desactivada');
+                }
+                
+                return tenant;
+            }
+            return null;
+        }
+        
+        async function cargarDatosEstudiante() {
+            const userEmail = window.__CURRENT_USER__?.email;
+            const institutoId = window.__TENANT_CONFIG__?.instituto?.id;
+            if (!userEmail || !institutoId) return;
+            
+            const { data: registros } = await window.supabase.from('padron_global')
+                .select('*')
+                .ilike('email', userEmail.trim())
+                .eq('instituto_id', institutoId)
+                .limit(1);
+            
+            const data = registros && registros.length > 0 ? registros[0] : null;
+            
+            if (data) {
+                window.__CURRENT_USER__.id_padron = data.id;
+                
+                const nombrePila = data.nombre_completo?.split(' ')[0] || 'Estudiante';
+                document.getElementById('studentName').textContent = nombrePila;
+                document.getElementById('alumnoNombre').textContent = data.nombre_completo || 'Sin nombre';
+                document.getElementById('alumnoRol').textContent = (data.rol || 'ALUMNO').toUpperCase();
+                document.getElementById('alumnoDni').textContent = data.documento || '---';
+                document.getElementById('alumnoMatricula').textContent = data.datos_dinamicos?.matricula || '---';
+                document.getElementById('cardMatricula').textContent = `Nº: ${data.datos_dinamicos?.matricula || '---'}`;
+                
+                const esActivo = data.estado_credencial === 'activo';
+                document.getElementById('alumnoEstado').textContent = esActivo ? 'ACTIVO' : 'SUSPENDIDO';
+                document.getElementById('alumnoEstado').className = `card-badge ${esActivo ? 'active' : 'revocado'}`;
+                
+                // ============ GAMIFICACIÓN ============
+                document.getElementById('puntosAsari').textContent = data.asari_puntos || 0;
+                document.getElementById('codigoReferido').textContent = data.codigo_referido || '------';
+                
+                // ============ CARGAR CERTIFICADOS REALES ============
+                await cargarCertificados(userEmail, institutoId);
+            }
+        }
+        
+        async function cargarCertificados(email, institutoId) {
+            const container = document.getElementById('certificadosContainer');
+            
+            const { data, error } = await window.supabase.from('sys_certificados')
+                .select('*')
+                .eq('alumno_email', email)
+                .eq('instituto_id', institutoId)
+                .order('created_at', { ascending: false });
+            
+            if (error) {
+                container.innerHTML = '<p class="text-sm text-red-400 text-center py-4">Error al cargar certificados</p>';
                 return;
             }
             
-            const alumnoId = window.__CURRENT_USER__?.id_padron;
-            const tenantSlug = window.getTenantSlug ? window.getTenantSlug() : 'default';
-            
-            if (!alumnoId) {
-                alert("Aún estamos cargando tu credencial. Intenta en un segundo.");
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Aún no tienes certificados emitidos</p>';
                 return;
             }
-
-            qrModalAbierto = true;
-
-            const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-            const urlValidador = `${baseUrl}/validador.html?instituto=${tenantSlug}&id=${alumnoId}`;
-            console.log("🔗 URL del QR generada:", urlValidador);
-
-            const modal = document.getElementById('qrModal');
-            const qrContainer = document.getElementById('qrcode');
-            const modalContent = document.getElementById('qrModalContent');
             
-            document.getElementById('qrStudentId').textContent = `ID: ${alumnoId.substring(0, 8)}...`;
-
-            qrContainer.innerHTML = '';
-            qrCodeInstancia = null;
-            
-            qrCodeInstancia = new QRCode(qrContainer, {
-                text: urlValidador,
-                width: 220,
-                height: 220,
-                colorDark: "#0f172a",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-
-            modal.style.display = 'flex';
-            modal.style.opacity = '0';
-            
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    modal.style.opacity = '1';
-                    modalContent.classList.add('scale-in');
-                });
-            });
-            
+            container.innerHTML = data.map(cert => {
+                const diplomaUrl = cert.archivos?.diploma || null;
+                const esActivo = cert.estado === 'activo';
+                const badgeClass = esActivo ? 'active' : 'revocado';
+                const badgeText = esActivo ? 'COMPLETO' : cert.estado.toUpperCase();
+                
+                return `
+                    <div class="credential-card certificado">
+                        <div class="card-header">
+                            <span class="card-type">Certificado</span>
+                            <span class="card-badge ${badgeClass}">${badgeText}</span>
+                        </div>
+                        <h2 class="card-name">${cert.curso_titulo}</h2>
+                        <p class="card-detail">${cert.curso_tipo || 'Certificación'} • ${new Date(cert.created_at).toLocaleDateString('es-AR')}</p>
+                        <div class="card-footer">
+                            <span class="card-number font-mono" style="font-size:10px;">${cert.txid?.substring(0,20) || ''}</span>
+                            ${diplomaUrl ? `<a href="${diplomaUrl}" target="_blank" class="btn-ver-diploma"><i data-lucide="eye" class="w-3 h-3"></i> Ver Diploma</a>` : '<span class="text-xs text-gray-500">Sin archivo</span>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
             lucide.createIcons();
         }
-
-        function cerrarQR() {
-            const modal = document.getElementById('qrModal');
-            const modalContent = document.getElementById('qrModalContent');
-            
-            qrModalAbierto = false;
-            
-            modalContent.classList.remove('scale-in');
-            modal.style.opacity = '0';
-            
-            setTimeout(() => {
-                modal.style.display = 'none';
-                modal.style.opacity = '';
-                const qrContainer = document.getElementById('qrcode');
-                if (qrContainer) qrContainer.innerHTML = '';
-                qrCodeInstancia = null;
-            }, 300);
+        
+        function copiarCodigo() {
+            const codigo = document.getElementById('codigoReferido').textContent;
+            if (codigo && codigo !== '------') {
+                navigator.clipboard.writeText(codigo).then(() => {
+                    showToast('Código copiado al portapapeles');
+                });
+            } else {
+                showToast('No tienes código de referido', 'error');
+            }
         }
         
-        document.getElementById('qrModal').addEventListener('click', function(e) {
-            if (e.target === this) cerrarQR();
-        });
+        function showQRCode() {
+            if (qrModalAbierto) return;
+            const alumnoId = window.__CURRENT_USER__?.id_padron;
+            if (!alumnoId) { alert('Aún cargando...'); return; }
+            
+            qrModalAbierto = true;
+            const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+            const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+            const urlValidador = `${baseUrl}/validador.html?instituto=${slug}&id=${alumnoId}`;
+            
+            document.getElementById('qrStudentId').textContent = `ID: ${alumnoId.substring(0,8)}...`;
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+            qrCodeInstancia = new QRCode(qrContainer, {
+                text: urlValidador, width: 200, height: 200,
+                colorDark: "#0f172a", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            document.getElementById('qrModal').style.display = 'flex';
+            lucide.createIcons();
+        }
         
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && qrModalAbierto) cerrarQR();
-        });
+        function cerrarQR() {
+            qrModalAbierto = false;
+            document.getElementById('qrModal').style.display = 'none';
+            const qrContainer = document.getElementById('qrcode');
+            if (qrContainer) qrContainer.innerHTML = '';
+            qrCodeInstancia = null;
+        }
         
-        // ============================================
-        // INICIALIZACIÓN PRINCIPAL
-        // ============================================
+        document.getElementById('qrModal').addEventListener('click', function(e) { if (e.target === this) cerrarQR(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarQR(); });
+        
         async function inicializar() {
-            console.log('💳 Inicializando Billetera ASARI (Blindaje activo)...');
-            
-            const isAuthenticated = await checkAuth();
-            if (!isAuthenticated) return;
-            
+            const isAuth = await checkAuth();
+            if (!isAuth) return;
             await inicializarTenant();
             await cargarDatosEstudiante();
-            
             setTimeout(() => { loader.classList.add('hidden'); }, 300);
-            
-            console.log('✅ Billetera inicializada correctamente');
         }
         
         window.addEventListener('DOMContentLoaded', inicializar);
-        
-        document.addEventListener('touchmove', function(e) {
-            if (e.target === document.body) e.preventDefault();
-        }, { passive: false });
-        
         window.addEventListener('load', () => { lucide.createIcons(); });
-        window.addEventListener('popstate', () => { history.pushState(null, '', window.location.href); });
         history.pushState(null, '', window.location.href);
-        
-        console.log('💳 Wallet ASARI - Lista (Blindaje activo)');
     </script>
 </body>
 </html>
