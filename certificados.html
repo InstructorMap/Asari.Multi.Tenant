@@ -52,7 +52,7 @@
         
         .btn-primary { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; border: 1px solid rgba(139,92,246,0.3); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; white-space: nowrap; }
         .btn-primary:hover { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 0 20px rgba(139,92,246,0.3); transform: translateY(-1px); }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
         .btn-secondary { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
         .btn-secondary:hover { background: rgba(255,255,255,0.1); }
         
@@ -111,6 +111,8 @@
         .status-dot { width: 6px; height: 6px; border-radius: 50%; }
         .status-dot.green { background: #10b981; }
         .status-dot.red { background: #ef4444; }
+        
+        .alert-roja { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 12px; }
         
         .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: toastIn 0.3s ease-out; max-width: 400px; }
         .toast.success { background: #059669; color: white; }
@@ -171,9 +173,9 @@
                     <p class="page-subtitle" id="viewSubtitle">Registro de emisiones</p>
                 </div>
             </div>
-            <div id="topbarActions">
+            <div class="flex items-center gap-3">
                 <span class="saldo-indicator" id="saldoIndicator"><div class="spinner w-4 h-4"></div></span>
-                <button class="btn-primary" onclick="navegarA('emisor')"><i data-lucide="plus" class="w-5 h-5"></i> Emitir Certificado</button>
+                <button class="btn-primary" onclick="navegarA('emisor')" id="btnEmitirTopbar"><i data-lucide="plus" class="w-5 h-5"></i> Emitir Certificado</button>
             </div>
         </header>
         
@@ -198,6 +200,13 @@
             
             <!-- VISTA EMISOR -->
             <section id="view-emisor" class="view-section hidden">
+                
+                <!-- ALERTA SI NO HAY CURSOS -->
+                <div class="alert-roja hidden mb-4" id="alertSinCursos">
+                    <i data-lucide="alert-triangle" class="w-6 h-6 text-red-400 flex-shrink-0"></i>
+                    <p class="text-sm text-red-300">⚠️ Debes crear al menos un Curso con su precio de venta en el Campus Virtual antes de poder emitir certificados.</p>
+                </div>
+                
                 <div class="form-card">
                     <h3 class="form-card-title"><span style="background:rgba(124,58,237,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="user" class="w-5 h-5" style="color:#a78bfa;"></i></span> Paso 1: Selección del Alumno</h3>
                     <div class="form-group"><label class="form-label">Alumno *</label><select id="emisorAlumno" class="form-select"><option value="">Cargando alumnos...</option></select></div>
@@ -300,9 +309,6 @@
         
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
-        const viewTitle = document.getElementById('viewTitle');
-        const viewSubtitle = document.getElementById('viewSubtitle');
-        const topbarActions = document.getElementById('topbarActions');
         const toast = document.getElementById('toast');
         
         function toggleSidebar() { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); }
@@ -322,12 +328,12 @@
             currentView = view;
             
             if (view === 'ledger') {
-                viewTitle.textContent = 'Ledger de Certificados';
-                viewSubtitle.textContent = 'Registro de emisiones';
+                document.getElementById('viewTitle').textContent = 'Ledger de Certificados';
+                document.getElementById('viewSubtitle').textContent = 'Registro de emisiones';
                 cargarCertificados();
             } else if (view === 'emisor') {
-                viewTitle.textContent = 'Emitir Nuevo Certificado';
-                viewSubtitle.textContent = 'Formulario con Revenue Share';
+                document.getElementById('viewTitle').textContent = 'Emitir Certificado';
+                document.getElementById('viewSubtitle').textContent = 'Revenue Share';
                 cargarAlumnosSelect();
                 cargarCursosSelect();
             }
@@ -336,18 +342,20 @@
         
         async function checkAuth() {
             const { data: { session } } = await window.supabase.auth.getSession();
-            if (!session?.user) { redirectToLogin(); return false; }
+            if (!session?.user) {
+                const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+                window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`;
+                return false;
+            }
             return true;
         }
-        function redirectToLogin() {
-            const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
-            window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`;
-        }
+        
         async function handleLogout() {
             if (!confirm('¿Cerrar sesión?')) return;
             await window.supabase.auth.signOut();
             localStorage.removeItem('asari_user_session');
-            redirectToLogin();
+            const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+            window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`;
         }
         
         async function inicializarTenant() {
@@ -377,18 +385,18 @@
             const indicator = document.getElementById('saldoIndicator');
             if (saldoUSD > 50) {
                 indicator.className = 'saldo-indicator saldo-ok';
-                indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)}`;
+                indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)} USD`;
             } else if (saldoUSD > 0) {
                 indicator.className = 'saldo-indicator saldo-low';
-                indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)}`;
+                indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)} USD`;
             } else {
                 indicator.className = 'saldo-indicator saldo-empty';
-                indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)}`;
+                indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)} USD`;
             }
             lucide.createIcons();
         }
         
-        // ============ FEE CALCULATION ============
+        // ============ FEE ============
         function calcularFee(nivel, precio) {
             const porcentaje = nivel === 1 ? 0.30 : (nivel === 2 ? 0.25 : 0.20);
             let fee = precio * porcentaje;
@@ -424,7 +432,7 @@
             return `ASARI-TX-${hash}-${Date.now().toString(36).toUpperCase()}`;
         }
         
-        // ============ FILE HANDLING ============
+        // ============ FILES ============
         function handleFileDrop(input, tipo) {
             if (input.files && input.files[0]) {
                 archivosSeleccionados[tipo] = input.files[0];
@@ -466,7 +474,7 @@
                 const totalFees = certificadosData.reduce((sum, c) => sum + (c.fee_asari_retenido || 0), 0);
                 document.getElementById('kpiContainer').innerHTML = `
                     <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(124,58,237,0.15);"><i data-lucide="award" class="w-5 h-5" style="color:#a78bfa;"></i></div><div class="kpi-value">${count || 0}</div><div class="kpi-label">Total Emitidos</div></div>
-                    <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(239,68,68,0.15);"><i data-lucide="dollar-sign" class="w-5 h-5" style="color:#f87171;"></i></div><div class="kpi-value font-mono">$${totalFees.toFixed(2)}</div><div class="kpi-label">Total Fees Retenidos</div></div>
+                    <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(239,68,68,0.15);"><i data-lucide="dollar-sign" class="w-5 h-5" style="color:#f87171;"></i></div><div class="kpi-value font-mono">$${totalFees.toFixed(2)}</div><div class="kpi-label">Fees Retenidos</div></div>
                 `;
                 
                 if (certificadosData.length === 0) {
@@ -512,12 +520,34 @@
             if (!institutoId) return;
             const { data } = await window.supabase.from('sys_cursos').select('*').eq('instituto_id', institutoId).eq('estado', 'activo').order('titulo');
             cursosData = data || [];
-            document.getElementById('emisorCursoSelect').innerHTML = '<option value="">Selecciona un curso...</option>' + cursosData.map(c => `<option value="${c.id}" data-titulo="${c.titulo}" data-precio="${c.precio_declarado_usd}">${c.titulo} — $${(c.precio_declarado_usd||0).toFixed(2)} USD</option>`).join('');
+            
+            const select = document.getElementById('emisorCursoSelect');
+            select.innerHTML = '<option value="">Selecciona un curso...</option>' + cursosData.map(c => `<option value="${c.id}" data-titulo="${c.titulo}" data-precio="${c.precio_declarado_usd}">${c.titulo} — $${(c.precio_declarado_usd||0).toFixed(2)} USD</option>`).join('');
+            
+            // CRÍTICO: Si no hay cursos, deshabilitar botón de emitir y mostrar alerta
+            const alert = document.getElementById('alertSinCursos');
+            const btnEmitir = document.getElementById('btnEmitir');
+            
+            if (cursosData.length === 0) {
+                alert.classList.remove('hidden');
+                btnEmitir.disabled = true;
+                btnEmitir.classList.add('opacity-40', 'cursor-not-allowed');
+            } else {
+                alert.classList.add('hidden');
+                btnEmitir.disabled = false;
+                btnEmitir.classList.remove('opacity-40', 'cursor-not-allowed');
+            }
+            lucide.createIcons();
         }
         
         async function emitirCertificado() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) { showToast('Error: Instituto no identificado', 'error'); return; }
+            
+            if (cursosData.length === 0) {
+                showToast('Debes crear un curso en Campus Virtual primero', 'error');
+                return;
+            }
             
             const selectAlumno = document.getElementById('emisorAlumno');
             const alumnoEmail = selectAlumno.value;
@@ -533,7 +563,6 @@
             const nivel = tenantConfig?.instituto?.nivel || tenantConfig?.configuracion?.nivel_instituto || 1;
             const fee = calcularFee(nivel, curso.precio_declarado_usd || 0);
             
-            // VERIFICAR SALDO
             if (saldoUSD < fee) {
                 document.getElementById('feeFaltante').textContent = `$${fee.toFixed(2)} USD`;
                 document.getElementById('saldoFaltante').textContent = `$${saldoUSD.toFixed(2)} USD`;
@@ -554,7 +583,6 @@
                 
                 const txid = generarTXID();
                 
-                // INSERT certificado
                 const { error } = await window.supabase.from('sys_certificados').insert([{
                     instituto_id: institutoId,
                     alumno_email: alumnoEmail,
@@ -570,24 +598,17 @@
                 }]);
                 if (error) throw error;
                 
-                // DESCONTAR SALDO
                 const nuevoSaldo = saldoUSD - fee;
-                const { error: billeteraError } = await window.supabase
-                    .from('sys_billetera_institutos')
-                    .update({ saldo_usd: nuevoSaldo })
-                    .eq('instituto_id', institutoId);
+                const { error: billeteraError } = await window.supabase.from('sys_billetera_institutos').update({ saldo_usd: nuevoSaldo }).eq('instituto_id', institutoId);
                 if (billeteraError) throw billeteraError;
                 
-                // REGISTRAR TRANSACCIÓN
-                const { error: transError } = await window.supabase
-                    .from('sys_transacciones')
-                    .insert([{
-                        instituto_id: institutoId,
-                        tipo_operacion: 'consumo_fee_certificado',
-                        monto_usd: -fee,
-                        estado: 'completado',
-                        descripcion: `Fee emisión certificado: ${curso.titulo} para ${alumnoNombre} (TXID: ${txid.substring(0,20)})`
-                    }]);
+                const { error: transError } = await window.supabase.from('sys_transacciones').insert([{
+                    instituto_id: institutoId,
+                    tipo_operacion: 'consumo_fee_certificado',
+                    monto_usd: -fee,
+                    estado: 'completado',
+                    descripcion: `Fee certificado: ${curso.titulo} para ${alumnoNombre} (${txid.substring(0,20)})`
+                }]);
                 if (transError) throw transError;
                 
                 saldoUSD = nuevoSaldo;
@@ -601,7 +622,7 @@
                 });
                 
                 navegarA('ledger');
-                showToast(`Certificado emitido. Se retuvieron $${fee.toFixed(2)} USD de tu saldo`, 'success');
+                showToast(`Certificado emitido. Se retuvieron $${fee.toFixed(2)} USD`, 'success');
             } catch(e) {
                 showToast('Error: ' + e.message, 'error');
             } finally {
