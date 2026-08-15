@@ -17,41 +17,27 @@
         * { font-family: 'Inter', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
-        :root {
-            --color-primary: #7c3aed;
-            --color-primary-light: #a78bfa;
-            --color-primary-dark: #5b21b6;
-        }
+        :root { --color-primary: #7c3aed; --color-primary-light: #a78bfa; --color-primary-dark: #5b21b6; }
         
         body { background: #050509; color: #e2e8f0; min-height: 100vh; -webkit-font-smoothing: antialiased; }
         
         .app-layout { display: flex; min-height: 100vh; }
         
-        .sidebar {
-            width: 260px; background: rgba(10,10,20,0.95); border-right: 1px solid rgba(255,255,255,0.05);
-            display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
-            z-index: 40; transition: transform 0.3s ease; backdrop-filter: blur(20px);
-        }
-        
+        .sidebar { width: 260px; background: rgba(10,10,20,0.95); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 40; transition: transform 0.3s ease; backdrop-filter: blur(20px); }
         .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar-logo-box { width: 44px; height: 44px; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
         .sidebar-logo-box img { width: 100%; height: 100%; object-fit: cover; }
         .sidebar-logo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 22px; background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary)); }
         .sidebar-institute-name { font-size: 14px; font-weight: 700; color: white; line-height: 1.2; }
         .sidebar-institute-role { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-        
         .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
         
-        .nav-item {
-            display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px;
-            color: #94a3b8; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s ease;
-            margin-bottom: 2px; text-decoration: none;
-        }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #94a3b8; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s ease; margin-bottom: 2px; text-decoration: none; }
         .nav-item:hover { background: rgba(255,255,255,0.04); color: #e2e8f0; }
         .nav-item.active { background: rgba(124,58,237,0.15); color: #a78bfa; font-weight: 600; }
         
         .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .btn-logout { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 14px; border-radius: 10px; background: none; border: none; color: #ef4444; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s ease; }
+        .btn-logout { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 14px; border-radius: 10px; background: none; border: none; color: #ef4444; font-size: 14px; font-weight: 500; cursor: pointer; }
         .btn-logout:hover { background: rgba(239,68,68,0.1); }
         
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 39; backdrop-filter: blur(2px); }
@@ -59,12 +45,8 @@
         
         .main-content { flex: 1; margin-left: 260px; min-height: 100vh; transition: margin-left 0.3s ease; }
         
-        .topbar {
-            background: rgba(5,5,9,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 30;
-        }
+        .topbar { background: rgba(5,5,9,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 30; }
         .btn-hamburger { display: none; width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); cursor: pointer; align-items: center; justify-content: center; color: #94a3b8; }
-        .btn-hamburger:hover { background: rgba(255,255,255,0.1); color: white; }
         
         .page-title { font-size: 20px; font-weight: 700; color: white; }
         .page-subtitle { font-size: 13px; color: #64748b; margin-top: 2px; }
@@ -72,23 +54,48 @@
         .btn-primary { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; border: 1px solid rgba(139,92,246,0.3); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; white-space: nowrap; }
         .btn-primary:hover { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 0 20px rgba(139,92,246,0.3); transform: translateY(-1px); }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .btn-secondary { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.15s ease; }
+        .btn-secondary { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
         .btn-secondary:hover { background: rgba(255,255,255,0.1); }
         
         .content-area { padding: 24px 28px; }
         
-        .card-dios { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; transition: all 0.2s ease; }
-        .card-dios:hover { border-color: rgba(139,92,246,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-        
-        .credit-card {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 28px;
-            position: relative; overflow: hidden; transition: all 0.3s ease;
+        .hero-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
+            border: 1px solid rgba(139,92,246,0.2);
+            border-radius: 24px;
+            padding: 40px 32px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 28px;
         }
-        .credit-card:hover { border-color: rgba(139,92,246,0.3); transform: translateY(-2px); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
-        .credit-card::before { content: ''; position: absolute; top: -30%; right: -30%; width: 150px; height: 150px; background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%); border-radius: 50%; }
-        .credit-card.primary::before { background: radial-gradient(circle, rgba(124,58,237,0.2) 0%, transparent 70%); }
-        .credit-card.secondary::before { background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%); }
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero-card::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .kpi-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 20px; }
+        .kpi-icon-box { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .kpi-value { font-size: 28px; font-weight: 800; color: white; line-height: 1; }
+        .kpi-label { font-size: 13px; color: #94a3b8; margin-top: 4px; }
         
         .chart-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; }
         .chart-title { font-size: 15px; font-weight: 700; color: white; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
@@ -99,38 +106,27 @@
         @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         .modal-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
         .modal-title { font-size: 18px; font-weight: 700; color: white; }
-        .modal-close { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.15s ease; }
+        .modal-close { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #94a3b8; }
         .modal-close:hover { background: rgba(255,255,255,0.1); color: white; }
         .modal-body { padding: 24px; }
         .modal-footer { padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; gap: 10px; justify-content: flex-end; }
         
         .form-group { margin-bottom: 18px; }
         .form-label { display: block; font-size: 13px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
-        .form-input, .form-select { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px; color: white; outline: none; transition: all 0.15s ease; }
-        .form-input:focus, .form-select:focus { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 15px rgba(139,92,246,0.1); background: rgba(255,255,255,0.06); }
+        .form-input { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px; color: white; outline: none; transition: all 0.15s ease; }
+        .form-input:focus { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 15px rgba(139,92,246,0.1); background: rgba(255,255,255,0.06); }
         .form-input::placeholder { color: #475569; }
-        select.form-select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 10px center; background-repeat: no-repeat; background-size: 20px; padding-right: 40px; }
-        select.form-select option { background: #1a1a2e; color: white; }
         
         .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: toastIn 0.3s ease-out; max-width: 400px; }
         .toast.success { background: #059669; color: white; }
         .toast.error { background: #dc2626; color: white; }
         @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
         
         .spinner { width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #7c3aed; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        @media (max-width: 1024px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .btn-hamburger { display: flex; }
-        }
-        @media (max-width: 640px) {
-            .content-area { padding: 16px; }
-            .topbar { padding: 12px 16px; }
-        }
+        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } .btn-hamburger { display: flex; } }
+        @media (max-width: 640px) { .content-area { padding: 16px; } .topbar { padding: 12px 16px; } .hero-card { padding: 28px 20px; } }
     </style>
 </head>
 <body>
@@ -142,9 +138,7 @@
             <div class="flex items-center gap-3">
                 <div class="sidebar-logo-box">
                     <div class="sidebar-logo-placeholder" id="sidebarLogoPlaceholder"><span>🎓</span></div>
-                    <img data-tenant-logo="principal" src="" alt="Logo" id="sidebarLogoImg" style="display: none;"
-                        onerror="this.style.display='none';document.getElementById('sidebarLogoPlaceholder').style.display='flex';"
-                        onload="this.style.display='block';document.getElementById('sidebarLogoPlaceholder').style.display='none';">
+                    <img data-tenant-logo="principal" src="" alt="Logo" id="sidebarLogoImg" style="display: none;" onerror="this.style.display='none';document.getElementById('sidebarLogoPlaceholder').style.display='flex';" onload="this.style.display='block';document.getElementById('sidebarLogoPlaceholder').style.display='none';">
                 </div>
                 <div>
                     <div class="sidebar-institute-name" id="sidebarInstituteName">Instituto</div>
@@ -177,7 +171,7 @@
                 <button class="btn-hamburger" onclick="toggleSidebar()"><i data-lucide="menu" class="w-5 h-5"></i></button>
                 <div>
                     <h1 class="page-title">Dashboard FinTech</h1>
-                    <p class="page-subtitle" id="tenantSubtitle">Panel de control financiero</p>
+                    <p class="page-subtitle" id="tenantSubtitle">Bóveda Financiera</p>
                 </div>
             </div>
             <div></div>
@@ -185,44 +179,58 @@
         
         <div class="content-area">
             
-            <!-- BILLETERA DE CRÉDITOS -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div class="credit-card primary">
-                    <div class="flex items-center justify-between mb-4 relative z-10">
-                        <span class="text-xs uppercase tracking-wider text-purple-300 font-semibold">Créditos de Legajo</span>
-                        <i data-lucide="credit-card" class="w-5 h-5 text-purple-400"></i>
+            <!-- HERO: BÓVEDA FINANCIERA -->
+            <div class="hero-card">
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs uppercase tracking-wider text-purple-300 font-semibold flex items-center gap-2">
+                            <i data-lucide="vault" class="w-4 h-4"></i> Bóveda Financiera
+                        </span>
+                        <span class="text-xs text-gray-500">SLA Dolarizado</span>
                     </div>
-                    <div class="relative z-10">
-                        <p class="text-4xl font-bold text-white font-mono" id="creditosLegajo">0</p>
-                        <p class="text-sm text-gray-400 mt-1">Disponibles para matricular alumnos</p>
-                        <p class="text-xs text-purple-400/70 mt-2">Costo: <span id="precioLegajo">$10.00 USD</span> por legajo</p>
+                    <p class="text-6xl font-bold text-white font-mono" id="heroSaldoUSD">$0.00</p>
+                    <p class="text-sm text-gray-400 mt-2">Saldo disponible en USD</p>
+                    
+                    <div class="flex gap-3 mt-8">
+                        <button class="btn-primary" onclick="abrirModalRecarga()">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i> Recargar Saldo
+                        </button>
+                        <a href="reportes.html" class="btn-secondary">
+                            <i data-lucide="file-text" class="w-4 h-4"></i> Ver Transacciones
+                        </a>
                     </div>
-                    <button onclick="abrirModalRecarga('legajo')" class="btn-primary mt-6 relative z-10 w-full justify-center"><i data-lucide="plus-circle" class="w-4 h-4"></i> Recargar Créditos</button>
-                </div>
-                
-                <div class="credit-card secondary">
-                    <div class="flex items-center justify-between mb-4 relative z-10">
-                        <span class="text-xs uppercase tracking-wider text-blue-300 font-semibold">Créditos de Emisión</span>
-                        <i data-lucide="award" class="w-5 h-5 text-blue-400"></i>
-                    </div>
-                    <div class="relative z-10">
-                        <p class="text-4xl font-bold text-white font-mono" id="creditosEmision">0</p>
-                        <p class="text-sm text-gray-400 mt-1">Disponibles para emitir certificados</p>
-                        <p class="text-xs text-blue-400/70 mt-2">Costo: <span id="precioEmision">$1.00 USD</span> por emisión</p>
-                    </div>
-                    <button onclick="abrirModalRecarga('emision')" class="btn-primary mt-6 relative z-10 w-full justify-center" style="background: linear-gradient(135deg, #3b82f6, #2563eb); border-color: rgba(59,130,246,0.3);"><i data-lucide="plus-circle" class="w-4 h-4"></i> Recargar Créditos</button>
                 </div>
             </div>
             
-            <!-- GRÁFICOS -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="chart-card">
-                    <h3 class="chart-title"><i data-lucide="trending-up" class="w-5 h-5 text-purple-400"></i> Evolución: Matrículas vs Certificaciones</h3>
-                    <div style="position: relative; height: 300px;"><canvas id="chartEvolucion"></canvas></div>
+            <!-- KPIs -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon-box" style="background:rgba(124,58,237,0.15);"><i data-lucide="users" class="w-5 h-5" style="color:#a78bfa;"></i></div>
+                    <div class="kpi-value" id="kpiTotalAlumnos">0</div>
+                    <div class="kpi-label">Total Alumnos</div>
                 </div>
-                <div class="chart-card">
-                    <h3 class="chart-title"><i data-lucide="pie-chart" class="w-5 h-5 text-purple-400"></i> Distribución de Alumnos por Sede</h3>
-                    <div style="position: relative; height: 300px;"><canvas id="chartSedes"></canvas></div>
+                <div class="kpi-card">
+                    <div class="kpi-icon-box" style="background:rgba(16,185,129,0.15);"><i data-lucide="award" class="w-5 h-5" style="color:#10b981;"></i></div>
+                    <div class="kpi-value" id="kpiTotalCursos">0</div>
+                    <div class="kpi-label">Cursos Activos</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon-box" style="background:rgba(59,130,246,0.15);"><i data-lucide="shield-check" class="w-5 h-5" style="color:#93c5fd;"></i></div>
+                    <div class="kpi-value" id="kpiTotalCertificados">0</div>
+                    <div class="kpi-label">Certificados Emitidos</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon-box" style="background:rgba(239,68,68,0.15);"><i data-lucide="dollar-sign" class="w-5 h-5" style="color:#f87171;"></i></div>
+                    <div class="kpi-value font-mono" id="kpiTotalFees">$0.00</div>
+                    <div class="kpi-label">Fees Retenidos por ASARI</div>
+                </div>
+            </div>
+            
+            <!-- GRÁFICO -->
+            <div class="chart-card">
+                <h3 class="chart-title"><i data-lucide="trending-up" class="w-5 h-5 text-purple-400"></i> Historial de Saldo (Últimas 10 Transacciones)</h3>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="chartSaldo"></canvas>
                 </div>
             </div>
             
@@ -233,26 +241,23 @@
     <div class="modal-overlay hidden" id="recargaModal">
         <div class="modal-card">
             <div class="modal-header">
-                <h3 class="modal-title" id="recargaModalTitle">Recargar Créditos</h3>
+                <h3 class="modal-title">Recargar Saldo</h3>
                 <button class="modal-close" onclick="cerrarModalRecarga()"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <form id="recargaForm">
                 <div class="modal-body">
-                    <input type="hidden" id="recargaTipo">
                     <div class="form-group">
-                        <label class="form-label">Cantidad de paquetes</label>
-                        <input type="number" id="recargaCantidad" class="form-input" min="1" value="1" required>
-                        <p class="text-xs text-gray-500 mt-1">1 paquete = 50 créditos</p>
+                        <label class="form-label">Monto a Recargar (USD) *</label>
+                        <input type="number" id="recargaMonto" class="form-input" placeholder="Ej: 500" min="1" step="0.01" required>
+                        <p class="form-hint text-xs text-gray-500 mt-1">Ingresa el monto libre en dólares</p>
                     </div>
-                    <div class="card-dios p-4">
-                        <div class="flex justify-between text-sm"><span class="text-gray-400">Subtotal</span><span class="text-white font-mono" id="recargaSubtotal">$0.00 USD</span></div>
-                        <div class="flex justify-between text-sm mt-2"><span class="text-gray-400">Créditos a recibir</span><span class="text-green-400 font-mono" id="recargaCreditos">0</span></div>
-                        <div class="flex justify-between text-sm mt-2 pt-2 border-t border-white/5"><span class="font-semibold">Total</span><span class="text-white font-bold font-mono" id="recargaTotal">$0.00 USD</span></div>
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
+                        <p class="text-sm text-blue-300">Saldo actual: <strong class="font-mono" id="recargaSaldoActual">$0.00 USD</strong></p>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary" onclick="cerrarModalRecarga()">Cancelar</button>
-                    <button type="submit" class="btn-primary" id="recargaSubmitBtn"><i data-lucide="credit-card" class="w-4 h-4"></i> Confirmar Compra</button>
+                    <button type="submit" class="btn-primary" id="recargaSubmitBtn"><i data-lucide="credit-card" class="w-4 h-4"></i> Confirmar Recarga</button>
                 </div>
             </form>
         </div>
@@ -265,52 +270,50 @@
     <script>
         lucide.createIcons();
         
-        // ============ ESTADO GLOBAL ============
         let tenantConfig = null;
-        let chartEvolucionInst = null;
-        let chartSedesInst = null;
+        let saldoUSD = 0;
+        let chartSaldoInst = null;
         
-        // ============ REFERENCIAS DOM ============
         const sidebar = document.getElementById('sidebar');
-        const sidebarOverlayEl = document.getElementById('sidebarOverlay');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
         const toast = document.getElementById('toast');
         
-        // ============ SIDEBAR ============
-        function toggleSidebar() { sidebar.classList.toggle('open'); sidebarOverlayEl.classList.toggle('active'); }
-        function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlayEl.classList.remove('active'); }
+        function toggleSidebar() { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); }
+        function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); }
         
-        // ============ TOAST ============
-        function showToast(message, type = 'success') {
-            toast.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${message}</span>`;
-            toast.className = `toast ${type}`; lucide.createIcons();
-            clearTimeout(window._tt); window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
+        function showToast(msg, type = 'success') {
+            toast.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${msg}</span>`;
+            toast.className = `toast ${type}`;
+            lucide.createIcons();
+            clearTimeout(window._tt);
+            window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
         }
         
-        // ============ AUTENTICACIÓN ============
         async function checkAuth() {
             const { data: { session } } = await window.supabase.auth.getSession();
-            if (!session?.user) { redirectToLogin(); return false; }
+            if (!session?.user) {
+                const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+                window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`;
+                return false;
+            }
             return true;
         }
-        function redirectToLogin() {
-            const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
-            window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`;
-        }
+        
         async function handleLogout() {
             if (!confirm('¿Cerrar sesión?')) return;
             await window.supabase.auth.signOut();
             localStorage.removeItem('asari_user_session');
-            redirectToLogin();
+            const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+            window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`;
         }
         
-        // ============ TENANT ============
         async function inicializarTenant() {
             if (typeof window.fetchTenantConfig !== 'function') { setTimeout(inicializarTenant, 100); return; }
             tenantConfig = await window.fetchTenantConfig();
             if (tenantConfig) {
                 const { instituto, configuracion } = tenantConfig;
                 document.getElementById('sidebarInstituteName').textContent = instituto.nombre;
-                document.getElementById('tenantSubtitle').textContent = `Panel de control - ${instituto.nombre}`;
+                document.getElementById('tenantSubtitle').textContent = `Bóveda Financiera - ${instituto.nombre}`;
                 document.title = `Dashboard - ${instituto.nombre} | ASARI`;
                 if (configuracion?.branding?.logo_principal) {
                     document.getElementById('sidebarLogoImg').src = configuracion.branding.logo_principal;
@@ -318,51 +321,105 @@
                     document.getElementById('sidebarLogoPlaceholder').style.display = 'none';
                 }
                 window.__TENANT_CONFIG__ = tenantConfig;
-                
-                // Cargar precios SLA
-                const precios = configuracion?.sla_precios || { legajo: 10, emision: 1 };
-                document.getElementById('precioLegajo').textContent = `$${precios.legajo.toFixed(2)} USD`;
-                document.getElementById('precioEmision').textContent = `$${precios.emision.toFixed(2)} USD`;
+                await cargarBilletera();
+                await cargarKPIs();
+                await cargarGrafico();
             }
         }
         
-        // ============ CARGAR CRÉDITOS ============
-        async function cargarCreditos() {
+        // ============ BILLETERA ============
+        async function cargarBilletera() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            try {
+                const { data, error } = await window.supabase
+                    .from('sys_billetera_institutos')
+                    .select('saldo_usd')
+                    .eq('instituto_id', institutoId)
+                    .maybeSingle();
+                saldoUSD = data?.saldo_usd || 0;
+                document.getElementById('heroSaldoUSD').textContent = `$${saldoUSD.toFixed(2)}`;
+                document.getElementById('recargaSaldoActual').textContent = `$${saldoUSD.toFixed(2)} USD`;
+            } catch(e) {
+                console.error('Error cargando billetera:', e);
+            }
+        }
+        
+        // ============ KPIs ============
+        async function cargarKPIs() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
             
-            try {
-                const { data: transacciones } = await window.supabase.from('sys_transacciones').select('tipo, cantidad, estado').eq('instituto_id', institutoId).eq('estado', 'completado');
-                
-                let legajos = 0, emisiones = 0;
-                (transacciones || []).forEach(t => {
-                    if (t.tipo === 'legajo') legajos += t.cantidad * 50;
-                    if (t.tipo === 'emision') emisiones += t.cantidad * 50;
-                });
-                
-                // Restar consumos de padron_global y sys_certificados
-                const { count: alumnosCount } = await window.supabase.from('padron_global').select('*', { count: 'exact', head: true }).eq('instituto_id', institutoId);
-                const { count: certsCount } = await window.supabase.from('sys_certificados').select('*', { count: 'exact', head: true }).eq('instituto_id', institutoId).eq('estado', 'activo');
-                
-                legajos = Math.max(0, legajos - (alumnosCount || 0));
-                emisiones = Math.max(0, emisiones - (certsCount || 0));
-                
-                document.getElementById('creditosLegajo').textContent = legajos;
-                document.getElementById('creditosEmision').textContent = emisiones;
-            } catch(e) {
-                console.error('Error cargando créditos:', e);
-            }
+            const { count: totalAlumnos } = await window.supabase.from('padron_global').select('*', { count: 'exact', head: true }).eq('instituto_id', institutoId);
+            const { count: totalCursos } = await window.supabase.from('sys_cursos').select('*', { count: 'exact', head: true }).eq('instituto_id', institutoId).eq('estado', 'activo');
+            const { data: certificados } = await window.supabase.from('sys_certificados').select('fee_asari_retenido').eq('instituto_id', institutoId);
+            
+            document.getElementById('kpiTotalAlumnos').textContent = totalAlumnos || 0;
+            document.getElementById('kpiTotalCursos').textContent = totalCursos || 0;
+            document.getElementById('kpiTotalCertificados').textContent = (certificados || []).length;
+            
+            const totalFees = (certificados || []).reduce((sum, c) => sum + (c.fee_asari_retenido || 0), 0);
+            document.getElementById('kpiTotalFees').textContent = `$${totalFees.toFixed(2)}`;
+        }
+        
+        // ============ GRÁFICO ============
+        async function cargarGrafico() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            
+            if (chartSaldoInst) chartSaldoInst.destroy();
+            
+            const { data: transacciones } = await window.supabase
+                .from('sys_transacciones')
+                .select('monto_usd, tipo_operacion, created_at')
+                .eq('instituto_id', institutoId)
+                .order('created_at', { ascending: false })
+                .limit(10);
+            
+            const ctx = document.getElementById('chartSaldo')?.getContext('2d');
+            if (!ctx) return;
+            
+            const labels = (transacciones || []).reverse().map(t => {
+                const d = new Date(t.created_at);
+                return `${d.getDate()}/${d.getMonth()+1} ${d.getHours()}:${d.getMinutes()}`;
+            });
+            const data = (transacciones || []).reverse().map(t => t.monto_usd || 0);
+            
+            chartSaldoInst = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels.length > 0 ? labels : ['Sin datos'],
+                    datasets: [{
+                        label: 'Movimientos USD',
+                        data: data.length > 0 ? data : [0],
+                        borderColor: '#7c3aed',
+                        backgroundColor: 'rgba(124,58,237,0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: '#7c3aed',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#94a3b8', usePointStyle: true, padding: 20 } } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 10 } } }
+                    }
+                }
+            });
         }
         
         // ============ MODAL RECARGA ============
-        let recargaTipoActual = 'legajo';
-        
-        function abrirModalRecarga(tipo) {
-            recargaTipoActual = tipo;
-            document.getElementById('recargaTipo').value = tipo;
-            document.getElementById('recargaModalTitle').textContent = tipo === 'legajo' ? 'Recargar Créditos de Legajo' : 'Recargar Créditos de Emisión';
-            document.getElementById('recargaCantidad').value = 1;
-            actualizarCalculoRecarga();
+        function abrirModalRecarga() {
+            document.getElementById('recargaForm').reset();
+            document.getElementById('recargaMonto').value = '';
+            document.getElementById('recargaSaldoActual').textContent = `$${saldoUSD.toFixed(2)} USD`;
             document.getElementById('recargaModal').classList.remove('hidden');
             lucide.createIcons();
         }
@@ -371,139 +428,61 @@
             document.getElementById('recargaModal').classList.add('hidden');
         }
         
-        function actualizarCalculoRecarga() {
-            const cantidad = parseInt(document.getElementById('recargaCantidad').value) || 0;
-            const precios = tenantConfig?.configuracion?.sla_precios || { legajo: 10, emision: 1 };
-            const precioUnitario = recargaTipoActual === 'legajo' ? precios.legajo : precios.emision;
-            const subtotal = cantidad * precioUnitario;
-            const creditos = cantidad * 50;
-            
-            document.getElementById('recargaSubtotal').textContent = `$${subtotal.toFixed(2)} USD`;
-            document.getElementById('recargaCreditos').textContent = creditos;
-            document.getElementById('recargaTotal').textContent = `$${subtotal.toFixed(2)} USD`;
-        }
-        
-        document.getElementById('recargaCantidad').addEventListener('input', actualizarCalculoRecarga);
-        
         document.getElementById('recargaForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const institutoId = tenantConfig?.instituto?.id;
-            if (!institutoId) return;
+            if (!institutoId) { showToast('Error: Instituto no identificado', 'error'); return; }
             
-            const cantidad = parseInt(document.getElementById('recargaCantidad').value) || 0;
-            if (cantidad <= 0) { showToast('Ingresa una cantidad válida', 'error'); return; }
-            
-            const precios = tenantConfig?.configuracion?.sla_precios || { legajo: 10, emision: 1 };
-            const precioUnitario = recargaTipoActual === 'legajo' ? precios.legajo : precios.emision;
-            const total = cantidad * precioUnitario;
+            const monto = parseFloat(document.getElementById('recargaMonto').value);
+            if (!monto || monto <= 0) { showToast('Ingresa un monto válido', 'error'); return; }
             
             const btn = document.getElementById('recargaSubmitBtn');
             btn.disabled = true;
             btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Procesando...</span>';
             
             try {
-                const { error } = await window.supabase.from('sys_transacciones').insert([{
-                    instituto_id: institutoId,
-                    tipo: recargaTipoActual,
-                    cantidad: cantidad,
-                    monto_usd: total,
-                    estado: 'completado',
-                    descripcion: `Recarga de ${cantidad} paquete(s) de créditos de ${recargaTipoActual}`,
-                    metadata: { creditos_recibidos: cantidad * 50 }
-                }]);
-                if (error) throw error;
+                // 1. UPDATE saldo (sumar)
+                const nuevoSaldo = saldoUSD + monto;
+                const { error: billeteraError } = await window.supabase
+                    .from('sys_billetera_institutos')
+                    .update({ saldo_usd: nuevoSaldo })
+                    .eq('instituto_id', institutoId);
+                if (billeteraError) throw billeteraError;
                 
+                // 2. INSERT transacción
+                const { error: transError } = await window.supabase
+                    .from('sys_transacciones')
+                    .insert([{
+                        instituto_id: institutoId,
+                        tipo_operacion: 'recarga_saldo',
+                        monto_usd: monto,
+                        estado: 'completado',
+                        descripcion: `Recarga de saldo por $${monto.toFixed(2)} USD`
+                    }]);
+                if (transError) throw transError;
+                
+                saldoUSD = nuevoSaldo;
                 cerrarModalRecarga();
-                await cargarCreditos();
-                showToast(`Recarga exitosa: ${cantidad * 50} créditos añadidos`);
+                await cargarBilletera();
+                await cargarGrafico();
+                showToast(`Recarga exitosa: $${monto.toFixed(2)} USD añadidos`);
             } catch(err) {
                 showToast('Error: ' + err.message, 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="credit-card" class="w-4 h-4"></i> Confirmar Compra';
+                btn.innerHTML = '<i data-lucide="credit-card" class="w-4 h-4"></i> Confirmar Recarga';
                 lucide.createIcons();
             }
         });
         
-        // ============ GRÁFICOS ============
-        async function cargarGraficos() {
-            const institutoId = tenantConfig?.instituto?.id;
-            if (!institutoId) return;
-            
-            if (chartEvolucionInst) chartEvolucionInst.destroy();
-            if (chartSedesInst) chartSedesInst.destroy();
-            
-            const ctxEvol = document.getElementById('chartEvolucion')?.getContext('2d');
-            if (ctxEvol) {
-                const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-                const ahora = new Date();
-                const labels = [];
-                for (let i = 5; i >= 0; i--) {
-                    const d = new Date(ahora.getFullYear(), ahora.getMonth() - i, 1);
-                    labels.push(meses[d.getMonth()] + ' ' + d.getFullYear());
-                }
-                
-                const { count: totalAlumnos } = await window.supabase.from('padron_global').select('*', { count: 'exact', head: true }).eq('instituto_id', institutoId);
-                const { count: totalCerts } = await window.supabase.from('sys_certificados').select('*', { count: 'exact', head: true }).eq('instituto_id', institutoId).eq('estado', 'activo');
-                const baseA = totalAlumnos || 10;
-                const baseC = totalCerts || 5;
-                
-                chartEvolucionInst = new Chart(ctxEvol, {
-                    type: 'line',
-                    data: {
-                        labels,
-                        datasets: [
-                            { label: 'Matrículas', data: [Math.round(baseA*0.3), Math.round(baseA*0.5), Math.round(baseA*0.6), Math.round(baseA*0.75), Math.round(baseA*0.9), baseA], borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.1)', fill: true, tension: 0.4, pointRadius: 4, pointHoverRadius: 6 },
-                            { label: 'Certificaciones', data: [Math.round(baseC*0.2), Math.round(baseC*0.4), Math.round(baseC*0.55), Math.round(baseC*0.7), Math.round(baseC*0.85), baseC], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.4, pointRadius: 4, pointHoverRadius: 6 }
-                        ]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#94a3b8', usePointStyle: true, padding: 20 } } },
-                        scales: {
-                            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
-                            x: { grid: { display: false }, ticks: { color: '#64748b' } }
-                        }
-                    }
-                });
-            }
-            
-            const ctxSedes = document.getElementById('chartSedes')?.getContext('2d');
-            if (ctxSedes) {
-                const { data: sedes } = await window.supabase.from('institutos_sedes').select('*').eq('instituto_id', institutoId);
-                const { count: totalAl } = await window.supabase.from('padron_global').select('*', { count: 'exact', head: true }).eq('instituto_id', institutoId);
-                
-                if (sedes && sedes.length > 0) {
-                    const porSede = sedes.map((_, idx) => idx === 0 ? Math.round((totalAl||10)*0.5) : Math.round((totalAl||10)*0.5/(sedes.length-1||1)));
-                    chartSedesInst = new Chart(ctxSedes, {
-                        type: 'doughnut',
-                        data: {
-                            labels: sedes.map(s => s.nombre),
-                            datasets: [{ data: porSede, backgroundColor: ['#7c3aed','#3b82f6','#10b981','#f59e0b','#ef4444'], borderColor: '#050509', borderWidth: 3 }]
-                        },
-                        options: {
-                            responsive: true, maintainAspectRatio: false,
-                            plugins: { legend: { labels: { color: '#94a3b8', usePointStyle: true, padding: 16 } } },
-                            cutout: '60%'
-                        }
-                    });
-                }
-            }
-        }
-        
-        // ============ INICIALIZACIÓN ============
-        async function inicializar() {
-            console.log('📊 Dashboard FinTech inicializando...');
-            if (!await checkAuth()) return;
-            await inicializarTenant();
-            await cargarCreditos();
-            await cargarGraficos();
-            console.log('✅ Dashboard listo');
-        }
-        
-        window.addEventListener('DOMContentLoaded', inicializar);
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarModalRecarga(); });
         document.getElementById('recargaModal').addEventListener('click', function(e) { if (e.target === this) cerrarModalRecarga(); });
+        
+        async function inicializar() {
+            if (!await checkAuth()) return;
+            await inicializarTenant();
+        }
+        window.addEventListener('DOMContentLoaded', inicializar);
         document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', () => { if (window.innerWidth < 1024) closeSidebar(); }));
     </script>
 </body>
