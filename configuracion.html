@@ -16,21 +16,13 @@
         * { font-family: 'Inter', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
-        :root {
-            --color-primary: #7c3aed;
-            --color-primary-light: #a78bfa;
-            --color-primary-dark: #5b21b6;
-        }
+        :root { --color-primary: #7c3aed; --color-primary-light: #a78bfa; --color-primary-dark: #5b21b6; }
         
         body { background: #050509; color: #e2e8f0; min-height: 100vh; -webkit-font-smoothing: antialiased; }
         
         .app-layout { display: flex; min-height: 100vh; }
         
-        .sidebar {
-            width: 260px; background: rgba(10,10,20,0.95); border-right: 1px solid rgba(255,255,255,0.05);
-            display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
-            z-index: 40; transition: transform 0.3s ease; backdrop-filter: blur(20px);
-        }
+        .sidebar { width: 260px; background: rgba(10,10,20,0.95); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 40; transition: transform 0.3s ease; backdrop-filter: blur(20px); }
         .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar-logo-box { width: 44px; height: 44px; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
         .sidebar-logo-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -61,37 +53,38 @@
         .btn-primary { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; border: 1px solid rgba(139,92,246,0.3); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; white-space: nowrap; }
         .btn-primary:hover { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 0 20px rgba(139,92,246,0.3); transform: translateY(-1px); }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .btn-secondary { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
         
         .content-area { padding: 24px 28px; }
         
-        .card-dios { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; margin-bottom: 20px; transition: all 0.2s ease; }
-        .card-dios:hover { border-color: rgba(139,92,246,0.2); }
-        .card-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
-        
+        .sla-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
         .sla-table { width: 100%; }
         .sla-table th { text-align: left; padding: 10px 14px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sla-table td { padding: 12px 14px; font-size: 14px; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); }
         .sla-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
         .sla-activo { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
         
-        .file-drop-zone {
-            border: 2px dashed rgba(255,255,255,0.15); border-radius: 14px; padding: 28px 20px;
-            text-align: center; cursor: pointer; transition: all 0.2s ease; background: rgba(255,255,255,0.02); position: relative;
-        }
-        .file-drop-zone:hover { border-color: var(--color-primary-light); background: rgba(124,58,237,0.05); }
-        .file-drop-zone.has-file { border-color: #10b981; background: rgba(16,185,129,0.05); }
-        .file-drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-        .file-drop-zone .preview-img { max-width: 100%; max-height: 140px; border-radius: 8px; margin-top: 12px; display: none; }
-        .file-drop-zone.has-file .preview-img { display: block; }
+        .tab-nav-item { padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; white-space: nowrap; }
+        .tab-nav-item:hover { color: rgba(255,255,255,0.8); }
+        .tab-nav-item.active { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(124,58,237,0.1); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .card-dios { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; }
         
         .form-group { margin-bottom: 18px; }
         .form-label { display: block; font-size: 13px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
-        .form-input { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px; color: white; outline: none; transition: all 0.15s ease; }
-        .form-input:focus { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 15px rgba(139,92,246,0.1); background: rgba(255,255,255,0.06); }
-        .form-input:disabled { opacity: 0.4; cursor: not-allowed; }
-        .form-input::placeholder { color: #475569; }
+        .form-input, .form-textarea { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px; color: white; outline: none; transition: all 0.15s ease; }
+        .form-input:focus, .form-textarea:focus { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 15px rgba(139,92,246,0.1); background: rgba(255,255,255,0.06); }
+        .form-input::placeholder, .form-textarea::placeholder { color: #475569; }
+        .form-textarea { resize: vertical; min-height: 80px; }
+        .form-hint { font-size: 11px; color: #64748b; margin-top: 4px; }
+        
+        .file-drop-zone { border: 2px dashed rgba(255,255,255,0.15); border-radius: 14px; padding: 24px 20px; text-align: center; cursor: pointer; transition: all 0.2s ease; background: rgba(255,255,255,0.02); position: relative; }
+        .file-drop-zone:hover { border-color: var(--color-primary-light); background: rgba(124,58,237,0.05); }
+        .file-drop-zone.has-file { border-color: #10b981; background: rgba(16,185,129,0.05); }
+        .file-drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .file-drop-zone .preview-img { max-width: 100%; max-height: 120px; border-radius: 8px; margin-top: 12px; display: none; }
+        .file-drop-zone.has-file .preview-img { display: block; }
         
         .logo-actual { width: 80px; height: 80px; border-radius: 16px; object-fit: cover; border: 2px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); }
         
@@ -151,34 +144,40 @@
                 <button class="btn-hamburger" onclick="toggleSidebar()"><i data-lucide="menu" class="w-5 h-5"></i></button>
                 <div>
                     <h1 class="page-title">Configuración</h1>
-                    <p class="page-subtitle" id="tenantSubtitle">SLA, Branding y Personalización</p>
+                    <p class="page-subtitle" id="tenantSubtitle">Identidad y Finanzas</p>
                 </div>
             </div>
-            <div></div>
         </header>
         
         <div class="content-area">
             
-            <!-- SLA CONTRATADO -->
-            <div class="card-dios">
-                <h3 class="card-title"><span style="background:rgba(124,58,237,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="file-check" class="w-5 h-5" style="color:#a78bfa;"></i></span> SLA Contratado (Solo Lectura)</h3>
+            <!-- SLA CONTRATADO (Solo Lectura - Tarjeta superior) -->
+            <div class="sla-card">
+                <h3 class="text-white font-bold mb-4 flex items-center gap-2">
+                    <i data-lucide="file-check" class="w-5 h-5 text-purple-400"></i> SLA Contratado (Solo Lectura)
+                </h3>
                 <div class="overflow-x-auto">
                     <table class="sla-table">
-                        <thead><tr><th>Concepto</th><th>Precio Unitario</th><th>Paquete</th><th>Estado</th></tr></thead>
+                        <thead><tr><th>Concepto</th><th>Precio</th><th>Estado</th></tr></thead>
                         <tbody id="slaTableBody">
-                            <tr><td colspan="4" class="text-center py-4"><div class="spinner"></div></td></tr>
+                            <tr><td colspan="3" class="text-center py-4"><div class="spinner"></div></td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
             
-            <!-- BRANDING -->
-            <div class="card-dios">
-                <h3 class="card-title"><span style="background:rgba(59,130,246,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="palette" class="w-5 h-5" style="color:#93c5fd;"></i></span> Branding del Instituto</h3>
-                
-                <form id="brandingForm">
+            <!-- TABS DE CONFIGURACIÓN -->
+            <div class="flex gap-2 border-b border-white/10 mb-6 overflow-x-auto pb-2">
+                <div class="tab-nav-item active" onclick="switchTab('branding', this)">🎨 Branding</div>
+                <div class="tab-nav-item" onclick="switchTab('perfil', this)">🏢 Perfil Institucional</div>
+                <div class="tab-nav-item" onclick="switchTab('redes', this)">📱 Redes Sociales</div>
+                <div class="tab-nav-item" onclick="switchTab('cobros', this)">💳 Pasarelas y Cobros</div>
+            </div>
+            
+            <!-- TAB BRANDING -->
+            <div class="tab-content active" id="tab-branding">
+                <div class="card-dios">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Logo Principal -->
                         <div>
                             <label class="form-label">Logo Principal</label>
                             <div class="flex items-start gap-4 mb-3">
@@ -195,8 +194,6 @@
                                 <p class="text-xs text-green-500 mt-1 hidden" id="fileNameLogoPrincipal"></p>
                             </div>
                         </div>
-                        
-                        <!-- Logo Secundario -->
                         <div>
                             <label class="form-label">Logo Secundario</label>
                             <div class="flex items-start gap-4 mb-3">
@@ -214,11 +211,94 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="flex justify-end mt-6">
-                        <button type="submit" class="btn-primary" id="brandingSubmitBtn"><i data-lucide="save" class="w-4 h-4"></i> Actualizar Logos</button>
+                        <button class="btn-primary" onclick="guardarBranding()" id="btnGuardarBranding"><i data-lucide="save" class="w-4 h-4"></i> Guardar Logos</button>
                     </div>
-                </form>
+                </div>
+            </div>
+            
+            <!-- TAB PERFIL INSTITUCIONAL -->
+            <div class="tab-content" id="tab-perfil">
+                <div class="card-dios">
+                    <div class="form-group">
+                        <label class="form-label">Lema / Slogan</label>
+                        <input type="text" id="perfilLema" class="form-input" placeholder="Ej: Formando líderes del futuro">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Historia</label>
+                        <textarea id="perfilHistoria" class="form-textarea" placeholder="Cuenta la historia de la institución..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Quiénes Somos</label>
+                        <textarea id="perfilQuienes" class="form-textarea" placeholder="Describe quiénes son..."></textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="btn-primary" onclick="guardarPerfil()" id="btnGuardarPerfil"><i data-lucide="save" class="w-4 h-4"></i> Guardar Perfil</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TAB REDES SOCIALES -->
+            <div class="tab-content" id="tab-redes">
+                <div class="card-dios">
+                    <div class="space-y-4">
+                        <div class="form-group">
+                            <label class="form-label flex items-center gap-2"><i data-lucide="message-circle" class="w-4 h-4 text-green-400"></i> WhatsApp</label>
+                            <input type="url" id="redWhatsApp" class="form-input" placeholder="https://wa.me/5491112345678">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label flex items-center gap-2"><i data-lucide="instagram" class="w-4 h-4 text-pink-400"></i> Instagram</label>
+                            <input type="url" id="redInstagram" class="form-input" placeholder="https://instagram.com/tuinstituto">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label flex items-center gap-2"><i data-lucide="facebook" class="w-4 h-4 text-blue-400"></i> Facebook</label>
+                            <input type="url" id="redFacebook" class="form-input" placeholder="https://facebook.com/tuinstituto">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label flex items-center gap-2"><i data-lucide="linkedin" class="w-4 h-4 text-blue-300"></i> LinkedIn</label>
+                            <input type="url" id="redLinkedIn" class="form-input" placeholder="https://linkedin.com/company/tuinstituto">
+                        </div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="btn-primary" onclick="guardarRedes()" id="btnGuardarRedes"><i data-lucide="save" class="w-4 h-4"></i> Guardar Redes</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TAB PASARELAS Y COBROS -->
+            <div class="tab-content" id="tab-cobros">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- COBRO MANUAL -->
+                    <div class="card-dios">
+                        <h4 class="text-white font-bold mb-4 flex items-center gap-2"><i data-lucide="banknote" class="w-5 h-5 text-green-400"></i> Cobro Manual</h4>
+                        <div class="form-group">
+                            <label class="form-label">Datos Bancarios (CBU, Alias, Titular)</label>
+                            <textarea id="datosBancarios" class="form-textarea h-48" placeholder="Banco: XX\nCBU: 0000000000000000000000\nAlias: instituto.cbu\nTitular: Instituto Ejemplo S.A."></textarea>
+                            <p class="form-hint">Esta información se mostrará a los alumnos para transferencias</p>
+                        </div>
+                        <div class="flex justify-end">
+                            <button class="btn-primary" onclick="guardarDatosBancarios()" id="btnGuardarBancarios"><i data-lucide="save" class="w-4 h-4"></i> Guardar Datos</button>
+                        </div>
+                    </div>
+                    
+                    <!-- COBRO AUTOMÁTICO -->
+                    <div class="card-dios">
+                        <h4 class="text-white font-bold mb-4 flex items-center gap-2"><i data-lucide="credit-card" class="w-5 h-5 text-blue-400"></i> Cobro Automático (MercadoPago)</h4>
+                        <div class="form-group">
+                            <label class="form-label">Access Token</label>
+                            <input type="password" id="mpAccessToken" class="form-input font-mono text-sm" placeholder="TEST-1234567890...">
+                            <p class="form-hint">Token secreto de la aplicación MercadoPago</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Public Key</label>
+                            <input type="text" id="mpPublicKey" class="form-input font-mono text-sm" placeholder="TEST-abcdefgh-1234-5678">
+                            <p class="form-hint">Clave pública para el frontend de MercadoPago</p>
+                        </div>
+                        <div class="flex justify-end">
+                            <button class="btn-primary" onclick="guardarMercadoPago()" id="btnGuardarMP"><i data-lucide="save" class="w-4 h-4"></i> Guardar Credenciales</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             
         </div>
@@ -231,34 +311,49 @@
     <script>
         lucide.createIcons();
         
-        let tenantConfig = null;
-        let archivosBranding = { principal: null, secundario: null };
         const STORAGE_BUCKET = 'asari-assets';
         
+        let tenantConfig = null;
+        let archivosBranding = { principal: null, secundario: null };
+        
         const sidebar = document.getElementById('sidebar');
-        const sidebarOverlayEl = document.getElementById('sidebarOverlay');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
         const toast = document.getElementById('toast');
         
-        function toggleSidebar() { sidebar.classList.toggle('open'); sidebarOverlayEl.classList.toggle('active'); }
-        function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlayEl.classList.remove('active'); }
+        function toggleSidebar() { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); }
+        function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); }
         
         function showToast(msg, type = 'success') {
             toast.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${msg}</span>`;
-            toast.className = `toast ${type}`; lucide.createIcons();
-            clearTimeout(window._tt); window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
+            toast.className = `toast ${type}`;
+            lucide.createIcons();
+            clearTimeout(window._tt);
+            window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
         }
         
         async function checkAuth() {
             const { data: { session } } = await window.supabase.auth.getSession();
-            if (!session?.user) { const slug = window.getTenantSlug ? window.getTenantSlug() : 'default'; window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`; return false; }
+            if (!session?.user) {
+                const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+                window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`;
+                return false;
+            }
             return true;
         }
+        
         async function handleLogout() {
             if (!confirm('¿Cerrar sesión?')) return;
             await window.supabase.auth.signOut();
             localStorage.removeItem('asari_user_session');
             const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
             window.location.href = `login.html?instituto=${encodeURIComponent(slug)}`;
+        }
+        
+        function switchTab(tab, el) {
+            document.querySelectorAll('.tab-nav-item').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
         }
         
         async function inicializarTenant() {
@@ -269,33 +364,42 @@
                 document.getElementById('sidebarInstituteName').textContent = instituto.nombre;
                 document.getElementById('tenantSubtitle').textContent = `Configuración - ${instituto.nombre}`;
                 document.title = `Configuración - ${instituto.nombre} | ASARI`;
+                
                 if (configuracion?.branding?.logo_principal) {
                     document.getElementById('sidebarLogoImg').src = configuracion.branding.logo_principal;
                     document.getElementById('sidebarLogoImg').style.display = 'block';
                     document.getElementById('sidebarLogoPlaceholder').style.display = 'none';
                 }
+                
                 window.__TENANT_CONFIG__ = tenantConfig;
                 
                 cargarSLA();
                 cargarBrandingActual();
+                cargarPerfilInstitucional();
+                cargarRedesSociales();
+                cargarDatosBancarios();
+                cargarMercadoPago();
             }
         }
         
         // ============ SLA ============
         function cargarSLA() {
-            const precios = tenantConfig?.configuracion?.sla_precios || { legajo: 10, emision: 1 };
+            const precios = tenantConfig?.configuracion?.sla_precios || {};
             const tbody = document.getElementById('slaTableBody');
             tbody.innerHTML = `
                 <tr>
-                    <td class="flex items-center gap-2"><i data-lucide="credit-card" class="w-4 h-4 text-purple-400"></i> Crédito de Legajo (Alta de alumno)</td>
-                    <td class="font-mono font-bold text-white">$${precios.legajo.toFixed(2)} USD</td>
-                    <td>50 créditos por paquete</td>
+                    <td class="flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4 text-purple-400"></i> Alta de Alumno</td>
+                    <td class="font-mono font-bold">$${(precios.alta_alumno || 10).toFixed(2)} USD</td>
                     <td><span class="sla-badge sla-activo"><span style="width:6px;height:6px;border-radius:50%;background:#10b981;"></span> Activo</span></td>
                 </tr>
                 <tr>
-                    <td class="flex items-center gap-2"><i data-lucide="award" class="w-4 h-4 text-blue-400"></i> Crédito de Emisión (Certificado)</td>
-                    <td class="font-mono font-bold text-white">$${precios.emision.toFixed(2)} USD</td>
-                    <td>50 créditos por paquete</td>
+                    <td class="flex items-center gap-2"><i data-lucide="award" class="w-4 h-4 text-blue-400"></i> Fee Certificación</td>
+                    <td class="font-mono font-bold">${precios.fee_emision_porcentaje || 20}%</td>
+                    <td><span class="sla-badge sla-activo"><span style="width:6px;height:6px;border-radius:50%;background:#10b981;"></span> Activo</span></td>
+                </tr>
+                <tr>
+                    <td class="flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4 text-green-400"></i> Abono Mensual</td>
+                    <td class="font-mono font-bold">$${(precios.abono_mensual || 0).toFixed(2)} USD</td>
                     <td><span class="sla-badge sla-activo"><span style="width:6px;height:6px;border-radius:50%;background:#10b981;"></span> Activo</span></td>
                 </tr>
             `;
@@ -345,18 +449,18 @@
             return data.publicUrl;
         }
         
-        document.getElementById('brandingForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        async function guardarBranding() {
             const institutoId = tenantConfig?.instituto?.id;
-            if (!institutoId) { showToast('Error: Instituto no identificado', 'error'); return; }
+            if (!institutoId) return;
             
             if (!archivosBranding.principal && !archivosBranding.secundario) {
-                showToast('Selecciona al menos un logo para actualizar', 'error'); return;
+                showToast('Selecciona al menos un logo', 'error');
+                return;
             }
             
-            const btn = document.getElementById('brandingSubmitBtn');
+            const btn = document.getElementById('btnGuardarBranding');
             btn.disabled = true;
-            btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Actualizando...</span>';
+            btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Guardando...</span>';
             
             try {
                 const brandingActual = tenantConfig.configuracion?.branding || {};
@@ -369,31 +473,177 @@
                     nuevoBranding.logo_secundario = await uploadLogo(archivosBranding.secundario, 'logo_secundario');
                 }
                 
-                const { error } = await window.supabase.from('sys_configuracion').update({ branding: nuevoBranding, updated_at: new Date().toISOString() }).eq('instituto_id', institutoId);
+                const { error } = await window.supabase.from('sys_configuracion')
+                    .update({ branding: nuevoBranding })
+                    .eq('instituto_id', institutoId);
                 if (error) throw error;
                 
-                // Actualizar tenantConfig local y UI
                 tenantConfig.configuracion.branding = nuevoBranding;
                 cargarBrandingActual();
                 
-                // Resetear drop zones
                 archivosBranding = { principal: null, secundario: null };
                 ['Principal','Secundario'].forEach(t => {
-                    const drop = document.getElementById(`dropLogo${t}`);
-                    drop.classList.remove('has-file');
+                    document.getElementById(`dropLogo${t}`).classList.remove('has-file');
                     document.getElementById(`previewLogo${t}`).style.display = 'none';
                     document.getElementById(`fileNameLogo${t}`).classList.add('hidden');
                 });
                 
-                showToast('Logos actualizados exitosamente');
+                showToast('Logos actualizados');
             } catch(err) {
                 showToast('Error: ' + err.message, 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Actualizar Logos';
+                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Guardar Logos';
                 lucide.createIcons();
             }
-        });
+        }
+        
+        // ============ PERFIL INSTITUCIONAL ============
+        function cargarPerfilInstitucional() {
+            const identidad = tenantConfig?.configuracion?.identidad || {};
+            document.getElementById('perfilLema').value = identidad.lema || '';
+            document.getElementById('perfilHistoria').value = identidad.historia || '';
+            document.getElementById('perfilQuienes').value = identidad.quienes_somos || '';
+        }
+        
+        async function guardarPerfil() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            
+            const identidad = {
+                lema: document.getElementById('perfilLema').value.trim(),
+                historia: document.getElementById('perfilHistoria').value.trim(),
+                quienes_somos: document.getElementById('perfilQuienes').value.trim()
+            };
+            
+            const btn = document.getElementById('btnGuardarPerfil');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Guardando...</span>';
+            
+            try {
+                const { error } = await window.supabase.from('sys_configuracion')
+                    .update({ identidad })
+                    .eq('instituto_id', institutoId);
+                if (error) throw error;
+                
+                tenantConfig.configuracion.identidad = identidad;
+                showToast('Perfil institucional guardado');
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Guardar Perfil';
+                lucide.createIcons();
+            }
+        }
+        
+        // ============ REDES SOCIALES ============
+        function cargarRedesSociales() {
+            const redes = tenantConfig?.configuracion?.redes_sociales || {};
+            document.getElementById('redWhatsApp').value = redes.whatsapp || '';
+            document.getElementById('redInstagram').value = redes.instagram || '';
+            document.getElementById('redFacebook').value = redes.facebook || '';
+            document.getElementById('redLinkedIn').value = redes.linkedin || '';
+        }
+        
+        async function guardarRedes() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            
+            const redes_sociales = {
+                whatsapp: document.getElementById('redWhatsApp').value.trim(),
+                instagram: document.getElementById('redInstagram').value.trim(),
+                facebook: document.getElementById('redFacebook').value.trim(),
+                linkedin: document.getElementById('redLinkedIn').value.trim()
+            };
+            
+            const btn = document.getElementById('btnGuardarRedes');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Guardando...</span>';
+            
+            try {
+                const { error } = await window.supabase.from('sys_configuracion')
+                    .update({ redes_sociales })
+                    .eq('instituto_id', institutoId);
+                if (error) throw error;
+                
+                tenantConfig.configuracion.redes_sociales = redes_sociales;
+                showToast('Redes sociales guardadas');
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Guardar Redes';
+                lucide.createIcons();
+            }
+        }
+        
+        // ============ DATOS BANCARIOS ============
+        function cargarDatosBancarios() {
+            document.getElementById('datosBancarios').value = tenantConfig?.configuracion?.datos_bancarios || '';
+        }
+        
+        async function guardarDatosBancarios() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            
+            const datos = document.getElementById('datosBancarios').value.trim();
+            
+            const btn = document.getElementById('btnGuardarBancarios');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Guardando...</span>';
+            
+            try {
+                const { error } = await window.supabase.from('sys_configuracion')
+                    .update({ datos_bancarios: datos })
+                    .eq('instituto_id', institutoId);
+                if (error) throw error;
+                
+                tenantConfig.configuracion.datos_bancarios = datos;
+                showToast('Datos bancarios guardados');
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Guardar Datos';
+                lucide.createIcons();
+            }
+        }
+        
+        // ============ MERCADO PAGO ============
+        function cargarMercadoPago() {
+            document.getElementById('mpAccessToken').value = tenantConfig?.configuracion?.mp_access_token || '';
+            document.getElementById('mpPublicKey').value = tenantConfig?.configuracion?.mp_public_key || '';
+        }
+        
+        async function guardarMercadoPago() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            
+            const accessToken = document.getElementById('mpAccessToken').value.trim();
+            const publicKey = document.getElementById('mpPublicKey').value.trim();
+            
+            const btn = document.getElementById('btnGuardarMP');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Guardando...</span>';
+            
+            try {
+                const { error } = await window.supabase.from('sys_configuracion')
+                    .update({ mp_access_token: accessToken, mp_public_key: publicKey })
+                    .eq('instituto_id', institutoId);
+                if (error) throw error;
+                
+                tenantConfig.configuracion.mp_access_token = accessToken;
+                tenantConfig.configuracion.mp_public_key = publicKey;
+                showToast('Credenciales MercadoPago guardadas');
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Guardar Credenciales';
+                lucide.createIcons();
+            }
+        }
         
         async function inicializar() {
             if (!await checkAuth()) return;
