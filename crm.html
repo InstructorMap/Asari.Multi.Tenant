@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Padrón de Alumnos - Panel Director | ASARI</title>
+    <title>CRM - Panel Director | ASARI</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -63,11 +63,17 @@
         .saldo-low { background: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
         .saldo-empty { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
         
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
-        .kpi-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 20px; }
-        .kpi-icon-box { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-        .kpi-value { font-size: 28px; font-weight: 800; color: white; line-height: 1; }
-        .kpi-label { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .kpi-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 18px; }
+        .kpi-icon-box { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+        .kpi-value { font-size: 24px; font-weight: 800; color: white; line-height: 1; }
+        .kpi-label { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+        
+        .tab-nav-item { padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; white-space: nowrap; }
+        .tab-nav-item:hover { color: rgba(255,255,255,0.8); }
+        .tab-nav-item.active { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(124,58,237,0.1); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         
         .table-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
         .table-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
@@ -92,6 +98,25 @@
         .btn-icon-sm { width: 34px; height: 34px; border-radius: 8px; background: none; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.15s ease; }
         .btn-icon-sm:hover { background: rgba(255,255,255,0.05); color: white; }
         .btn-icon-sm.danger:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+        
+        /* KANBAN */
+        .kanban-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .kanban-column { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; min-height: 300px; }
+        .kanban-column-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .kanban-column-title { font-size: 14px; font-weight: 700; color: white; display: flex; align-items: center; gap: 8px; }
+        .kanban-count { background: rgba(255,255,255,0.08); padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+        
+        .lead-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all 0.2s ease; }
+        .lead-card:hover { border-color: rgba(139,92,246,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .lead-name { font-weight: 700; color: white; font-size: 14px; margin-bottom: 2px; }
+        .lead-email { font-size: 12px; color: #94a3b8; margin-bottom: 6px; word-break: break-all; }
+        .lead-curso { font-size: 11px; color: #a78bfa; margin-bottom: 8px; }
+        
+        .btn-matricular { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-matricular:hover { background: rgba(16,185,129,0.25); }
+        
+        .btn-comprobante { background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
+        .btn-comprobante:hover { background: rgba(59,130,246,0.25); }
         
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.hidden { display: none; }
@@ -121,9 +146,9 @@
         .spinner { width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #7c3aed; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        .empty-state { text-align: center; padding: 48px 24px; color: #64748b; }
+        .empty-state { text-align: center; padding: 40px 20px; color: #64748b; }
         
-        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } .btn-hamburger { display: flex; } }
+        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } .btn-hamburger { display: flex; } .kanban-grid { grid-template-columns: 1fr; } }
         @media (max-width: 640px) { .content-area { padding: 16px; } .topbar { padding: 12px 16px; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
@@ -168,8 +193,8 @@
             <div class="flex items-center gap-4">
                 <button class="btn-hamburger" onclick="toggleSidebar()"><i data-lucide="menu" class="w-5 h-5"></i></button>
                 <div>
-                    <h1 class="page-title">Padrón de Alumnos</h1>
-                    <p class="page-subtitle" id="tenantSubtitle">Gestión de alumnos</p>
+                    <h1 class="page-title">CRM Híbrido</h1>
+                    <p class="page-subtitle" id="tenantSubtitle">Padrón y Ventas</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -180,23 +205,66 @@
         
         <div class="content-area">
             
-            <div class="kpi-grid">
-                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(124,58,237,0.15);"><i data-lucide="users" class="w-5 h-5" style="color:#a78bfa;"></i></div><div class="kpi-value" id="statTotalAlumnos">0</div><div class="kpi-label">Total Alumnos</div></div>
-                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(16,185,129,0.15);"><i data-lucide="user-check" class="w-5 h-5" style="color:#10b981;"></i></div><div class="kpi-value" id="statActivos">0</div><div class="kpi-label">Activos</div></div>
-                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(239,68,68,0.15);"><i data-lucide="user-x" class="w-5 h-5" style="color:#ef4444;"></i></div><div class="kpi-value" id="statSuspendidos">0</div><div class="kpi-label">Suspendidos</div></div>
-                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(59,130,246,0.15);"><i data-lucide="wallet" class="w-5 h-5" style="color:#93c5fd;"></i></div><div class="kpi-value font-mono" id="statSaldo">$0.00</div><div class="kpi-label">Saldo USD</div></div>
+            <!-- TABS -->
+            <div class="flex gap-2 border-b border-white/10 mb-6 overflow-x-auto pb-2">
+                <div class="tab-nav-item active" onclick="switchTab('padron', this)">📋 Padrón Oficial</div>
+                <div class="tab-nav-item" onclick="switchTab('kanban', this)">🚀 Tablero de Ventas (Leads)</div>
             </div>
             
-            <div class="table-card">
-                <div class="table-header">
-                    <h2 class="table-title">Listado de Alumnos</h2>
-                    <input type="text" class="search-input" placeholder="🔍 Buscar..." id="searchInput" oninput="filtrarAlumnos()">
+            <!-- KPIs -->
+            <div class="kpi-grid">
+                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(124,58,237,0.15);"><i data-lucide="users" class="w-4 h-4" style="color:#a78bfa;"></i></div><div class="kpi-value" id="statTotalAlumnos">0</div><div class="kpi-label">Alumnos</div></div>
+                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(16,185,129,0.15);"><i data-lucide="user-check" class="w-4 h-4" style="color:#10b981;"></i></div><div class="kpi-value" id="statActivos">0</div><div class="kpi-label">Activos</div></div>
+                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(239,68,68,0.15);"><i data-lucide="user-x" class="w-4 h-4" style="color:#ef4444;"></i></div><div class="kpi-value" id="statSuspendidos">0</div><div class="kpi-label">Suspendidos</div></div>
+                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(59,130,246,0.15);"><i data-lucide="wallet" class="w-4 h-4" style="color:#93c5fd;"></i></div><div class="kpi-value font-mono" id="statSaldo">$0.00</div><div class="kpi-label">Saldo USD</div></div>
+                <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(245,158,11,0.15);"><i data-lucide="target" class="w-4 h-4" style="color:#f59e0b;"></i></div><div class="kpi-value" id="statLeads">0</div><div class="kpi-label">Leads Activos</div></div>
+            </div>
+            
+            <!-- TAB PADRÓN -->
+            <div class="tab-content active" id="tab-padron">
+                <div class="table-card">
+                    <div class="table-header">
+                        <h2 class="table-title">Listado de Alumnos</h2>
+                        <input type="text" class="search-input" placeholder="🔍 Buscar..." id="searchInput" oninput="filtrarAlumnos()">
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Nombre</th><th>Email</th><th>Documento</th><th>Matrícula</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
+                            <tbody id="alumnosTableBody"></tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead><tr><th>Nombre Completo</th><th>Email</th><th>Documento</th><th>Matrícula</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
-                        <tbody id="alumnosTableBody"></tbody>
-                    </table>
+            </div>
+            
+            <!-- TAB KANBAN -->
+            <div class="tab-content" id="tab-kanban">
+                <div class="kanban-grid">
+                    <!-- Columna Nuevos -->
+                    <div class="kanban-column">
+                        <div class="kanban-column-header">
+                            <span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos</span>
+                            <span class="kanban-count" id="countNuevos">0</span>
+                        </div>
+                        <div id="kanbanNuevos"></div>
+                    </div>
+                    
+                    <!-- Columna Contactados -->
+                    <div class="kanban-column">
+                        <div class="kanban-column-header">
+                            <span class="kanban-column-title"><i data-lucide="phone" class="w-4 h-4 text-yellow-400"></i> Contactados</span>
+                            <span class="kanban-count" id="countContactados">0</span>
+                        </div>
+                        <div id="kanbanContactados"></div>
+                    </div>
+                    
+                    <!-- Columna Pagos Pendientes -->
+                    <div class="kanban-column">
+                        <div class="kanban-column-header">
+                            <span class="kanban-column-title"><i data-lucide="credit-card" class="w-4 h-4 text-green-400"></i> Pagos Pendientes</span>
+                            <span class="kanban-count" id="countPagos">0</span>
+                        </div>
+                        <div id="kanbanPagos"></div>
+                    </div>
                 </div>
             </div>
             
@@ -210,22 +278,19 @@
             <form id="alumnoForm">
                 <div class="modal-body">
                     <input type="hidden" id="alumnoId">
-                    <div class="form-group"><label class="form-label">Nombre Completo *</label><input type="text" id="nombreCompleto" class="form-input" placeholder="Ej: María García López" required></div>
-                    <div class="form-group"><label class="form-label">Correo Electrónico *</label><input type="email" id="emailAlumno" class="form-input" placeholder="Ej: maria@email.com" required><p class="form-hint">Se usará para crear su cuenta de acceso</p></div>
-                    <div class="form-group"><label class="form-label">Documento (DNI/Pasaporte) *</label><input type="text" id="documento" class="form-input" placeholder="Ej: 12.345.678" required><p class="form-hint">También será su contraseña inicial</p></div>
-                    <div class="form-group"><label class="form-label">Número de Matrícula *</label><input type="text" id="matricula" class="form-input" placeholder="Ej: 2024-00123" required></div>
+                    <div class="form-group"><label class="form-label">Nombre *</label><input type="text" id="nombreCompleto" class="form-input" required></div>
+                    <div class="form-group"><label class="form-label">Email *</label><input type="email" id="emailAlumno" class="form-input" required></div>
+                    <div class="form-group"><label class="form-label">Documento *</label><input type="text" id="documento" class="form-input" required></div>
+                    <div class="form-group"><label class="form-label">Matrícula *</label><input type="text" id="matricula" class="form-input" required></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="form-group"><label class="form-label">Rol</label><select id="rolAlumno" class="form-select"><option value="alumno">Alumno</option><option value="profesor">Profesor</option><option value="directivo">Directivo</option></select></div>
+                        <div class="form-group"><label class="form-label">Rol</label><select id="rolAlumno" class="form-select"><option value="alumno">Alumno</option><option value="profesor">Profesor</option></select></div>
                         <div class="form-group"><label class="form-label">Estado</label><select id="estadoAlumno" class="form-select"><option value="activo">Activo</option><option value="suspendido">Suspendido</option></select></div>
                     </div>
-                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mt-2">
-                        <p class="text-sm text-blue-300">Costo de alta: <strong class="font-mono" id="costoAltaLabel">$0.00 USD</strong></p>
-                        <p class="text-xs text-gray-500 mt-1">Se descontará de tu saldo al confirmar</p>
-                    </div>
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4"><p class="text-sm text-blue-300">Costo: <strong class="font-mono" id="costoAltaLabel">$0.00</strong></p></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
-                    <button type="submit" class="btn-primary" id="submitBtn"><i data-lucide="save" class="w-4 h-4"></i><span>Guardar Alumno</span></button>
+                    <button type="submit" class="btn-primary" id="submitBtn"><i data-lucide="save" class="w-4 h-4"></i> Guardar</button>
                 </div>
             </form>
         </div>
@@ -235,18 +300,15 @@
     <div class="modal-overlay hidden" id="saldoModal">
         <div class="modal-card" style="max-width: 440px; text-align: center;">
             <div class="modal-body py-8">
-                <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(239,68,68,0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-                    <i data-lucide="alert-triangle" class="w-10 h-10" style="color: #ef4444;"></i>
-                </div>
+                <div style="width:72px;height:72px;border-radius:50%;background:rgba(239,68,68,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;"><i data-lucide="alert-triangle" class="w-10 h-10" style="color:#ef4444;"></i></div>
                 <h3 class="text-xl font-bold text-white mb-2">Saldo Insuficiente</h3>
-                <p class="text-gray-400 mb-6">No tienes saldo suficiente para dar de alta a este alumno.</p>
                 <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">
-                    <p class="text-sm text-red-300">Costo por alta: <strong class="font-mono" id="costoFaltante">$0.00 USD</strong></p>
-                    <p class="text-sm text-red-300 mt-1">Tu saldo actual: <strong class="font-mono" id="saldoActualFaltante">$0.00 USD</strong></p>
+                    <p class="text-sm text-red-300">Costo: <strong class="font-mono" id="costoFaltante">$0.00</strong></p>
+                    <p class="text-sm text-red-300 mt-1">Saldo: <strong class="font-mono" id="saldoActualFaltante">$0.00</strong></p>
                 </div>
                 <div class="flex gap-3">
                     <button class="btn-secondary flex-1 justify-center" onclick="document.getElementById('saldoModal').classList.add('hidden')">Cancelar</button>
-                    <a href="dashboard.html" class="btn-primary flex-1 justify-center"><i data-lucide="arrow-right" class="w-4 h-4"></i> Recargar Saldo</a>
+                    <a href="dashboard.html" class="btn-primary flex-1 justify-center">Recargar</a>
                 </div>
             </div>
         </div>
@@ -263,20 +325,36 @@
         const SILENT_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZXd0amRpbWJlY2RmeW50Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU0MzYxMTYsImV4cCI6MjEwMTAxMjExNn0.YlJ99AVTuWrKAjNJ8DOrP-4-drHs1PcYVVU0_EwjpTA';
         
         let alumnosData = [];
+        let leadsData = [];
+        let cursosData = [];
         let tenantConfig = null;
         let saldoUSD = 0;
         let costoAlta = 0;
+        let currentTab = 'padron';
         
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
-        const alumnosTableBody = document.getElementById('alumnosTableBody');
-        const searchInput = document.getElementById('searchInput');
-        const alumnoModal = document.getElementById('alumnoModal');
-        const alumnoForm = document.getElementById('alumnoForm');
         const toast = document.getElementById('toast');
         
         function toggleSidebar() { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); }
         function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); }
+        
+        function switchTab(tab, el) {
+            document.querySelectorAll('.tab-nav-item').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            currentTab = tab;
+            if (tab === 'kanban') cargarLeads();
+        }
+        
+        function showToast(msg, type = 'success') {
+            toast.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${msg}</span>`;
+            toast.className = `toast ${type}`;
+            lucide.createIcons();
+            clearTimeout(window._tt);
+            window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
+        }
         
         async function checkAuth() {
             const { data: { session } } = await window.supabase.auth.getSession();
@@ -297,12 +375,9 @@
             if (tenantConfig) {
                 const { instituto, configuracion } = tenantConfig;
                 document.getElementById('sidebarInstituteName').textContent = instituto.nombre;
-                document.getElementById('tenantSubtitle').textContent = `Gestión de alumnos - ${instituto.nombre}`;
-                document.title = `Alumnos - ${instituto.nombre} | ASARI`;
-                
+                document.title = `CRM - ${instituto.nombre} | ASARI`;
                 costoAlta = configuracion?.sla_precios?.alta_alumno || 10;
                 document.getElementById('costoAltaLabel').textContent = `$${costoAlta.toFixed(2)} USD`;
-                
                 if (configuracion?.branding?.logo_principal) {
                     document.getElementById('sidebarLogoImg').src = configuracion.branding.logo_principal;
                     document.getElementById('sidebarLogoImg').style.display = 'block';
@@ -311,180 +386,63 @@
                 window.__TENANT_CONFIG__ = tenantConfig;
                 await cargarBilletera();
                 await cargarAlumnos();
+                await cargarCursos();
+                await cargarLeads();
             }
         }
         
-        // ============ BILLETERA ============
         async function cargarBilletera() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
             const { data } = await window.supabase.from('sys_billetera_institutos').select('saldo_usd').eq('instituto_id', institutoId).maybeSingle();
             saldoUSD = data?.saldo_usd || 0;
-            
             const indicator = document.getElementById('saldoIndicator');
-            if (saldoUSD >= costoAlta * 3) {
-                indicator.className = 'saldo-indicator saldo-ok';
-                indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)} USD`;
-            } else if (saldoUSD >= costoAlta) {
-                indicator.className = 'saldo-indicator saldo-low';
-                indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)} USD`;
-            } else {
-                indicator.className = 'saldo-indicator saldo-empty';
-                indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)} USD`;
-            }
+            if (saldoUSD >= costoAlta * 3) { indicator.className = 'saldo-indicator saldo-ok'; indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)}`; }
+            else if (saldoUSD >= costoAlta) { indicator.className = 'saldo-indicator saldo-low'; indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)}`; }
+            else { indicator.className = 'saldo-indicator saldo-empty'; indicator.innerHTML = `<i data-lucide="wallet" class="w-4 h-4"></i> $${saldoUSD.toFixed(2)}`; }
             document.getElementById('statSaldo').textContent = `$${saldoUSD.toFixed(2)}`;
             lucide.createIcons();
         }
         
-        function abrirModalAlumno() {
-            if (saldoUSD < costoAlta) {
-                document.getElementById('costoFaltante').textContent = `$${costoAlta.toFixed(2)} USD`;
-                document.getElementById('saldoActualFaltante').textContent = `$${saldoUSD.toFixed(2)} USD`;
-                document.getElementById('saldoModal').classList.remove('hidden');
-                lucide.createIcons();
-                return;
-            }
-            openCreateModal();
+        async function cargarCursos() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            const { data } = await window.supabase.from('sys_cursos').select('id, titulo').eq('instituto_id', institutoId);
+            cursosData = data || [];
         }
         
-        function openCreateModal() {
-            document.getElementById('modalTitle').textContent = 'Nuevo Alumno';
-            document.getElementById('submitBtn').innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Guardar Alumno</span>';
-            alumnoForm.reset();
-            document.getElementById('alumnoId').value = '';
-            document.getElementById('rolAlumno').value = 'alumno';
-            document.getElementById('estadoAlumno').value = 'activo';
-            alumnoModal.classList.remove('hidden');
-            lucide.createIcons();
-        }
-        function closeModal() { alumnoModal.classList.add('hidden'); alumnoForm.reset(); }
-        
-        function editarAlumno(id) {
-            const a = alumnosData.find(x => x.id === id);
-            if (!a) return;
-            document.getElementById('modalTitle').textContent = 'Editar Alumno';
-            document.getElementById('submitBtn').innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Actualizar Alumno</span>';
-            document.getElementById('alumnoId').value = a.id;
-            document.getElementById('nombreCompleto').value = a.nombre_completo || '';
-            document.getElementById('emailAlumno').value = a.email || '';
-            document.getElementById('documento').value = a.documento || '';
-            document.getElementById('matricula').value = a.datos_dinamicos?.matricula || '';
-            document.getElementById('rolAlumno').value = a.rol || 'alumno';
-            document.getElementById('estadoAlumno').value = a.estado_credencial || 'activo';
-            alumnoModal.classList.remove('hidden');
-            lucide.createIcons();
+        function getCursoNombre(cursoId) {
+            const curso = cursosData.find(c => c.id === cursoId);
+            return curso ? curso.titulo : 'Curso desconocido';
         }
         
-        async function registrarUsuarioEnAuth(email, password, nombreCompleto) {
-            const res = await fetch(`${SILENT_URL}/auth/v1/signup`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SILENT_KEY },
-                body: JSON.stringify({ email, password, data: { nombre_completo: nombreCompleto } })
-            });
-            if (!res.ok && res.status !== 422) {
-                const d = await res.json();
-                throw new Error(d.msg || 'Error en registro Auth');
-            }
-        }
-        
-        alumnoForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!tenantConfig?.instituto?.id) { showToast('Error: Instituto no identificado', 'error'); return; }
-            
-            const alumnoId = document.getElementById('alumnoId').value;
-            const nombreCompleto = document.getElementById('nombreCompleto').value.trim();
-            const email = document.getElementById('emailAlumno').value.trim();
-            const documentoRaw = document.getElementById('documento').value.trim();
-            const matricula = document.getElementById('matricula').value.trim();
-            const rol = document.getElementById('rolAlumno').value;
-            const estado = document.getElementById('estadoAlumno').value;
-            const password = documentoRaw.replace(/[.\-\s]/g, '');
-            
-            if (!nombreCompleto || !email || !documentoRaw || !matricula) { showToast('Todos los campos son obligatorios', 'error'); return; }
-            if (password.length < 6) { showToast('El documento debe tener al menos 6 caracteres', 'error'); return; }
-            
-            if (!alumnoId && saldoUSD < costoAlta) {
-                closeModal();
-                document.getElementById('costoFaltante').textContent = `$${costoAlta.toFixed(2)} USD`;
-                document.getElementById('saldoActualFaltante').textContent = `$${saldoUSD.toFixed(2)} USD`;
-                document.getElementById('saldoModal').classList.remove('hidden');
-                lucide.createIcons();
-                return;
-            }
-            
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Procesando...</span>';
-            
-            try {
-                if (!alumnoId) await registrarUsuarioEnAuth(email, password, nombreCompleto);
-                
-                const alumnoData = {
-                    instituto_id: tenantConfig.instituto.id,
-                    nombre_completo: nombreCompleto,
-                    documento: documentoRaw,
-                    email, rol,
-                    estado_credencial: estado,
-                    datos_dinamicos: { matricula }
-                };
-                
-                let result;
-                if (alumnoId) result = await window.supabase.from('padron_global').update(alumnoData).eq('id', alumnoId).select().single();
-                else result = await window.supabase.from('padron_global').insert([alumnoData]).select().single();
-                if (result.error) throw result.error.code === '23505' ? new Error('Email o documento ya existe') : result.error;
-                
-                if (!alumnoId) {
-                    const nuevoSaldo = saldoUSD - costoAlta;
-                    const { error: billeteraError } = await window.supabase.from('sys_billetera_institutos').update({ saldo_usd: nuevoSaldo }).eq('instituto_id', tenantConfig.instituto.id);
-                    if (billeteraError) throw billeteraError;
-                    
-                    const { error: transError } = await window.supabase.from('sys_transacciones').insert([{
-                        instituto_id: tenantConfig.instituto.id,
-                        tipo_operacion: 'consumo_alta_alumno',
-                        monto_usd: -costoAlta,
-                        estado: 'completado',
-                        descripcion: `Alta de alumno: ${nombreCompleto} (${email})`
-                    }]);
-                    if (transError) throw transError;
-                    
-                    saldoUSD = nuevoSaldo;
-                    await cargarBilletera();
-                }
-                
-                closeModal();
-                await cargarAlumnos();
-                showToast(alumnoId ? 'Alumno actualizado' : `Alumno creado. Se descontaron $${costoAlta.toFixed(2)} USD`, 'success');
-            } catch(err) {
-                showToast('Error: ' + err.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>' + (alumnoId ? 'Actualizar' : 'Guardar') + ' Alumno</span>';
-                lucide.createIcons();
-            }
-        });
-        
+        // ============ PADRÓN ============
         async function cargarAlumnos() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
-            alumnosTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-8"><div class="spinner"></div></td></tr>';
+            const tbody = document.getElementById('alumnosTableBody');
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-8"><div class="spinner"></div></td></tr>';
             const { data, error } = await window.supabase.from('padron_global').select('*').eq('instituto_id', institutoId).order('created_at', { ascending: false });
-            if (error) { alumnosTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-red-400">Error</td></tr>'; return; }
+            if (error) { tbody.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-red-400">Error</td></tr>'; return; }
             alumnosData = data || [];
             renderizarAlumnos(alumnosData);
-            actualizarEstadisticas();
-            await cargarBilletera();
+            document.getElementById('statTotalAlumnos').textContent = alumnosData.length;
+            document.getElementById('statActivos').textContent = alumnosData.filter(a=>a.estado_credencial==='activo').length;
+            document.getElementById('statSuspendidos').textContent = alumnosData.filter(a=>a.estado_credencial==='suspendido').length;
         }
         
         function renderizarAlumnos(data) {
+            const tbody = document.getElementById('alumnosTableBody');
             if (data.length === 0) {
-                alumnosTableBody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i data-lucide="users" class="w-12 h-12 mx-auto mb-3 opacity-20"></i><p class="font-semibold">No hay alumnos</p></div></td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i data-lucide="users" class="w-12 h-12 mx-auto mb-3 opacity-20"></i><p class="font-semibold">No hay alumnos</p></div></td></tr>';
             } else {
-                alumnosTableBody.innerHTML = data.map(a => `
+                tbody.innerHTML = data.map(a => `
                     <tr>
-                        <td><div class="flex items-center gap-3"><div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(139,92,246,0.15));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#a78bfa;">${obtenerIniciales(a.nombre_completo)}</div><div><div style="font-weight:600;">${a.nombre_completo||'Sin nombre'}</div></div></div></td>
+                        <td><div class="flex items-center gap-3"><div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(139,92,246,0.15));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#a78bfa;">${obtenerIniciales(a.nombre_completo)}</div><div style="font-weight:600;">${a.nombre_completo||'Sin nombre'}</div></div></td>
                         <td class="text-sm">${a.email||'-'}</td>
                         <td>${a.documento||'-'}</td>
                         <td><code style="background:rgba(124,58,237,0.1);padding:4px 10px;border-radius:6px;font-size:12px;color:#a78bfa;">${a.datos_dinamicos?.matricula||'-'}</code></td>
-                        <td><span style="background:rgba(255,255,255,0.04);padding:4px 10px;border-radius:6px;font-size:12px;">${a.rol||'alumno'}</span></td>
+                        <td>${a.rol||'alumno'}</td>
                         <td><span class="status-badge ${a.estado_credencial==='activo'?'activo':'suspendido'}"><span class="status-dot ${a.estado_credencial==='activo'?'green':'red'}"></span>${a.estado_credencial||'activo'}</span></td>
                         <td><div class="flex gap-2">
                             <button class="btn-icon-sm" onclick="editarAlumno('${a.id}')"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
@@ -504,16 +462,103 @@
         }
         
         function filtrarAlumnos() {
-            const q = searchInput.value.toLowerCase().trim();
+            const q = document.getElementById('searchInput').value.toLowerCase().trim();
             if (!q) { renderizarAlumnos(alumnosData); return; }
-            renderizarAlumnos(alumnosData.filter(a => (a.nombre_completo||'').toLowerCase().includes(q) || (a.documento||'').toLowerCase().includes(q) || (a.email||'').toLowerCase().includes(q) || (a.datos_dinamicos?.matricula||'').toLowerCase().includes(q)));
+            renderizarAlumnos(alumnosData.filter(a => (a.nombre_completo||'').toLowerCase().includes(q) || (a.email||'').toLowerCase().includes(q) || (a.documento||'').toLowerCase().includes(q)));
         }
         
-        function actualizarEstadisticas() {
-            document.getElementById('statTotalAlumnos').textContent = alumnosData.length;
-            document.getElementById('statActivos').textContent = alumnosData.filter(a=>a.estado_credencial==='activo').length;
-            document.getElementById('statSuspendidos').textContent = alumnosData.filter(a=>a.estado_credencial==='suspendido').length;
+        function abrirModalAlumno() {
+            if (saldoUSD < costoAlta) {
+                document.getElementById('costoFaltante').textContent = `$${costoAlta.toFixed(2)} USD`;
+                document.getElementById('saldoActualFaltante').textContent = `$${saldoUSD.toFixed(2)} USD`;
+                document.getElementById('saldoModal').classList.remove('hidden');
+                lucide.createIcons();
+                return;
+            }
+            openCreateModal();
         }
+        
+        function openCreateModal() {
+            document.getElementById('modalTitle').textContent = 'Nuevo Alumno';
+            document.getElementById('alumnoForm').reset();
+            document.getElementById('alumnoId').value = '';
+            document.getElementById('rolAlumno').value = 'alumno';
+            document.getElementById('estadoAlumno').value = 'activo';
+            document.getElementById('alumnoModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        function closeModal() { document.getElementById('alumnoModal').classList.add('hidden'); }
+        
+        function editarAlumno(id) {
+            const a = alumnosData.find(x => x.id === id);
+            if (!a) return;
+            document.getElementById('alumnoId').value = a.id;
+            document.getElementById('nombreCompleto').value = a.nombre_completo || '';
+            document.getElementById('emailAlumno').value = a.email || '';
+            document.getElementById('documento').value = a.documento || '';
+            document.getElementById('matricula').value = a.datos_dinamicos?.matricula || '';
+            document.getElementById('rolAlumno').value = a.rol || 'alumno';
+            document.getElementById('estadoAlumno').value = a.estado_credencial || 'activo';
+            document.getElementById('alumnoModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        
+        async function registrarUsuarioEnAuth(email, password, nombreCompleto) {
+            const res = await fetch(`${SILENT_URL}/auth/v1/signup`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SILENT_KEY },
+                body: JSON.stringify({ email, password, data: { nombre_completo: nombreCompleto } })
+            });
+            if (!res.ok && res.status !== 422) { const d = await res.json(); throw new Error(d.msg || 'Error'); }
+        }
+        
+        document.getElementById('alumnoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!tenantConfig?.instituto?.id) return;
+            const alumnoId = document.getElementById('alumnoId').value;
+            const nombreCompleto = document.getElementById('nombreCompleto').value.trim();
+            const email = document.getElementById('emailAlumno').value.trim();
+            const documentoRaw = document.getElementById('documento').value.trim();
+            const matricula = document.getElementById('matricula').value.trim();
+            const rol = document.getElementById('rolAlumno').value;
+            const estado = document.getElementById('estadoAlumno').value;
+            const password = documentoRaw.replace(/[.\-\s]/g, '');
+            
+            if (!nombreCompleto || !email || !documentoRaw || !matricula) { showToast('Todos los campos son obligatorios', 'error'); return; }
+            if (password.length < 6) { showToast('Documento debe tener al menos 6 caracteres', 'error'); return; }
+            if (!alumnoId && saldoUSD < costoAlta) {
+                closeModal();
+                document.getElementById('costoFaltante').textContent = `$${costoAlta.toFixed(2)} USD`;
+                document.getElementById('saldoActualFaltante').textContent = `$${saldoUSD.toFixed(2)} USD`;
+                document.getElementById('saldoModal').classList.remove('hidden');
+                lucide.createIcons();
+                return;
+            }
+            
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-5 h-5"></div><span>Procesando...</span>';
+            
+            try {
+                if (!alumnoId) await registrarUsuarioEnAuth(email, password, nombreCompleto);
+                const alumnoData = { instituto_id: tenantConfig.instituto.id, nombre_completo: nombreCompleto, documento: documentoRaw, email, rol, estado_credencial: estado, datos_dinamicos: { matricula } };
+                let result;
+                if (alumnoId) result = await window.supabase.from('padron_global').update(alumnoData).eq('id', alumnoId);
+                else result = await window.supabase.from('padron_global').insert([alumnoData]);
+                if (result.error) throw result.error;
+                
+                if (!alumnoId) {
+                    const nuevoSaldo = saldoUSD - costoAlta;
+                    await window.supabase.from('sys_billetera_institutos').update({ saldo_usd: nuevoSaldo }).eq('instituto_id', tenantConfig.instituto.id);
+                    await window.supabase.from('sys_transacciones').insert([{ instituto_id: tenantConfig.instituto.id, tipo_operacion: 'consumo_alta_alumno', monto_usd: -costoAlta, estado: 'completado', descripcion: `Alta: ${nombreCompleto}` }]);
+                    saldoUSD = nuevoSaldo;
+                    await cargarBilletera();
+                }
+                closeModal();
+                await cargarAlumnos();
+                showToast('Alumno guardado');
+            } catch(err) { showToast('Error: ' + err.message, 'error'); }
+            finally { btn.disabled = false; btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Guardar'; lucide.createIcons(); }
+        });
         
         async function toggleEstadoAlumno(id) {
             const a = alumnosData.find(x => x.id === id);
@@ -532,19 +577,121 @@
             showToast('Alumno eliminado');
         }
         
-        function showToast(msg, type = 'success') {
-            toast.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${msg}</span>`;
-            toast.className = `toast ${type}`;
+        // ============ KANBAN LEADS ============
+        async function cargarLeads() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            
+            const { data, error } = await window.supabase.from('crm_leads').select('*').eq('instituto_id', institutoId).order('created_at', { ascending: false });
+            if (error) { console.error(error); return; }
+            leadsData = data || [];
+            
+            document.getElementById('statLeads').textContent = leadsData.length;
+            
+            const nuevos = leadsData.filter(l => l.estado === 'nuevo');
+            const contactados = leadsData.filter(l => l.estado === 'contactado');
+            const pagos = leadsData.filter(l => l.estado === 'pago_pendiente');
+            
+            document.getElementById('countNuevos').textContent = nuevos.length;
+            document.getElementById('countContactados').textContent = contactados.length;
+            document.getElementById('countPagos').textContent = pagos.length;
+            
+            renderizarColumna('kanbanNuevos', nuevos);
+            renderizarColumna('kanbanContactados', contactados);
+            renderizarColumna('kanbanPagos', pagos);
             lucide.createIcons();
-            clearTimeout(window._tt);
-            window._tt = setTimeout(() => { toast.className = 'toast hidden'; toast.innerHTML = ''; }, 4000);
+        }
+        
+        function renderizarColumna(containerId, leads) {
+            const container = document.getElementById(containerId);
+            if (leads.length === 0) {
+                container.innerHTML = '<div class="empty-state text-xs">Sin leads</div>';
+                return;
+            }
+            
+            container.innerHTML = leads.map(lead => {
+                const comprobanteBtn = lead.comprobante_url 
+                    ? `<a href="${lead.comprobante_url}" target="_blank" class="btn-comprobante mb-2"><i data-lucide="eye" class="w-3 h-3"></i> Ver Comprobante</a>` 
+                    : '';
+                
+                return `
+                    <div class="lead-card">
+                        <p class="lead-name">${lead.nombre_completo}</p>
+                        <p class="lead-email">${lead.email}</p>
+                        <p class="lead-curso">📚 ${getCursoNombre(lead.curso_interes)}</p>
+                        <p class="text-xs text-gray-500 mb-2">Origen: ${lead.origen || '-'}</p>
+                        ${comprobanteBtn}
+                        <button class="btn-matricular" onclick="matricularLead('${lead.id}')"><i data-lucide="check-circle" class="w-3 h-3"></i> Matricular</button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        async function matricularLead(leadId) {
+            const lead = leadsData.find(l => l.id === leadId);
+            if (!lead) return;
+            
+            if (saldoUSD < costoAlta) {
+                document.getElementById('costoFaltante').textContent = `$${costoAlta.toFixed(2)} USD`;
+                document.getElementById('saldoActualFaltante').textContent = `$${saldoUSD.toFixed(2)} USD`;
+                document.getElementById('saldoModal').classList.remove('hidden');
+                lucide.createIcons();
+                return;
+            }
+            
+            if (!confirm(`¿Matricular a ${lead.nombre_completo}? Se descontarán $${costoAlta.toFixed(2)} USD`)) return;
+            
+            try {
+                // 1. Crear en Auth silencioso
+                const password = lead.email.split('@')[0] + '123';
+                await registrarUsuarioEnAuth(lead.email, password, lead.nombre_completo);
+                
+                // 2. INSERT en padron_global
+                const { data: alumnoCreado, error: insertError } = await window.supabase.from('padron_global').insert([{
+                    instituto_id: tenantConfig.instituto.id,
+                    nombre_completo: lead.nombre_completo,
+                    email: lead.email,
+                    documento: lead.email.split('@')[0],
+                    rol: 'alumno',
+                    estado_credencial: 'activo',
+                    datos_dinamicos: { matricula: 'LEAD-' + lead.id.substring(0,8).toUpperCase() }
+                }]).select().single();
+                if (insertError) throw insertError;
+                
+                // 3. Descontar saldo
+                const nuevoSaldo = saldoUSD - costoAlta;
+                await window.supabase.from('sys_billetera_institutos').update({ saldo_usd: nuevoSaldo }).eq('instituto_id', tenantConfig.instituto.id);
+                
+                // 4. Registrar transacción
+                await window.supabase.from('sys_transacciones').insert([{
+                    instituto_id: tenantConfig.instituto.id,
+                    tipo_operacion: 'consumo_alta_alumno',
+                    monto_usd: -costoAlta,
+                    estado: 'completado',
+                    descripcion: `Matriculación desde Lead: ${lead.nombre_completo}`
+                }]);
+                
+                // 5. Borrar lead
+                await window.supabase.from('crm_leads').delete().eq('id', leadId);
+                
+                saldoUSD = nuevoSaldo;
+                await cargarBilletera();
+                await cargarAlumnos();
+                await cargarLeads();
+                showToast(`Lead matriculado: ${lead.nombre_completo}`);
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            }
         }
         
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); document.getElementById('saldoModal').classList.add('hidden'); } });
-        alumnoModal.addEventListener('click', (e) => { if (e.target === alumnoModal) closeModal(); });
+        document.getElementById('alumnoModal').addEventListener('click', (e) => { if (e.target === document.getElementById('alumnoModal')) closeModal(); });
         document.getElementById('saldoModal').addEventListener('click', function(e) { if (e.target === this) this.classList.add('hidden'); });
         
-        async function inicializar() { if (!await checkAuth()) return; await inicializarTenant(); }
+        async function inicializar() {
+            if (!await checkAuth()) return;
+            await inicializarTenant();
+        }
         window.addEventListener('DOMContentLoaded', inicializar);
         document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', () => { if (window.innerWidth < 1024) closeSidebar(); }));
     </script>
