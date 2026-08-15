@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Chart.js para Flujo de Caja y Métricas -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
@@ -55,7 +55,7 @@
         select.input-dios { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 12px center; background-repeat: no-repeat; background-size: 16px; padding-right: 40px; }
         select.input-dios option { background: #0a0a0f; color: white; }
         
-        /* INTERRUPTORES (TOGGLES) */
+        /* TOGGLES */
         .toggle-switch { position: relative; display: inline-block; width: 36px; height: 20px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .3s; border-radius: 20px; }
@@ -78,18 +78,18 @@
         .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .tab-content.active { display: block; }
         
-        /* TABLAS MODERNAS */
+        /* TABLAS */
         table { width: 100%; border-collapse: collapse; }
         th { text-align: left; padding: 16px; font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         td { padding: 16px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.02); vertical-align: middle; }
         tr:hover td { background: rgba(255,255,255,0.01); }
 
-        /* UPLOAD AREA */
+        /* UPLOAD */
         .upload-area { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; background: rgba(0,0,0,0.2); }
         .upload-area:hover { border-color: #7c3aed; background: rgba(124,58,237,0.05); }
         .upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
         
-        /* ANIMACIONES Y TOAST */
+        /* ANIMACIONES */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
         
@@ -101,7 +101,6 @@
         .spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #a78bfa; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* SIDEBAR OVERLAY MÓVIL */
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 39; backdrop-filter: blur(3px); }
         .sidebar-overlay.active { display: block; }
         
@@ -148,19 +147,17 @@
 
     <!-- MAIN CONTENT -->
     <main class="main-content flex-1 bg-[#050509]" id="mainContent">
-        <!-- TOPBAR -->
         <header class="sticky top-0 z-30 bg-[#050509]/80 backdrop-blur-md border-b border-white/5 px-8 py-5 flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <button class="btn-hamburger" onclick="toggleSidebar()"><i data-lucide="menu" class="w-5 h-5"></i></button>
                 <div>
                     <h2 class="text-2xl font-bold text-white tracking-tight" id="viewTitle">Panel Financiero</h2>
-                    <p class="text-sm text-gray-500 mt-1" id="viewSubtitle">Métricas globales y flujo de caja estimado</p>
+                    <p class="text-sm text-gray-500 mt-1" id="viewSubtitle">Métricas globales y flujo de caja</p>
                 </div>
             </div>
             <div id="topbarActions"></div>
         </header>
 
-        <!-- AREA DE VISTAS -->
         <div class="p-8">
             
             <!-- VISTA 1: DASHBOARD -->
@@ -170,7 +167,7 @@
                         <div class="absolute top-0 right-0 p-4 opacity-10"><i data-lucide="dollar-sign" class="w-16 h-16"></i></div>
                         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">MRR Proyectado (USD)</p>
                         <h3 class="text-3xl font-black text-white font-mono" id="kpiMRR">$0</h3>
-                        <p class="text-xs text-green-400 mt-2 flex items-center gap-1"><i data-lucide="trending-up" class="w-3 h-3"></i> Revenue Share</p>
+                        <p class="text-xs text-green-400 mt-2"><i data-lucide="trending-up" class="w-3 h-3 inline"></i> Revenue Share</p>
                     </div>
                     <div class="card-dios p-6 relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-4 opacity-10"><i data-lucide="building" class="w-16 h-16"></i></div>
@@ -188,7 +185,7 @@
                         <div class="absolute top-0 right-0 p-4 opacity-10"><i data-lucide="award" class="w-16 h-16"></i></div>
                         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Fees Retenidos</p>
                         <h3 class="text-3xl font-black text-white font-mono" id="kpiFees">$0</h3>
-                        <p class="text-xs text-yellow-400 mt-2">Revenue Share acumulado</p>
+                        <p class="text-xs text-yellow-400 mt-2">Revenue Share</p>
                     </div>
                 </div>
 
@@ -199,7 +196,7 @@
                     </div>
                     <div class="card-dios p-6">
                         <h4 class="text-sm font-bold text-white mb-4">Distribución de Alumnos</h4>
-                        <div class="h-64 w-full relative"><canvas id="chartAlumnos"></canvas></div>
+                        <div class="h-64 w-full"><canvas id="chartAlumnos"></canvas></div>
                     </div>
                 </div>
             </section>
@@ -263,12 +260,12 @@
                 <div class="card-dios p-8" id="builderFormContainer" style="display:none;">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div>
-                            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2"><i data-lucide="layout" class="text-purple-400 w-5 h-5"></i> Pestañas Especiales</h3>
+                            <h3 class="text-lg font-bold text-white mb-2"><i data-lucide="layout" class="text-purple-400 w-5 h-5 inline"></i> Pestañas Especiales</h3>
                             <p class="text-xs text-gray-400 mb-4">Sepáralas por comas.</p>
                             <input type="text" id="bTabs" class="input-dios" placeholder="Ej: Bolsa de Trabajo, Prácticas">
                         </div>
                         <div>
-                            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2"><i data-lucide="code" class="text-blue-400 w-5 h-5"></i> Campos JSON</h3>
+                            <h3 class="text-lg font-bold text-white mb-2"><i data-lucide="code" class="text-blue-400 w-5 h-5 inline"></i> Campos JSON</h3>
                             <p class="text-xs text-gray-400 mb-4">Estructura para campos extra.</p>
                             <textarea id="bJson" class="input-dios font-mono text-xs h-48" placeholder='[{"nombre": "legajo_papel", "tipo": "texto"}]'></textarea>
                         </div>
@@ -295,7 +292,6 @@
                 <button onclick="cerrarModalInst()" class="p-2 hover:bg-white/10 rounded-lg text-gray-400"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
 
-            <!-- TABS -->
             <div class="flex px-6 pt-4 gap-2 border-b border-white/5 bg-black/10 overflow-x-auto" id="miTabs">
                 <div class="tab-nav-item active" onclick="cambiarTabInst('general', this)">⚙️ General</div>
                 <div class="tab-nav-item" onclick="cambiarTabInst('branding', this)">🎨 Branding</div>
@@ -370,7 +366,7 @@
                     </div>
                 </div>
 
-                <!-- ✅ TAB MÓDULOS (SaaS TIERING) - NUEVO -->
+                <!-- TAB MÓDULOS (SaaS TIERING) -->
                 <div class="tab-content" id="tab-modulos">
                     <p class="text-xs text-gray-500 mb-4">Controla qué secciones ve el Director</p>
                     <div class="space-y-3">
@@ -402,12 +398,17 @@
                             <div><p class="font-medium">Billetera (Wallet)</p><p class="text-xs text-gray-500">Credencial digital</p></div>
                             <label class="toggle-switch"><input type="checkbox" id="modWallet" checked><span class="toggle-slider"></span></label>
                         </div>
+                        <!-- ✅ GAMIFICACIÓN -->
+                        <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-yellow-500/20">
+                            <div><p class="font-medium text-yellow-400">⚡ Módulo Growth (Gamificación)</p><p class="text-xs text-gray-500">Puntos ASARI y Referidos</p></div>
+                            <label class="toggle-switch"><input type="checkbox" id="modGamificacion"><span class="toggle-slider"></span></label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- ✅ TAB SLA - NUEVO -->
+                <!-- TAB SLA -->
                 <div class="tab-content" id="tab-sla">
-                    <p class="text-xs text-gray-500 mb-4">Modelo de negocio de esta instancia</p>
+                    <p class="text-xs text-gray-500 mb-4">Modelo de negocio</p>
                     <div class="space-y-4">
                         <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Costo Alta Alumno (USD)</label><input type="number" id="slaAltaAlumno" class="input-dios" min="0" step="0.01" value="10"></div>
                         <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Fee Certificación (%)</label><input type="number" id="slaFeeCert" class="input-dios" min="0" max="100" step="0.1" value="20"></div>
@@ -427,7 +428,7 @@
     <div id="modalUsuario" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="cerrarModalUser()"></div>
         <div class="card-dios w-full max-w-md relative z-10 p-8">
-            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2"><i data-lucide="user-plus" class="text-blue-400"></i> Alta de Credencial</h3>
+            <h3 class="text-xl font-bold text-white mb-6"><i data-lucide="user-plus" class="text-blue-400 inline"></i> Alta de Credencial</h3>
             <div class="space-y-5">
                 <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Instituto</label><select id="muInstituto" class="input-dios"></select></div>
                 <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Email</label><input type="email" id="muEmail" class="input-dios"></div>
@@ -465,10 +466,8 @@
         let chartFlujo = null;
         let chartPie = null;
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebarOverlay').classList.toggle('active');
-        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); }
 
         function showToast(msg, type = 'success') {
             const t = document.getElementById('toastMsg');
@@ -500,7 +499,7 @@
             elem.classList.add('active');
             
             const titles = {
-                dashboard: ['Panel Financiero', 'Métricas globales y proyecciones'],
+                dashboard: ['Panel Financiero', 'Métricas globales'],
                 institutos: ['Red de Institutos', 'Control de inquilinos'],
                 usuarios: ['Gestión de Accesos', 'Cuentas de staff'],
                 builder: ['Constructor JSON', 'Inyección de módulos']
@@ -538,7 +537,7 @@
             const totalA = alumnosTotal || 0;
             const activos = institutosData.filter(i => i.estado === 'activo').length;
             const totalFees = (certificados || []).reduce((sum, c) => sum + (c.fee_asari_retenido || 0), 0);
-            const mrr = totalA * 10; // $10 USD por alumno
+            const mrr = totalA * 10;
             
             document.getElementById('kpiMRR').textContent = `$${mrr.toLocaleString()}`;
             document.getElementById('kpiInstitutos').textContent = institutosData.length;
@@ -561,19 +560,8 @@
             
             chartFlujo = new Chart(ctxFlujo, {
                 type: 'line',
-                data: {
-                    labels: ['Mes 1','Mes 2','Mes 3','Mes 4','Mes 5','Mes 6'],
-                    datasets: [{
-                        label: 'MRR USD',
-                        data: proyecciones,
-                        borderColor: '#7c3aed',
-                        backgroundColor: 'rgba(124,58,237,0.1)',
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }, x: { grid: { display: false }, ticks: { color: '#94a3b8' } } } }
+                data: { labels: ['M1','M2','M3','M4','M5','M6'], datasets: [{ label: 'MRR USD', data: proyecciones, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.1)', borderWidth: 3, tension: 0.4, fill: true }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
             
             const ctxPie = document.getElementById('chartAlumnos').getContext('2d');
@@ -582,8 +570,8 @@
             
             chartPie = new Chart(ctxPie, {
                 type: 'doughnut',
-                data: { labels, datasets: [{ data, backgroundColor: ['#7c3aed','#3b82f6','#10b981','#f59e0b','#ec4899'], borderWidth: 0 }] },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels: { color: '#e5e7eb', boxWidth: 12, font: { size: 10 } } } } }
+                data: { labels, datasets: [{ data, backgroundColor: ['#7c3aed','#3b82f6','#10b981','#f59e0b','#ec4899'] }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '75%' }
             });
         }
 
@@ -649,11 +637,12 @@
             document.getElementById(`tab-${tab}`).classList.add('active');
         }
 
+        function setToggle(id, value) { document.getElementById(id).checked = value; }
+
         function abrirModalInst(id = null) {
             document.getElementById('modalInstituto').classList.remove('hidden');
             cambiarTabInst('general', document.querySelector('#miTabs .tab-nav-item'));
             
-            // Reset
             document.getElementById('miId').value = '';
             document.getElementById('miNombre').value = '';
             document.getElementById('miSlug').value = '';
@@ -667,15 +656,13 @@
             document.getElementById('miTermWallet').value = 'Billetera Virtual';
             document.getElementById('miTermMatricula').value = 'Nº Registro';
             
-            // Toggles default
             ['modCrm','modSedes','modCampus','modCertificados','modPortal','modReportes','modWallet'].forEach(id => document.getElementById(id).checked = true);
+            document.getElementById('modGamificacion').checked = false; // Off por defecto
             
-            // SLA default
             document.getElementById('slaAltaAlumno').value = 10;
             document.getElementById('slaFeeCert').value = 20;
             document.getElementById('slaAbono').value = 0;
             
-            // Logos reset
             document.getElementById('previewLogo1').classList.add('hidden');
             document.getElementById('iconLogo1').classList.remove('hidden');
             document.getElementById('previewLogo2').classList.add('hidden');
@@ -687,6 +674,7 @@
                 const b = conf.branding || {};
                 const t = conf.terminologia || {};
                 const sla = conf.sla_precios || {};
+                const mods = inst.modulos_activos || {};
                 
                 document.getElementById('miTitulo').textContent = `Auditar: ${inst.nombre}`;
                 document.getElementById('miId').value = inst.id;
@@ -707,14 +695,14 @@
                 document.getElementById('miTermWallet').value = t.wallet || '';
                 document.getElementById('miTermMatricula').value = t.matricula || '';
                 
-                const mods = inst.modulos_activos || {};
-                document.getElementById('modCrm').checked = mods.crm !== false;
-                document.getElementById('modSedes').checked = mods.sedes !== false;
-                document.getElementById('modCampus').checked = mods.campus !== false;
-                document.getElementById('modCertificados').checked = mods.certificados !== false;
-                document.getElementById('modPortal').checked = mods.portal !== false;
-                document.getElementById('modReportes').checked = mods.reportes !== false;
-                document.getElementById('modWallet').checked = mods.wallet !== false;
+                setToggle('modCrm', mods.crm !== false);
+                setToggle('modSedes', mods.sedes !== false);
+                setToggle('modCampus', mods.campus !== false);
+                setToggle('modCertificados', mods.certificados !== false);
+                setToggle('modPortal', mods.portal !== false);
+                setToggle('modReportes', mods.reportes !== false);
+                setToggle('modWallet', mods.wallet !== false);
+                setToggle('modGamificacion', mods.gamificacion === true);
                 
                 document.getElementById('slaAltaAlumno').value = sla.alta_alumno || 10;
                 document.getElementById('slaFeeCert').value = sla.fee_emision_porcentaje || 20;
@@ -771,7 +759,8 @@
                     certificados: document.getElementById('modCertificados').checked,
                     portal: document.getElementById('modPortal').checked,
                     reportes: document.getElementById('modReportes').checked,
-                    wallet: document.getElementById('modWallet').checked
+                    wallet: document.getElementById('modWallet').checked,
+                    gamificacion: document.getElementById('modGamificacion').checked
                 };
                 
                 const sla_precios = {
@@ -919,6 +908,10 @@
             await window.supabase.from('sys_configuracion').update({ custom_ui: { tabs, campos_extra: campos } }).eq('instituto_id', instId);
             showToast('Inyección exitosa');
         }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') { cerrarModalInst(); cerrarModalUser(); }
+        });
 
         window.onload = () => {
             if(verificarSesionAdmin()) {
