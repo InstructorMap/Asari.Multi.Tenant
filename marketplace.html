@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Panel Director | ASARI</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+        
+        * { font-family: 'Inter', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        :root { --color-primary: #7c3aed; --color-primary-light: #a78bfa; --color-primary-dark: #5b21b6; }
+        
+        body { background: #050509; color: #e2e8f0; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        
+        .app-layout { display: flex; min-height: 100vh; }
+        
+        .sidebar { width: 260px; background: rgba(10,10,20,0.95); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 40; transition: transform 0.3s ease; backdrop-filter: blur(20px); }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-logo-box { width: 44px; height: 44px; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+        .sidebar-logo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .sidebar-logo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 22px; background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary)); }
+        .sidebar-institute-name { font-size: 14px; font-weight: 700; color: white; line-height: 1.2; }
+        .sidebar-institute-role { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+        .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+        
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #94a3b8; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s ease; margin-bottom: 2px; text-decoration: none; }
+        .nav-item:hover { background: rgba(255,255,255,0.04); color: #e2e8f0; }
+        .nav-item.active { background: rgba(124,58,237,0.15); color: #a78bfa; font-weight: 600; }
+        
+        .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .btn-logout { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 14px; border-radius: 10px; background: none; border: none; color: #ef4444; font-size: 14px; font-weight: 500; cursor: pointer; }
+        .btn-logout:hover { background: rgba(239,68,68,0.1); }
+        
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 39; backdrop-filter: blur(2px); }
+        .sidebar-overlay.active { display: block; }
+        
+        .main-content { flex: 1; margin-left: 260px; min-height: 100vh; transition: margin-left 0.3s ease; }
+        
+        .topbar { background: rgba(5,5,9,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 30; }
+        .btn-hamburger { display: none; width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); cursor: pointer; align-items: center; justify-content: center; color: #94a3b8; }
+        
+        .page-title { font-size: 20px; font-weight: 700; color: white; }
+        .page-subtitle { font-size: 13px; color: #64748b; margin-top: 2px; }
+        
+        .btn-primary { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; border: 1px solid rgba(139,92,246,0.3); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; white-space: nowrap; }
+        .btn-primary:hover { background: linear-gradient(135deg, #8b5cf6, #7c3aed); box-shadow: 0 0 20px rgba(139,92,246,0.3); transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        
+        .content-area { padding: 24px 28px; }
+        
+        .tab-nav-item { padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; white-space: nowrap; }
+        .tab-nav-item:hover { color: rgba(255,255,255,0.8); }
+        .tab-nav-item.active { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(124,58,237,0.1); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* MARKETPLACE CARDS (Netflix Style) */
+        .carousel-container { overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        .carousel-container::-webkit-scrollbar { display: none; }
+        
+        .market-card { position: relative; min-width: 200px; max-width: 200px; height: 280px; border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; flex-shrink: 0; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+        .market-card:hover { transform: scale(1.05); z-index: 5; box-shadow: 0 15px 40px rgba(0,0,0,0.5); border-color: var(--color-primary-light); }
+        .market-card img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+        .market-card-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.9) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; }
+        .market-card-badge { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; z-index: 2; }
+        
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.hidden { display: none; }
+        .modal-card { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.5); animation: modalIn 0.25s ease-out; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        .form-group { margin-bottom: 18px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px; color: white; outline: none; transition: all 0.15s ease; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 15px rgba(139,92,246,0.1); background: rgba(255,255,255,0.06); }
+        select.form-select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 10px center; background-repeat: no-repeat; background-size: 20px; padding-right: 40px; }
+        select.form-select option { background: #1a1a2e; color: white; }
+        .form-textarea { resize: vertical; min-height: 80px; }
+        
+        .file-drop-zone { border: 2px dashed rgba(255,255,255,0.15); border-radius: 14px; padding: 24px 20px; text-align: center; cursor: pointer; transition: all 0.2s ease; background: rgba(255,255,255,0.02); position: relative; }
+        .file-drop-zone:hover { border-color: var(--color-primary-light); background: rgba(124,58,237,0.05); }
+        .file-drop-zone.has-file { border-color: #10b981; background: rgba(16,185,129,0.05); }
+        .file-drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .file-drop-zone .preview-img { max-width: 100%; max-height: 160px; border-radius: 8px; margin-top: 12px; display: none; }
+        .file-drop-zone.has-file .preview-img { display: block; }
+        
+        .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: toastIn 0.3s ease-out; max-width: 400px; }
+        .toast.success { background: #059669; color: white; }
+        .toast.error { background: #dc2626; color: white; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .spinner { width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #7c3aed; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .kpi-creator { background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(124,58,237,0.15)); border: 1px solid rgba(245,158,11,0.3); border-radius: 12px; padding: 8px 16px; font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #fbbf24; }
+        
+        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } .btn-hamburger { display: flex; } }
+        @media (max-width: 640px) { .content-area { padding: 16px; } .topbar { padding: 12px 16px; } }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    
+    <!-- SIDEBAR UNIFICADO -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="flex items-center gap-3">
+                <div class="sidebar-logo-box">
+                    <div class="sidebar-logo-placeholder" id="sidebarLogoPlaceholder"><span>🎓</span></div>
+                    <img data-tenant-logo="principal" src="" alt="Logo" id="sidebarLogoImg" style="display: none;" onerror="this.style.display='none';document.getElementById('sidebarLogoPlaceholder').style.display='flex';" onload="this.style.display='block';document.getElementById('sidebarLogoPlaceholder').style.display='none';">
+                </div>
+                <div>
+                    <div class="sidebar-institute-name" id="sidebarInstituteName">Instituto</div>
+                    <div class="sidebar-institute-role">Panel Director</div>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item"><i data-lucide="bar-chart-3" class="w-4 h-4"></i><span>Dashboard</span></a>
+            <a href="staff.html" class="nav-item"><i data-lucide="shield" class="w-4 h-4"></i><span>Staff & Permisos</span></a>
+            <a href="crm.html" class="nav-item"><i data-lucide="users" class="w-4 h-4"></i><span>Alumnos</span></a>
+            <a href="sedes.html" class="nav-item"><i data-lucide="map-pin" class="w-4 h-4"></i><span>Sedes y Cobros</span></a>
+            <a href="campus-admin.html" class="nav-item"><i data-lucide="graduation-cap" class="w-4 h-4"></i><span>Campus Virtual</span></a>
+            <a href="certificados.html" class="nav-item"><i data-lucide="award" class="w-4 h-4"></i><span>Certificaciones</span></a>
+            <a href="portal-admin.html" class="nav-item"><i data-lucide="globe" class="w-4 h-4"></i><span>Portal & CMS</span></a>
+            <a href="reportes.html" class="nav-item"><i data-lucide="file-text" class="w-4 h-4"></i><span>Reportes</span></a>
+            <a href="configuracion.html" class="nav-item"><i data-lucide="settings" class="w-4 h-4"></i><span>Configuración</span></a>
+            <a href="marketplace.html" class="nav-item active"><i data-lucide="store" class="w-4 h-4"></i><span>Marketplace</span></a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="handleLogout()"><i data-lucide="log-out" class="w-5 h-5"></i><span>Cerrar Sesión</span></button>
+        </div>
+    </aside>
+    
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <header class="topbar">
+            <div class="flex items-center gap-4">
+                <button class="btn-hamburger" onclick="toggleSidebar()"><i data-lucide="menu" class="w-5 h-5"></i></button>
+                <div>
+                    <h1 class="page-title">ASARI Marketplace</h1>
+                    <p class="page-subtitle">Hub de Co-Producción B2B/B2C</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="kpi-creator" id="kpiGananciasCreador">💰 $0.00 USD</span>
+            </div>
+        </header>
+        
+        <div class="content-area">
+            
+            <!-- TABS -->
+            <div class="flex gap-2 border-b border-white/10 mb-6 overflow-x-auto pb-2">
+                <div class="tab-nav-item active" onclick="switchTab('descubrir', this)">🍿 Descubrir</div>
+                <div class="tab-nav-item" onclick="switchTab('adquisiciones', this)">📚 Mis Adquisiciones</div>
+                <div class="tab-nav-item" onclick="switchTab('creator', this)">🎬 Creator Studio</div>
+            </div>
+            
+            <!-- TAB DESCUBRIR -->
+            <div class="tab-content active" id="tab-descubrir">
+                <div id="marketplaceSections"></div>
+            </div>
+            
+            <!-- TAB ADQUISICIONES -->
+            <div class="tab-content" id="tab-adquisiciones">
+                <div id="adquisicionesList"></div>
+            </div>
+            
+            <!-- TAB CREATOR STUDIO -->
+            <div class="tab-content" id="tab-creator">
+                <div class="flex justify-end mb-6">
+                    <button class="btn-primary" onclick="abrirModalPublicar()"><i data-lucide="plus" class="w-4 h-4"></i> Publicar Nuevo Curso</button>
+                </div>
+                <div id="misPublicacionesList"></div>
+            </div>
+            
+        </div>
+    </main>
+    
+    <!-- MODAL DETALLE CURSO -->
+    <div class="modal-overlay hidden" id="detalleModal">
+        <div class="modal-card">
+            <div class="modal-header" style="padding:0;">
+                <div style="position:relative; height:220px; overflow:hidden; border-radius:20px 20px 0 0;">
+                    <img src="" id="detallePortada" class="w-full h-full object-cover">
+                    <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(15,15,26,0.95));"></div>
+                    <button onclick="cerrarDetalle()" class="absolute top-4 right-4 btn-icon" style="z-index:3;"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <h3 class="text-2xl font-bold text-white mb-2" id="detalleTitulo">Curso</h3>
+                <p class="text-sm text-purple-300 mb-4" id="detalleAutor">Autor</p>
+                <p class="text-gray-400 mb-6" id="detalleDescripcion">Descripción</p>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="font-mono text-2xl font-bold text-green-400" id="detallePrecio">$0.00</span>
+                    <span class="badge" id="detalleBadge"></span>
+                </div>
+                <button class="btn-primary w-full justify-center" id="btnAdquirir" onclick="adquirirCurso()">
+                    <i data-lucide="shopping-cart" class="w-4 h-4"></i> <span id="btnAdquirirTexto">Adquirir Curso</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL PUBLICAR -->
+    <div class="modal-overlay hidden" id="publicarModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">Publicar en Marketplace</h3>
+                <button onclick="cerrarPublicar()" class="btn-icon"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="publicarForm" class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Curso Propio *</label>
+                    <select id="pubCursoId" class="form-select"><option value="">Cargando...</option></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Modelo de Negocio *</label>
+                    <select id="pubModelo" class="form-select" onchange="toggleModelo()">
+                        <option value="pago_unico">Pago Único (Licencia)</option>
+                        <option value="revenue_share">Revenue Share</option>
+                    </select>
+                </div>
+                <div class="form-group" id="divPrecio">
+                    <label class="form-label">Precio USD *</label>
+                    <input type="number" id="pubPrecio" class="form-input" min="1" step="0.01" placeholder="99.00">
+                </div>
+                <div class="form-group hidden" id="divPorcentaje">
+                    <label class="form-label">Porcentaje Creador (%) *</label>
+                    <input type="number" id="pubPorcentaje" class="form-input" min="1" max="80" value="30">
+                    <p class="form-hint text-xs text-gray-500">Máximo sugerido: 50%</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Autor / Marca *</label>
+                    <input type="text" id="pubAutor" class="form-input" placeholder="Nombre del creador">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descripción Corta *</label>
+                    <textarea id="pubDescripcion" class="form-textarea" placeholder="Describe brevemente el curso..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Portada *</label>
+                    <div class="file-drop-zone" id="dropPortada">
+                        <input type="file" accept="image/*" id="filePortada" onchange="handlePortada(this)">
+                        <i data-lucide="image" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
+                        <p class="text-xs text-gray-400" id="portadaFileName">Click para subir portada</p>
+                        <img src="" class="preview-img" id="previewPortada">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary w-full justify-center" id="btnPublicar"><i data-lucide="rocket" class="w-4 h-4"></i> Publicar</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="supabase-config.js?v=5"></script>
+
+    <script>
+        lucide.createIcons();
+        
+        const STORAGE_BUCKET = 'asari-assets';
+        
+        let tenantConfig = null;
+        let marketplaceData = [];
+        let cursoSeleccionado = null;
+        let portadaFile = null;
+        
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); }
+        
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-5 h-5"></i><span>${msg}</span>`;
+            t.className = `toast ${type}`;
+            lucide.createIcons();
+            clearTimeout(window._tt);
+            window._tt = setTimeout(() => { t.className = 'toast hidden'; t.innerHTML = ''; }, 4000);
+        }
+        
+        function switchTab(tab, el) {
+            document.querySelectorAll('.tab-nav-item').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+        
+        async function checkAuth() {
+            const { data: { session } } = await window.supabase.auth.getSession();
+            if (!session?.user) { window.location.href = 'admin-login.html'; return false; }
+            return true;
+        }
+        
+        async function handleLogout() {
+            if (!confirm('¿Cerrar sesión?')) return;
+            await window.supabase.auth.signOut();
+            window.location.href = 'admin-login.html';
+        }
+        
+        async function inicializarTenant() {
+            if (typeof window.fetchTenantConfig !== 'function') { setTimeout(inicializarTenant, 100); return; }
+            tenantConfig = await window.fetchTenantConfig();
+            if (tenantConfig) {
+                document.getElementById('sidebarInstituteName').textContent = tenantConfig.instituto.nombre;
+                document.title = `Marketplace - ${tenantConfig.instituto.nombre} | ASARI`;
+                if (tenantConfig.configuracion?.branding?.logo_principal) {
+                    document.getElementById('sidebarLogoImg').src = tenantConfig.configuracion.branding.logo_principal;
+                    document.getElementById('sidebarLogoImg').style.display = 'block';
+                    document.getElementById('sidebarLogoPlaceholder').style.display = 'none';
+                }
+                window.__TENANT_CONFIG__ = tenantConfig;
+                await cargarMarketplace();
+                await cargarGananciasCreador();
+            }
+        }
+        
+        async function cargarGananciasCreador() {
+            const institutoId = tenantConfig?.instituto?.id;
+            const { data } = await window.supabase.from('sys_transacciones')
+                .select('monto_usd')
+                .eq('instituto_id', institutoId)
+                .eq('tipo_operacion', 'ingreso_marketplace');
+            const total = (data || []).reduce((sum, t) => sum + (t.monto_usd || 0), 0);
+            document.getElementById('kpiGananciasCreador').textContent = `💰 $${total.toFixed(2)} USD`;
+        }
+        
+        async function cargarMarketplace() {
+            const { data } = await window.supabase.from('sys_marketplace').select('*').eq('estado', 'activo');
+            marketplaceData = data || [];
+            
+            const nuevos = marketplaceData.slice(0, 6);
+            const revShare = marketplaceData.filter(c => c.modelo_negocio === 'revenue_share').slice(0, 6);
+            const plr = marketplaceData.filter(c => c.modelo_negocio === 'pago_unico').slice(0, 6);
+            
+            const container = document.getElementById('marketplaceSections');
+            container.innerHTML = `
+                ${renderCarousel('Nuevos Lanzamientos', nuevos)}
+                ${renderCarousel('Top Ventas (Revenue Share)', revShare)}
+                ${renderCarousel('Licencias PLR (Pago Único)', plr)}
+            `;
+            lucide.createIcons();
+        }
+        
+        function renderCarousel(titulo, cursos) {
+            if (cursos.length === 0) return '';
+            return `
+                <div class="mb-8">
+                    <h3 class="text-lg font-bold text-white mb-4">${titulo}</h3>
+                    <div class="carousel-container flex gap-4 pb-4">
+                        ${cursos.map(c => `
+                            <div class="market-card" onclick="abrirDetalle('${c.id}')">
+                                ${c.portada_url ? `<img src="${c.portada_url}" alt="${c.curso_titulo}">` : '<div class="w-full h-full bg-gradient-to-br from-purple-900 to-blue-900 flex items-center justify-center"><i data-lucide="book-open" class="w-12 h-12 text-white/30"></i></div>'}
+                                <span class="market-card-badge" style="${c.modelo_negocio === 'revenue_share' ? 'background:rgba(16,185,129,0.2);color:#6ee7b7;' : 'background:rgba(245,158,11,0.2);color:#fbbf24;'}">
+                                    ${c.modelo_negocio === 'revenue_share' ? `${c.porcentaje_creador}% Rev-Share` : 'Libre de Regalías'}
+                                </span>
+                                <div class="market-card-overlay">
+                                    <h4 class="text-sm font-bold text-white mb-1">${c.curso_titulo}</h4>
+                                    <p class="text-xs text-gray-400">${c.autor_nombre}</p>
+                                    <p class="font-mono text-sm font-bold ${c.modelo_negocio === 'pago_unico' ? 'text-yellow-400' : 'text-green-400'}">${c.modelo_negocio === 'pago_unico' ? `$${(c.precio_usd||0).toFixed(2)}` : 'Gratis'}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function abrirDetalle(id) {
+            cursoSeleccionado = marketplaceData.find(c => c.id === id);
+            if (!cursoSeleccionado) return;
+            
+            document.getElementById('detallePortada').src = cursoSeleccionado.portada_url || '';
+            document.getElementById('detalleTitulo').textContent = cursoSeleccionado.curso_titulo;
+            document.getElementById('detalleAutor').textContent = `Por: ${cursoSeleccionado.autor_nombre}`;
+            document.getElementById('detalleDescripcion').textContent = cursoSeleccionado.descripcion_corta || '';
+            document.getElementById('detallePrecio').textContent = cursoSeleccionado.modelo_negocio === 'pago_unico' ? `$${(cursoSeleccionado.precio_usd||0).toFixed(2)} USD` : 'Gratis (Rev-Share)';
+            document.getElementById('btnAdquirirTexto').textContent = cursoSeleccionado.modelo_negocio === 'pago_unico' ? 'Adquirir Licencia' : 'Agregar a mi Campus';
+            document.getElementById('detalleModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        
+        function cerrarDetalle() { document.getElementById('detalleModal').classList.add('hidden'); }
+        
+        async function adquirirCurso() {
+            if (!cursoSeleccionado) return;
+            const institutoId = tenantConfig?.instituto?.id;
+            
+            if (cursoSeleccionado.modelo_negocio === 'pago_unico') {
+                // Validar saldo
+                const { data: billetera } = await window.supabase.from('sys_billetera_institutos').select('saldo_usd').eq('instituto_id', institutoId).single();
+                const saldo = billetera?.saldo_usd || 0;
+                
+                if (saldo < cursoSeleccionado.precio_usd) {
+                    showToast('Saldo insuficiente', 'error');
+                    return;
+                }
+                
+                // Descontar comprador
+                await window.supabase.from('sys_billetera_institutos').update({ saldo_usd: saldo - cursoSeleccionado.precio_usd }).eq('instituto_id', institutoId);
+                
+                // Registrar transacción comprador
+                await window.supabase.from('sys_transacciones').insert([{
+                    instituto_id: institutoId,
+                    tipo_operacion: 'compra_marketplace',
+                    monto_usd: -cursoSeleccionado.precio_usd,
+                    estado: 'completado',
+                    descripcion: `Compra de licencia: ${cursoSeleccionado.curso_titulo}`
+                }]);
+                
+                // Transferir 80% al creador
+                const montoCreador = cursoSeleccionado.precio_usd * 0.80;
+                await window.supabase.from('sys_billetera_institutos').update({ saldo_usd: saldo + montoCreador }).eq('instituto_id', cursoSeleccionado.instituto_origen_id);
+                
+                // Registrar ingreso creador
+                await window.supabase.from('sys_transacciones').insert([{
+                    instituto_id: cursoSeleccionado.instituto_origen_id,
+                    tipo_operacion: 'ingreso_marketplace',
+                    monto_usd: montoCreador,
+                    estado: 'completado',
+                    descripcion: `Venta de licencia: ${cursoSeleccionado.curso_titulo}`
+                }]);
+                
+                // Clonar curso
+                await clonarCurso(cursoSeleccionado, institutoId);
+                
+                showToast('Licencia adquirida. Curso agregado a tu campus.');
+            } else {
+                // Revenue Share: Clonar sin cobro
+                await clonarCurso(cursoSeleccionado, institutoId);
+                showToast(`Curso agregado. Compartirás el ${cursoSeleccionado.porcentaje_creador}% de ganancias.`);
+            }
+            
+            cerrarDetalle();
+        }
+        
+        async function clonarCurso(item, institutoComprador) {
+            const { data: cursoOriginal } = await window.supabase.from('sys_cursos').select('*').eq('id', item.curso_id).single();
+            if (!cursoOriginal) return;
+            
+            await window.supabase.from('sys_cursos').insert([{
+                instituto_id: institutoComprador,
+                titulo: cursoOriginal.titulo,
+                tipo_curso: cursoOriginal.tipo_curso,
+                precio_declarado_usd: item.modelo_negocio === 'pago_unico' ? item.precio_usd : 0,
+                estado: 'activo',
+                padre_id: item.curso_id,
+                modelo_negocio: item.modelo_negocio,
+                porcentaje_creador: item.porcentaje_creador || null
+            }]);
+        }
+        
+        // ============ CREATOR STUDIO ============
+        function toggleModelo() {
+            const modelo = document.getElementById('pubModelo').value;
+            document.getElementById('divPrecio').classList.toggle('hidden', modelo === 'revenue_share');
+            document.getElementById('divPorcentaje').classList.toggle('hidden', modelo === 'pago_unico');
+        }
+        
+        function handlePortada(input) {
+            if (input.files && input.files[0]) {
+                portadaFile = input.files[0];
+                document.getElementById('portadaFileName').textContent = input.files[0].name;
+                document.getElementById('dropPortada').classList.add('has-file');
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('previewPortada').src = e.target.result;
+                    document.getElementById('previewPortada').style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        function abrirModalPublicar() {
+            document.getElementById('publicarForm').reset();
+            portadaFile = null;
+            document.getElementById('dropPortada').classList.remove('has-file');
+            document.getElementById('previewPortada').style.display = 'none';
+            cargarCursosPropios();
+            toggleModelo();
+            document.getElementById('publicarModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        
+        function cerrarPublicar() { document.getElementById('publicarModal').classList.add('hidden'); }
+        
+        async function cargarCursosPropios() {
+            const institutoId = tenantConfig?.instituto?.id;
+            const { data } = await window.supabase.from('sys_cursos').select('*').eq('instituto_id', institutoId).eq('estado', 'activo');
+            document.getElementById('pubCursoId').innerHTML = '<option value="">Selecciona...</option>' + (data || []).map(c => `<option value="${c.id}">${c.titulo}</option>`).join('');
+        }
+        
+        document.getElementById('publicarForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const institutoId = tenantConfig?.instituto?.id;
+            const cursoId = document.getElementById('pubCursoId').value;
+            const modelo = document.getElementById('pubModelo').value;
+            const precio = parseFloat(document.getElementById('pubPrecio').value) || 0;
+            const porcentaje = parseInt(document.getElementById('pubPorcentaje').value) || 0;
+            const autor = document.getElementById('pubAutor').value.trim();
+            const descripcion = document.getElementById('pubDescripcion').value.trim();
+            
+            if (!cursoId || !autor || !descripcion) { showToast('Completa todos los campos', 'error'); return; }
+            if (modelo === 'pago_unico' && precio <= 0) { showToast('Ingresa un precio válido', 'error'); return; }
+            if (modelo === 'revenue_share' && (porcentaje <= 0 || porcentaje > 80)) { showToast('Porcentaje inválido', 'error'); return; }
+            
+            let portadaUrl = null;
+            if (portadaFile) {
+                const ext = portadaFile.name.split('.').pop();
+                const path = `marketplace/${institutoId}/${Date.now()}.${ext}`;
+                await window.supabase.storage.from(STORAGE_BUCKET).upload(path, portadaFile);
+                const { data } = window.supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+                portadaUrl = data.publicUrl;
+            }
+            
+            const { error } = await window.supabase.from('sys_marketplace').insert([{
+                curso_id: cursoId,
+                instituto_origen_id: institutoId,
+                autor_nombre: autor,
+                portada_url: portadaUrl,
+                descripcion_corta: descripcion,
+                modelo_negocio: modelo,
+                precio_usd: modelo === 'pago_unico' ? precio : 0,
+                porcentaje_creador: modelo === 'revenue_share' ? porcentaje : null,
+                estado: 'activo',
+                curso_titulo: (await window.supabase.from('sys_cursos').select('titulo').eq('id', cursoId).single()).data?.titulo || 'Curso'
+            }]);
+            
+            if (error) { showToast('Error: ' + error.message, 'error'); return; }
+            
+            cerrarPublicar();
+            await cargarMarketplace();
+            showToast('Curso publicado en Marketplace');
+        });
+        
+        async function inicializar() {
+            if (!await checkAuth()) return;
+            await inicializarTenant();
+        }
+        
+        window.addEventListener('DOMContentLoaded', inicializar);
+    </script>
+</body>
+</html>
