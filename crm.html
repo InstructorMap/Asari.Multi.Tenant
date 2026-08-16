@@ -833,8 +833,9 @@
             `;
             
             if (lead.estado !== 'aprobado') {
+                const actionFn = (lead.origen === 'creador' || lead.origen === 'afiliado') ? `aprobarLead('${lead.id}')` : `matricularLead('${lead.id}')`;
                 document.getElementById('offcanvasFooter').innerHTML = `
-                    <button class="btn-approve" onclick="aprobarLead('${lead.id}')"><i data-lucide="check-circle" class="w-4 h-4"></i> Aprobar Lead</button>
+                    <button class="btn-approve" onclick="${actionFn}"><i data-lucide="check-circle" class="w-4 h-4"></i> Aprobar Lead</button>
                 `;
             } else {
                 document.getElementById('offcanvasFooter').innerHTML = `
@@ -953,7 +954,15 @@
                     descripcion: `Matriculación desde Lead: ${lead.nombre_completo}`
                 }]);
                 
-                await window.supabase.from('crm_leads').delete().eq('id', leadId);
+                await window.supabase.from('crm_leads').update({ estado: 'aprobado' }).eq('id', leadId);
+                
+                const mensaje = `¡Hola ${lead.nombre_completo}! 🎉 Tu inscripción en nuestro Instituto ha sido aprobada. Ya puedes ingresar al campus. \n\n📧 Tu usuario: ${lead.email}\n🔑 Tu contraseña: Tu número de documento (sin puntos)`;
+                const telefonoLimpio = (lead.telefono || '').replace(/[^0-9+]/g, '');
+                if (telefonoLimpio) {
+                    const url = `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
+                    window.open(url, '_blank');
+                }
+                closeOffcanvas();
                 
                 saldoUSD = nuevoSaldo;
                 await cargarBilletera();
