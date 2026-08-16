@@ -22,77 +22,90 @@
             --color-primary-dark: #5b21b6; 
         }
         
-        body { background: #f8fafc; color: #1e293b; -webkit-font-smoothing: antialiased; }
+        body { background: #fafafa; color: #1e293b; -webkit-font-smoothing: antialiased; }
         
         /* NAVBAR */
-        .navbar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .navbar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.92); backdrop-filter: blur(30px); border-bottom: 1px solid rgba(0,0,0,0.06); }
         
-        /* HERO */
-        .hero-section { position: relative; min-height: 560px; background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; display: flex; align-items: center; }
-        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, var(--color-primary-dark)ee 50%, rgba(15,23,42,0.8) 100%); }
+        /* HERO CINEMÁTICO */
+        .hero-section { position: relative; min-height: 80vh; display: flex; align-items: center; overflow: hidden; background: #0f172a; }
+        .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.4; transition: opacity 1s ease; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.7) 0%, rgba(15,23,42,0.9) 100%); }
+        .hero-glow { position: absolute; bottom: -50%; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse, var(--color-primary)30 0%, transparent 70%); pointer-events: none; }
         
-        .section-title { font-size: 32px; font-weight: 900; color: #0f172a; margin-bottom: 8px; letter-spacing: -1px; }
-        .section-subtitle { font-size: 16px; color: #64748b; margin-bottom: 40px; }
+        /* BENTO GRID */
+        .bento-card { background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 28px; transition: all 0.35s cubic-bezier(0.4,0,0.2,1); cursor: pointer; text-decoration: none; color: #1e293b; position: relative; overflow: hidden; }
+        .bento-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--color-primary); transform: scaleX(0); transition: transform 0.35s ease; }
+        .bento-card:hover { box-shadow: 0 25px 50px rgba(0,0,0,0.08); transform: translateY(-6px); border-color: transparent; }
+        .bento-card:hover::before { transform: scaleX(1); }
+        .bento-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 24px; }
         
-        /* QUICK CARDS */
-        .quick-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: #1e293b; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .quick-card:hover { border-color: var(--color-primary); box-shadow: 0 15px 35px rgba(0,0,0,0.08); transform: translateY(-4px); }
-        .quick-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 22px; background: var(--color-primary-light)20; color: var(--color-primary); }
-        
-        /* CURSO CARDS */
-        .curso-card { background: white; border: 1px solid #e2e8f0; border-radius: 18px; padding: 28px; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
-        .curso-card:hover { border-color: var(--color-primary); box-shadow: 0 20px 40px rgba(0,0,0,0.08); transform: translateY(-4px); }
-        
-        /* NOTICIA CARDS */
-        .noticia-card { background: white; border: 1px solid #e2e8f0; border-radius: 18px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
-        .noticia-card:hover { border-color: var(--color-primary); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
-        .noticia-card img { width: 100%; height: 200px; object-fit: cover; }
-        
-        /* BOTONES */
-        .btn-primary { background: var(--color-primary); color: white; border: none; padding: 12px 28px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .btn-primary:hover { background: var(--color-primary-dark); box-shadow: 0 8px 25px rgba(0,0,0,0.15); transform: translateY(-2px); }
+        /* BOTONES CON GLOW */
+        .btn-primary { background: var(--color-primary); color: white; border: none; padding: 14px 32px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: all 0.35s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 8px 25px rgba(0,0,0,0.15), 0 0 30px var(--color-primary)30; position: relative; overflow: hidden; }
+        .btn-primary::after { content: ''; position: absolute; top: -50%; left: -100%; width: 50%; height: 200%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transform: skewX(-25deg); transition: left 0.5s ease; }
+        .btn-primary:hover::after { left: 150%; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.2), 0 0 50px var(--color-primary)50; }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .btn-secondary { background: white; color: #475569; border: 2px solid #e2e8f0; padding: 12px 28px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: all 0.2s ease; }
-        .btn-secondary:hover { border-color: var(--color-primary); color: var(--color-primary); }
         
-        /* INPUTS */
-        .input-dios { background: white; border: 1px solid #e2e8f0; border-radius: 10px; color: #1e293b; padding: 12px 16px; width: 100%; font-size: 14px; outline: none; transition: all 0.2s ease; }
-        .input-dios:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
-        select.input-dios { appearance: none; }
-        select.input-dios option { background: white; color: #1e293b; }
+        .btn-outline-light { background: rgba(255,255,255,0.08); color: white; border: 2px solid rgba(255,255,255,0.3); padding: 14px 32px; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; backdrop-filter: blur(10px); }
+        .btn-outline-light:hover { background: rgba(255,255,255,0.15); border-color: white; transform: translateY(-2px); }
+        
+        /* CARDS CURSOS */
+        .curso-card { background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 28px; transition: all 0.35s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 2px 10px rgba(0,0,0,0.04); position: relative; }
+        .curso-card:hover { box-shadow: 0 25px 50px rgba(0,0,0,0.08); transform: translateY(-5px); border-color: var(--color-primary-light); }
+        .curso-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: var(--color-primary)15; color: var(--color-primary); }
+        
+        /* NOTICIAS */
+        .noticia-card { background: white; border: 1px solid #e2e8f0; border-radius: 20px; overflow: hidden; transition: all 0.35s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+        .noticia-card:hover { box-shadow: 0 25px 50px rgba(0,0,0,0.08); transform: translateY(-5px); }
+        .noticia-card img { width: 100%; height: 220px; object-fit: cover; }
         
         /* MODAL */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.7); backdrop-filter: blur(8px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.7); backdrop-filter: blur(12px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.hidden { display: none; }
-        .modal-card { background: white; border-radius: 24px; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.2); animation: modalIn 0.3s ease-out; }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-card { background: white; border-radius: 28px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; box-shadow: 0 40px 100px rgba(0,0,0,0.25); animation: modalIn 0.35s cubic-bezier(0.4,0,0.2,1); }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.92) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        /* INPUTS */
+        .input-dios { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; color: #1e293b; padding: 14px 18px; width: 100%; font-size: 15px; outline: none; transition: all 0.25s ease; }
+        .input-dios:focus { border-color: var(--color-primary); box-shadow: 0 0 0 4px var(--color-primary)15; background: white; }
+        select.input-dios { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 14px center; background-repeat: no-repeat; background-size: 20px; padding-right: 44px; }
+        
+        /* CHECKBOX LEGAL */
+        .legal-checkbox { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+        .legal-checkbox input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--color-primary); cursor: pointer; }
         
         /* TOAST */
-        .toast { position: fixed; bottom: 24px; right: 24px; padding: 16px 24px; border-radius: 14px; font-size: 14px; font-weight: 600; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); transform: translateY(100px); opacity: 0; transition: all 0.3s ease; }
+        .toast { position: fixed; bottom: 30px; right: 30px; padding: 18px 28px; border-radius: 16px; font-size: 14px; font-weight: 600; z-index: 200; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); transform: translateY(120px); opacity: 0; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
         .toast.show { transform: translateY(0); opacity: 1; }
         .toast.success { background: #059669; color: white; }
         .toast.error { background: #dc2626; color: white; }
         
-        /* FILE DROP */
+        /* SPINNER */
+        .spinner { width: 30px; height: 30px; border: 3px solid #e2e8f0; border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* FOOTER LEGAL */
+        .footer-premium { background: #0f172a; color: #64748b; }
+        .legal-link { color: #64748b; font-size: 12px; transition: color 0.2s ease; }
+        .legal-link:hover { color: white; }
+        
+        /* SECCIÓN ACCESOS BENTO */
+        .accesos-section { background: linear-gradient(180deg, #fafafa 0%, #f1f5f9 100%); }
+        
+        /* SECCIÓN CREADORES */
+        .creator-section { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, var(--color-primary-dark) 100%); position: relative; overflow: hidden; }
+        .creator-glow { position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, var(--color-primary)40 0%, transparent 70%); pointer-events: none; }
+        
+        /* SECCIÓN AFILIADOS */
+        .affiliate-section { background: white; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+        
         .file-drop-zone { border: 2px dashed #e2e8f0; border-radius: 14px; padding: 24px; text-align: center; cursor: pointer; position: relative; background: #f8fafc; transition: all 0.2s ease; }
         .file-drop-zone:hover { border-color: var(--color-primary); background: #f1f5f9; }
         .file-drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
         .file-drop-zone.has-file { border-color: #10b981; background: #f0fdf4; }
         
-        /* SPINNER */
-        .spinner { width: 28px; height: 28px; border: 3px solid #e2e8f0; border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* FOOTER */
-        .footer-premium { background: #0f172a; color: #94a3b8; }
-        
-        /* SECCIÓN ACCESOS */
-        .accesos-section { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-        .accesos-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 22px; text-align: center; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: white; }
-        .accesos-card:hover { background: rgba(255,255,255,0.12); transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
-        .accesos-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 22px; }
-        
-        @media (max-width: 768px) { .hero-section { min-height: 400px; } }
+        @media (max-width: 768px) { .hero-section { min-height: 70vh; } }
     </style>
 </head>
 <body>
@@ -108,75 +121,150 @@
         </div>
         <div class="flex items-center gap-4">
             <a href="#cursos" class="text-sm text-gray-600 hover:text-gray-900 transition hidden md:block font-medium">Cursos</a>
+            <a href="#creadores" class="text-sm text-gray-600 hover:text-gray-900 transition hidden md:block font-medium">Enseña</a>
+            <a href="#afiliados" class="text-sm text-gray-600 hover:text-gray-900 transition hidden md:block font-medium">Afiliados</a>
             <a href="#noticias" class="text-sm text-gray-600 hover:text-gray-900 transition hidden md:block font-medium">Noticias</a>
-            <a href="#nosotros" class="text-sm text-gray-600 hover:text-gray-900 transition hidden md:block font-medium">Nosotros</a>
-            <a href="login.html" class="btn-primary text-sm"><i data-lucide="log-in" class="w-4 h-4"></i> Acceso Alumnos</a>
+            <a href="login.html" class="btn-primary text-sm px-6 py-2.5"><i data-lucide="log-in" class="w-4 h-4"></i> Acceso Alumnos</a>
         </div>
     </nav>
 
-    <!-- HERO -->
-    <section class="hero-section">
+    <!-- HERO CINEMÁTICO -->
+    <section class="hero-section" id="heroSection">
+        <div class="hero-bg" id="heroBackground"></div>
         <div class="hero-overlay"></div>
-        <div class="relative z-10 px-6 py-20 max-w-3xl">
-            <h1 class="text-4xl md:text-6xl font-black text-white mb-4 leading-tight" id="heroInstituteName">Instituto</h1>
-            <p class="text-xl md:text-2xl text-white/90 font-semibold mb-6" id="heroLema">Excelencia académica</p>
-            <p class="text-white/70 max-w-2xl mb-10 text-lg">Formación de calidad con credenciales digitales verificables</p>
+        <div class="hero-glow"></div>
+        <div class="relative z-10 px-8 py-24 max-w-3xl">
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-lg rounded-full px-5 py-2 mb-6 border border-white/20">
+                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                <span class="text-white/80 text-sm font-medium">Admisiones Abiertas 2026</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-[1.05] tracking-tight" id="heroInstituteName">Instituto</h1>
+            <p class="text-2xl md:text-3xl text-white/90 font-semibold mb-6" id="heroLema">Excelencia académica</p>
+            <p class="text-white/60 text-lg mb-10 max-w-xl leading-relaxed">Formación de calidad con credenciales digitales verificables. Tu futuro comienza aquí.</p>
             <div class="flex flex-wrap gap-4">
-                <a href="#cursos" class="btn-primary text-lg px-10 py-4"><i data-lucide="book-open" class="w-5 h-5"></i> Ver Oferta Académica</a>
-                <a href="#nosotros" class="btn-secondary text-lg px-10 py-4 bg-white/10 border-white/30 text-white hover:bg-white/20"><i data-lucide="info" class="w-5 h-5"></i> Conócenos</a>
+                <a href="#cursos" class="btn-primary text-lg px-12 py-5"><i data-lucide="book-open" class="w-5 h-5"></i> Explorar Cursos</a>
+                <a href="#creadores" class="btn-outline-light text-lg px-12 py-5"><i data-lucide="video" class="w-5 h-5"></i> Enseña con Nosotros</a>
             </div>
         </div>
     </section>
 
-    <!-- ACCESOS RÁPIDOS (Franja Premium) -->
-    <section class="accesos-section px-6 py-16">
+    <!-- ACCESOS RÁPIDOS (BENTO GRID) -->
+    <section class="accesos-section px-6 py-24">
         <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-black text-white text-center mb-4">Portal del Alumno</h2>
-            <p class="text-white/60 text-center mb-12">Servicios estudiantiles digitales</p>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <a href="login.html" class="accesos-card"><div class="accesos-icon" style="background:rgba(124,58,237,0.3);color:#c4b5fd;"><i data-lucide="wallet" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Billetera</h3></a>
-                <a href="campus.html" class="accesos-card"><div class="accesos-icon" style="background:rgba(59,130,246,0.3);color:#93c5fd;"><i data-lucide="graduation-cap" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Campus</h3></a>
-                <a href="validador.html" class="accesos-card"><div class="accesos-icon" style="background:rgba(16,185,129,0.3);color:#6ee7b7;"><i data-lucide="shield-check" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Validador</h3></a>
-                <a href="biblioteca.html" class="accesos-card"><div class="accesos-icon" style="background:rgba(245,158,11,0.3);color:#fcd34d;"><i data-lucide="library" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Biblioteca</h3></a>
-                <a href="calendario.html" class="accesos-card"><div class="accesos-icon" style="background:rgba(236,72,153,0.3);color:#f9a8d4;"><i data-lucide="calendar" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Calendario</h3></a>
+            <h2 class="text-4xl font-black text-gray-900 text-center mb-4 tracking-tight">Portal del Alumno</h2>
+            <p class="text-gray-500 text-center mb-16 text-lg">Todo lo que necesitas, en un solo lugar</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <a href="login.html" class="bento-card md:col-span-2">
+                    <div class="bento-icon" style="background: var(--color-primary)15;"><i data-lucide="wallet" class="w-7 h-7" style="color: var(--color-primary);"></i></div>
+                    <h3 class="font-bold text-xl mb-2">Billetera Digital</h3>
+                    <p class="text-gray-500 text-sm">Credenciales y certificados verificables</p>
+                </a>
+                <a href="campus.html" class="bento-card">
+                    <div class="bento-icon" style="background: #dbeafe;"><i data-lucide="graduation-cap" class="w-7 h-7" style="color: #2563eb;"></i></div>
+                    <h3 class="font-bold text-lg mb-2">Campus</h3>
+                    <p class="text-gray-500 text-sm">Aulas virtuales</p>
+                </a>
+                <a href="validador.html" class="bento-card">
+                    <div class="bento-icon" style="background: #d1fae5;"><i data-lucide="shield-check" class="w-7 h-7" style="color: #059669;"></i></div>
+                    <h3 class="font-bold text-lg mb-2">Validador</h3>
+                    <p class="text-gray-500 text-sm">Verificar QR</p>
+                </a>
+                <a href="biblioteca.html" class="bento-card">
+                    <div class="bento-icon" style="background: #fef3c7;"><i data-lucide="library" class="w-7 h-7" style="color: #d97706;"></i></div>
+                    <h3 class="font-bold text-lg mb-2">Biblioteca</h3>
+                    <p class="text-gray-500 text-sm">Recursos digitales</p>
+                </a>
+                <a href="calendario.html" class="bento-card md:col-span-3">
+                    <div class="bento-icon" style="background: #fce7f3;"><i data-lucide="calendar" class="w-7 h-7" style="color: #db2777;"></i></div>
+                    <h3 class="font-bold text-xl mb-2">Calendario Académico</h3>
+                    <p class="text-gray-500 text-sm">Fechas de exámenes, inscripciones y eventos importantes</p>
+                </a>
             </div>
         </div>
     </section>
 
     <!-- OFERTA ACADÉMICA -->
-    <section id="cursos" class="px-6 py-20 max-w-6xl mx-auto">
-        <h2 class="section-title">Oferta Académica</h2>
-        <p class="section-subtitle">Explora nuestros programas de estudio</p>
+    <section id="cursos" class="px-6 py-24 max-w-6xl mx-auto">
+        <h2 class="text-4xl font-black text-gray-900 mb-4 tracking-tight">Oferta Académica</h2>
+        <p class="text-gray-500 mb-16 text-lg">Programas diseñados para tu desarrollo profesional</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="cursosGrid">
             <div class="text-center py-12 col-span-full"><div class="spinner mx-auto"></div></div>
         </div>
     </section>
 
+    <!-- [NUEVO] CREATOR STUDIO -->
+    <section id="creadores" class="creator-section px-6 py-24 relative overflow-hidden">
+        <div class="creator-glow"></div>
+        <div class="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <span class="inline-block bg-white/10 backdrop-blur-lg rounded-full px-5 py-2 text-white/80 text-sm font-medium mb-6 border border-white/20">🎬 Creator Studio</span>
+                <h2 class="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">Enseña con Nosotros</h2>
+                <p class="text-white/60 text-lg mb-8 leading-relaxed">¿Eres experto en tu campo? Publica tus cursos en nuestra plataforma y genera ingresos pasivos. Te damos las herramientas, tú pones el conocimiento.</p>
+                <button class="btn-primary text-lg px-10 py-4" onclick="abrirModalCreador()"><i data-lucide="rocket" class="w-5 h-5"></i> Postular mi Curso</button>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
+                    <i data-lucide="dollar-sign" class="w-8 h-8 text-green-400 mb-4"></i>
+                    <p class="font-bold text-white text-lg mb-1">+$50K</p>
+                    <p class="text-white/50 text-sm">Pagado a creadores</p>
+                </div>
+                <div class="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
+                    <i data-lucide="users" class="w-8 h-8 text-blue-400 mb-4"></i>
+                    <p class="font-bold text-white text-lg mb-1">+500</p>
+                    <p class="text-white/50 text-sm">Creadores activos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- [NUEVO] PROGRAMA DE AFILIADOS -->
+    <section id="afiliados" class="affiliate-section px-6 py-16">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center gap-3 mb-6">
+                <i data-lucide="link-2" class="w-8 h-8" style="color: var(--color-primary);"></i>
+                <h2 class="text-3xl font-black text-gray-900">Programa de Afiliados</h2>
+            </div>
+            <p class="text-gray-500 text-lg mb-4">Gana comisiones recomendando nuestros cursos</p>
+            <p class="text-gray-400 mb-8">Obtén tu código de afiliado en tu Billetera Digital y empieza a generar ingresos compartiendo enlaces.</p>
+            <a href="login.html" class="btn-primary px-8 py-3"><i data-lucide="wallet" class="w-4 h-4"></i> Obtener mi Código</a>
+        </div>
+    </section>
+
     <!-- NOTICIAS -->
-    <section id="noticias" class="px-6 py-20 max-w-6xl mx-auto bg-gray-50 rounded-3xl">
-        <h2 class="section-title">Cartelera y Noticias</h2>
-        <p class="section-subtitle">Novedades institucionales</p>
+    <section id="noticias" class="px-6 py-24 max-w-6xl mx-auto">
+        <h2 class="text-4xl font-black text-gray-900 mb-4 tracking-tight">Cartelera y Noticias</h2>
+        <p class="text-gray-500 mb-16 text-lg">Novedades institucionales</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="noticiasGrid">
             <div class="text-center py-12 col-span-full"><div class="spinner mx-auto"></div></div>
         </div>
     </section>
 
     <!-- NOSOTROS -->
-    <section id="nosotros" class="px-6 py-20 max-w-4xl mx-auto">
-        <h2 class="section-title">Quiénes Somos</h2>
-        <p class="text-gray-600 leading-relaxed mb-8" id="historiaText">Cargando...</p>
-        <h3 class="text-xl font-bold text-gray-900 mb-4">Nuestra Historia</h3>
-        <p class="text-gray-600 leading-relaxed mb-12" id="quienesText">Cargando...</p>
+    <section id="nosotros" class="px-6 py-24 max-w-4xl mx-auto">
+        <h2 class="text-4xl font-black text-gray-900 mb-8 tracking-tight">Quiénes Somos</h2>
+        <p class="text-gray-600 leading-relaxed mb-10 text-lg" id="historiaText">Cargando...</p>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Nuestra Historia</h3>
+        <p class="text-gray-600 leading-relaxed mb-14 text-lg" id="quienesText">Cargando...</p>
         
-        <h3 class="text-xl font-bold text-gray-900 mb-6">Redes Sociales</h3>
+        <h3 class="text-2xl font-bold text-gray-900 mb-6">Redes Sociales</h3>
         <div class="flex gap-4" id="redesContainer"></div>
     </section>
 
-    <!-- FOOTER PREMIUM -->
-    <footer class="footer-premium py-12 text-center">
-        <p class="text-lg font-bold text-white mb-2">Powered by <span style="color: var(--color-primary-light);">ASARI</span></p>
-        <p class="text-sm mb-4">Plataforma Educativa Multi-Tenant</p>
-        <a href="admin-login.html" class="text-xs text-gray-500 hover:text-white transition">Acceso Administrativo</a>
+    <!-- FOOTER PREMIUM LEGAL -->
+    <footer class="footer-premium py-16">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="text-2xl font-black text-white mb-2">Powered by <span style="color: var(--color-primary-light);">ASARI</span></p>
+            <p class="text-sm mb-8 text-gray-400">Plataforma Educativa Multi-Tenant</p>
+            
+            <div class="flex flex-wrap justify-center gap-8 mb-8">
+                <a href="#" class="legal-link">Términos y Condiciones</a>
+                <a href="#" class="legal-link">Políticas de Privacidad (Protección de Datos)</a>
+                <a href="#" class="legal-link">Políticas de Propiedad Intelectual</a>
+            </div>
+            
+            <a href="admin-login.html" class="text-xs text-gray-600 hover:text-gray-300 transition">Acceso Administrativo</a>
+        </div>
     </footer>
 
     <!-- MODAL INSCRIPCIÓN -->
@@ -213,6 +301,30 @@
                     <p class="text-sm text-blue-700">Serás redirigido a la pasarela de pago de MercadoPago</p>
                 </div>
                 <button type="submit" class="btn-primary w-full justify-center" id="btnEnviarLead"><i data-lucide="send" class="w-4 h-4"></i> Enviar Inscripción</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- [NUEVO] MODAL CREADOR -->
+    <div class="modal-overlay hidden" id="modalCreador">
+        <div class="modal-card">
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-900">Postular mi Curso</h3>
+                <button onclick="cerrarModalCreador()" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="creadorForm" class="p-6 space-y-5">
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Nombre Completo *</label><input type="text" id="creadorNombre" class="input-dios" required></div>
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Email *</label><input type="email" id="creadorEmail" class="input-dios" required></div>
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Especialidad *</label><input type="text" id="creadorEspecialidad" class="input-dios" placeholder="Ej: Inteligencia Artificial, Marketing, Derecho" required></div>
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Link a tu Perfil / CV *</label><input type="url" id="creadorLink" class="input-dios" placeholder="https://linkedin.com/in/tuperfil" required></div>
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Temática del Curso *</label><textarea id="creadorTematica" class="input-dios" rows="3" placeholder="Describe brevemente el contenido del curso..." required></textarea></div>
+                
+                <label class="legal-checkbox">
+                    <input type="checkbox" id="creadorLegal" required>
+                    <span class="text-sm text-gray-600 leading-relaxed">Acepto los <strong>Términos de Contratista Independiente</strong> (Locación de Servicios - Sin relación de dependencia) y las <strong>Políticas de Copyright</strong>. Entiendo que mi participación es como prestador independiente.</span>
+                </label>
+                
+                <button type="submit" class="btn-primary w-full justify-center" id="btnEnviarCreador"><i data-lucide="send" class="w-4 h-4"></i> Enviar Postulación</button>
             </form>
         </div>
     </div>
@@ -271,7 +383,7 @@
                     document.getElementById('navLogoPlaceholder').style.display = 'none';
                 }
                 
-                // Inyección dinámica de colores de la franquicia
+                // Inyección dinámica de colores
                 if (configuracion?.branding?.colores?.primario) {
                     const c = configuracion.branding.colores.primario;
                     document.documentElement.style.setProperty('--color-primary', c);
@@ -279,21 +391,28 @@
                     const dynamicStyle = document.createElement('style');
                     dynamicStyle.innerHTML = `
                         .btn-primary { background: ${c} !important; }
-                        .btn-primary:hover { background: ${c}dd !important; box-shadow: 0 8px 25px ${c}40 !important; }
-                        .input-dios:focus { border-color: ${c} !important; box-shadow: 0 0 0 3px ${c}20 !important; }
-                        .curso-card:hover, .noticia-card:hover, .quick-card:hover, .accesos-card:hover, .file-drop-zone:hover { border-color: ${c} !important; }
-                        .section-title { color: ${c} !important; }
-                        .quick-icon { color: ${c} !important; background: ${c}15 !important; }
-                        .hero-overlay { background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, ${c}dd 50%, rgba(15,23,42,0.8) 100%) !important; }
+                        .btn-primary:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.2), 0 0 50px ${c}50 !important; }
+                        .input-dios:focus { border-color: ${c} !important; box-shadow: 0 0 0 4px ${c}15 !important; }
+                        .curso-card:hover, .noticia-card:hover, .bento-card:hover, .file-drop-zone:hover { border-color: ${c} !important; }
+                        .bento-card::before { background: ${c} !important; }
+                        .hero-glow { background: radial-gradient(ellipse, ${c}30 0%, transparent 70%) !important; }
+                        .curso-badge { background: ${c}15 !important; color: ${c} !important; }
+                        .creator-section { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, ${c} 100%) !important; }
                     `;
                     document.head.appendChild(dynamicStyle);
+                    
+                    // Hero background con color dinámico
+                    const heroBg = document.getElementById('heroBackground');
+                    heroBg.style.backgroundImage = `linear-gradient(135deg, ${c}40 0%, #0f172a 100%), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')`;
+                } else {
+                    const heroBg = document.getElementById('heroBackground');
+                    heroBg.style.backgroundImage = `url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')`;
                 }
                 
                 cargarRedes(configuracion?.redes_sociales || {});
                 cargarCursos();
                 cargarNoticias();
                 
-                // Actualizar links
                 document.querySelectorAll('a[href="login.html"]').forEach(a => a.href = buildUrl('login.html'));
                 document.querySelectorAll('a[href="campus.html"]').forEach(a => a.href = buildUrl('campus.html'));
                 document.querySelectorAll('a[href="validador.html"]').forEach(a => a.href = buildUrl('validador.html'));
@@ -308,10 +427,10 @@
             const container = document.getElementById('redesContainer');
             const redesHTML = [];
             
-            if (redes.whatsapp) redesHTML.push(`<a href="${redes.whatsapp}" target="_blank" class="quick-card flex-1"><i data-lucide="message-circle" class="w-6 h-6" style="color:#10b981;"></i><span class="text-xs text-gray-700">WhatsApp</span></a>`);
-            if (redes.instagram) redesHTML.push(`<a href="${redes.instagram}" target="_blank" class="quick-card flex-1"><i data-lucide="instagram" class="w-6 h-6" style="color:#ec4899;"></i><span class="text-xs text-gray-700">Instagram</span></a>`);
-            if (redes.facebook) redesHTML.push(`<a href="${redes.facebook}" target="_blank" class="quick-card flex-1"><i data-lucide="facebook" class="w-6 h-6" style="color:#3b82f6;"></i><span class="text-xs text-gray-700">Facebook</span></a>`);
-            if (redes.linkedin) redesHTML.push(`<a href="${redes.linkedin}" target="_blank" class="quick-card flex-1"><i data-lucide="linkedin" class="w-6 h-6" style="color:#0ea5e9;"></i><span class="text-xs text-gray-700">LinkedIn</span></a>`);
+            if (redes.whatsapp) redesHTML.push(`<a href="${redes.whatsapp}" target="_blank" class="bento-card flex-1 text-center"><i data-lucide="message-circle" class="w-7 h-7 mb-2" style="color:#10b981;"></i><span class="text-sm font-semibold">WhatsApp</span></a>`);
+            if (redes.instagram) redesHTML.push(`<a href="${redes.instagram}" target="_blank" class="bento-card flex-1 text-center"><i data-lucide="instagram" class="w-7 h-7 mb-2" style="color:#ec4899;"></i><span class="text-sm font-semibold">Instagram</span></a>`);
+            if (redes.facebook) redesHTML.push(`<a href="${redes.facebook}" target="_blank" class="bento-card flex-1 text-center"><i data-lucide="facebook" class="w-7 h-7 mb-2" style="color:#3b82f6;"></i><span class="text-sm font-semibold">Facebook</span></a>`);
+            if (redes.linkedin) redesHTML.push(`<a href="${redes.linkedin}" target="_blank" class="bento-card flex-1 text-center"><i data-lucide="linkedin" class="w-7 h-7 mb-2" style="color:#0ea5e9;"></i><span class="text-sm font-semibold">LinkedIn</span></a>`);
             
             container.innerHTML = redesHTML.length > 0 ? redesHTML.join('') : '<p class="text-gray-500 text-sm">Sin redes sociales configuradas</p>';
             lucide.createIcons();
@@ -331,8 +450,8 @@
             
             grid.innerHTML = cursosData.map(c => `
                 <div class="curso-card">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">${c.titulo}</h3>
-                    <p class="text-sm text-gray-500 mb-4">${c.tipo_curso || 'Curso'}</p>
+                    <span class="curso-badge mb-4">${c.tipo_curso || 'Curso'}</span>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">${c.titulo}</h3>
                     <p class="font-mono text-3xl font-black mb-6" style="color: var(--color-primary);">$${(c.precio_declarado_usd || 0).toFixed(2)} USD</p>
                     <button class="btn-primary w-full justify-center" onclick="abrirModalInscripcion('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')">
                         <i data-lucide="clipboard-list" class="w-4 h-4"></i> Quiero Inscribirme
@@ -356,7 +475,7 @@
             
             grid.innerHTML = noticias.map(n => `
                 <div class="noticia-card">
-                    ${n.imagen_url ? `<img src="${n.imagen_url}" alt="${n.titulo}">` : '<div class="h-48 bg-gray-100 flex items-center justify-center"><i data-lucide="newspaper" class="w-10 h-10 text-gray-300"></i></div>'}
+                    ${n.imagen_url ? `<img src="${n.imagen_url}" alt="${n.titulo}">` : '<div class="h-52 bg-gray-100 flex items-center justify-center"><i data-lucide="newspaper" class="w-12 h-12 text-gray-300"></i></div>'}
                     <div class="p-6">
                         <span class="text-xs font-bold uppercase" style="color: var(--color-primary);">${n.tipo}</span>
                         <h3 class="font-bold text-gray-900 mt-2 mb-3 text-lg">${n.titulo}</h3>
@@ -396,6 +515,65 @@
                 document.getElementById('comprobanteFileName').textContent = input.files[0].name;
             }
         }
+        
+        // 🆕 NUEVO: Modal Creador
+        function abrirModalCreador() {
+            document.getElementById('modalCreador').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        
+        function cerrarModalCreador() {
+            document.getElementById('modalCreador').classList.add('hidden');
+            document.getElementById('creadorForm').reset();
+        }
+        
+        document.getElementById('creadorForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('creadorNombre').value.trim();
+            const email = document.getElementById('creadorEmail').value.trim();
+            const especialidad = document.getElementById('creadorEspecialidad').value.trim();
+            const link = document.getElementById('creadorLink').value.trim();
+            const tematica = document.getElementById('creadorTematica').value.trim();
+            const legal = document.getElementById('creadorLegal').checked;
+            
+            if (!nombre || !email || !especialidad || !link || !tematica) {
+                showToast('Completa todos los campos', 'error');
+                return;
+            }
+            
+            if (!legal) {
+                showToast('Debes aceptar los términos legales', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('btnEnviarCreador');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-4 h-4"></div> Enviando...';
+            
+            try {
+                const { error } = await window.supabase.from('crm_creadores').insert([{
+                    instituto_id: tenantConfig.instituto.id,
+                    nombre_completo: nombre,
+                    email: email,
+                    especialidad: especialidad,
+                    link_perfil: link,
+                    tematica_curso: tematica,
+                    estado: 'pendiente'
+                }]);
+                
+                if (error) throw error;
+                
+                cerrarModalCreador();
+                showToast('Postulación enviada. Te contactaremos pronto.', 'success');
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Enviar Postulación';
+                lucide.createIcons();
+            }
+        });
         
         document.getElementById('inscripcionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -461,6 +639,10 @@
         
         document.getElementById('inscripcionModal').addEventListener('click', function(e) {
             if (e.target === this) cerrarModalInscripcion();
+        });
+        
+        document.getElementById('modalCreador').addEventListener('click', function(e) {
+            if (e.target === this) cerrarModalCreador();
         });
         
         window.addEventListener('DOMContentLoaded', inicializar);
