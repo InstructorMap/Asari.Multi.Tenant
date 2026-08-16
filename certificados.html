@@ -114,6 +114,18 @@
         
         .alert-roja { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 12px; }
         
+        /* 🆕 NUEVO: TABS DE EMISIÓN */
+        .tab-emision-item { padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; white-space: nowrap; }
+        .tab-emision-item:hover { color: rgba(255,255,255,0.8); }
+        .tab-emision-item.active { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(124,58,237,0.1); }
+        .tab-emision-content { display: none; }
+        .tab-emision-content.active { display: block; }
+        
+        /* 🆕 NUEVO: PANEL RESUMEN CSV */
+        .resumen-batch { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 14px; padding: 20px; margin-top: 16px; }
+        .resumen-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .resumen-row:last-child { border-bottom: none; }
+        
         .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: toastIn 0.3s ease-out; max-width: 400px; }
         .toast.success { background: #059669; color: white; }
         .toast.error { background: #dc2626; color: white; }
@@ -123,6 +135,15 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         
         .empty-state { text-align: center; padding: 48px 24px; color: #64748b; }
+        
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.hidden { display: none; }
+        .modal-card { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 100%; max-width: 440px; box-shadow: 0 25px 60px rgba(0,0,0,0.5); animation: modalIn 0.25s ease-out; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
+        .modal-title { font-size: 18px; font-weight: 700; color: white; }
+        .modal-body { padding: 24px; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; gap: 10px; justify-content: flex-end; }
         
         @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } .btn-hamburger { display: flex; } }
         @media (max-width: 640px) { .content-area { padding: 16px; } .topbar { padding: 12px 16px; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -207,63 +228,124 @@
                     <p class="text-sm text-red-300">⚠️ Debes crear al menos un Curso con su precio de venta en el Campus Virtual antes de poder emitir certificados.</p>
                 </div>
                 
-                <div class="form-card">
-                    <h3 class="form-card-title"><span style="background:rgba(124,58,237,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="user" class="w-5 h-5" style="color:#a78bfa;"></i></span> Paso 1: Selección del Alumno</h3>
-                    <div class="form-group"><label class="form-label">Alumno *</label><select id="emisorAlumno" class="form-select"><option value="">Cargando alumnos...</option></select></div>
+                <!-- 🆕 NUEVO: TABS DE EMISIÓN -->
+                <div class="flex gap-2 border-b border-white/10 mb-6 overflow-x-auto pb-2">
+                    <div class="tab-emision-item active" onclick="switchTabEmision('individual', this)">📄 Emisión Individual</div>
+                    <div class="tab-emision-item" onclick="switchTabEmision('masiva', this)">🚀 Emisión Masiva (CSV)</div>
                 </div>
                 
-                <div class="form-card">
-                    <h3 class="form-card-title"><span style="background:rgba(59,130,246,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="book-open" class="w-5 h-5" style="color:#93c5fd;"></i></span> Paso 2: Curso (Revenue Share)</h3>
-                    <div class="form-group">
-                        <label class="form-label">Curso *</label>
-                        <select id="emisorCursoSelect" class="form-select" onchange="mostrarCalculoFee()"><option value="">Selecciona un curso...</option></select>
+                <!-- 🆕 TAB: EMISIÓN INDIVIDUAL -->
+                <div class="tab-emision-content active" id="tab-emision-individual">
+                    <div class="form-card">
+                        <h3 class="form-card-title"><span style="background:rgba(124,58,237,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="user" class="w-5 h-5" style="color:#a78bfa;"></i></span> Paso 1: Selección del Alumno</h3>
+                        <div class="form-group"><label class="form-label">Alumno *</label><select id="emisorAlumno" class="form-select"><option value="">Cargando alumnos...</option></select></div>
                     </div>
-                    <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 hidden" id="feePreview">
-                        <p class="text-sm text-red-300">Fee ASARI a retener: <strong class="font-mono" id="feePreviewMonto">$0.00 USD</strong></p>
-                        <p class="text-xs text-gray-500 mt-1">Nivel del instituto: <span id="feePreviewNivel">-</span></p>
+                    
+                    <div class="form-card">
+                        <h3 class="form-card-title"><span style="background:rgba(59,130,246,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="book-open" class="w-5 h-5" style="color:#93c5fd;"></i></span> Paso 2: Curso (Revenue Share)</h3>
+                        <div class="form-group">
+                            <label class="form-label">Curso *</label>
+                            <select id="emisorCursoSelect" class="form-select" onchange="mostrarCalculoFee()"><option value="">Selecciona un curso...</option></select>
+                        </div>
+                        <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 hidden" id="feePreview">
+                            <p class="text-sm text-red-300">Fee ASARI a retener: <strong class="font-mono" id="feePreviewMonto">$0.00 USD</strong></p>
+                            <p class="text-xs text-gray-500 mt-1">Nivel del instituto: <span id="feePreviewNivel">-</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-card">
+                        <h3 class="form-card-title"><span style="background:rgba(16,185,129,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="upload-cloud" class="w-5 h-5" style="color:#10b981;"></i></span> Paso 3: Carga de Archivos</h3>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label class="form-label">Diploma *</label>
+                                <div class="file-drop-zone" id="dropDiploma">
+                                    <input type="file" accept="image/*,.pdf" onchange="handleFileDrop(this, 'diploma')">
+                                    <i data-lucide="file-text" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
+                                    <p class="text-sm text-gray-400">Click para subir</p>
+                                    <img src="" class="preview-img" id="previewDiploma">
+                                    <p class="text-xs text-green-500 mt-1 hidden" id="fileNameDiploma"></p>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Analítico</label>
+                                <div class="file-drop-zone" id="dropAnalitico">
+                                    <input type="file" accept="image/*,.pdf" onchange="handleFileDrop(this, 'analitico')">
+                                    <i data-lucide="file-spreadsheet" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
+                                    <p class="text-sm text-gray-400">Opcional</p>
+                                    <img src="" class="preview-img" id="previewAnalitico">
+                                    <p class="text-xs text-green-500 mt-1 hidden" id="fileNameAnalitico"></p>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Extra</label>
+                                <div class="file-drop-zone" id="dropExtra">
+                                    <input type="file" accept="image/*,.pdf" onchange="handleFileDrop(this, 'extra')">
+                                    <i data-lucide="paperclip" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
+                                    <p class="text-sm text-gray-400">Opcional</p>
+                                    <img src="" class="preview-img" id="previewExtra">
+                                    <p class="text-xs text-green-500 mt-1 hidden" id="fileNameExtra"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end gap-3 mt-4">
+                        <button class="btn-secondary" onclick="navegarA('ledger')">Cancelar</button>
+                        <button class="btn-primary" onclick="emitirCertificado()" id="btnEmitir"><i data-lucide="shield-check" class="w-5 h-5"></i><span>Emitir Certificado</span></button>
                     </div>
                 </div>
                 
-                <div class="form-card">
-                    <h3 class="form-card-title"><span style="background:rgba(16,185,129,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="upload-cloud" class="w-5 h-5" style="color:#10b981;"></i></span> Paso 3: Carga de Archivos</h3>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <label class="form-label">Diploma *</label>
-                            <div class="file-drop-zone" id="dropDiploma">
-                                <input type="file" accept="image/*,.pdf" onchange="handleFileDrop(this, 'diploma')">
-                                <i data-lucide="file-text" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
-                                <p class="text-sm text-gray-400">Click para subir</p>
-                                <img src="" class="preview-img" id="previewDiploma">
-                                <p class="text-xs text-green-500 mt-1 hidden" id="fileNameDiploma"></p>
+                <!-- 🆕 NUEVO: TAB EMISIÓN MASIVA -->
+                <div class="tab-emision-content" id="tab-emision-masiva">
+                    <div class="form-card">
+                        <h3 class="form-card-title"><span style="background:rgba(245,158,11,0.15); width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i data-lucide="file-spreadsheet" class="w-5 h-5" style="color:#f59e0b;"></i></span> Emisión por Lotes (CSV)</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Curso a Certificar *</label>
+                            <select id="batchCursoSelect" class="form-select"><option value="">Selecciona un curso...</option></select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Archivo CSV (email, nombre_completo)</label>
+                            <div class="file-drop-zone" id="dropCSV">
+                                <input type="file" accept=".csv,.txt" id="fileCSV" onchange="handleCSVFile(this)">
+                                <i data-lucide="file-up" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
+                                <p class="text-sm text-gray-400" id="csvFileName">Click para subir CSV</p>
+                            </div>
+                            <p class="form-hint">Formato: email,nombre_completo (una línea por alumno)</p>
+                        </div>
+                        
+                        <!-- PANEL RESUMEN -->
+                        <div class="resumen-batch hidden" id="resumenBatch">
+                            <div class="resumen-row">
+                                <span class="text-sm text-gray-400">Total Alumnos:</span>
+                                <span class="font-mono font-bold text-white" id="batchTotalAlumnos">0</span>
+                            </div>
+                            <div class="resumen-row">
+                                <span class="text-sm text-gray-400">Fee por Certificado:</span>
+                                <span class="font-mono font-bold text-red-400" id="batchFeeUnitario">$0.00</span>
+                            </div>
+                            <div class="resumen-row">
+                                <span class="text-sm text-gray-400">Costo Total:</span>
+                                <span class="font-mono font-bold text-red-400" id="batchCostoTotal">$0.00 USD</span>
+                            </div>
+                            <div class="resumen-row">
+                                <span class="text-sm text-gray-400">Saldo Actual:</span>
+                                <span class="font-mono font-bold text-green-400" id="batchSaldoActual">$0.00 USD</span>
+                            </div>
+                            <div class="resumen-row" id="batchAdvertenciaRow" style="display:none;">
+                                <span class="text-xs text-red-400">⚠️ Saldo insuficiente para procesar este lote</span>
                             </div>
                         </div>
-                        <div>
-                            <label class="form-label">Analítico</label>
-                            <div class="file-drop-zone" id="dropAnalitico">
-                                <input type="file" accept="image/*,.pdf" onchange="handleFileDrop(this, 'analitico')">
-                                <i data-lucide="file-spreadsheet" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
-                                <p class="text-sm text-gray-400">Opcional</p>
-                                <img src="" class="preview-img" id="previewAnalitico">
-                                <p class="text-xs text-green-500 mt-1 hidden" id="fileNameAnalitico"></p>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="form-label">Extra</label>
-                            <div class="file-drop-zone" id="dropExtra">
-                                <input type="file" accept="image/*,.pdf" onchange="handleFileDrop(this, 'extra')">
-                                <i data-lucide="paperclip" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
-                                <p class="text-sm text-gray-400">Opcional</p>
-                                <img src="" class="preview-img" id="previewExtra">
-                                <p class="text-xs text-green-500 mt-1 hidden" id="fileNameExtra"></p>
-                            </div>
+                        
+                        <div class="flex justify-end mt-6">
+                            <button class="btn-primary" onclick="iniciarEmisionMasiva()" id="btnBatchEmitir" disabled>
+                                <i data-lucide="rocket" class="w-4 h-4"></i> 🚀 Iniciar Emisión Masiva
+                            </button>
                         </div>
                     </div>
                 </div>
                 
-                <div class="flex justify-end gap-3 mt-4">
-                    <button class="btn-secondary" onclick="navegarA('ledger')">Cancelar</button>
-                    <button class="btn-primary" onclick="emitirCertificado()" id="btnEmitir"><i data-lucide="shield-check" class="w-5 h-5"></i><span>Emitir Certificado</span></button>
-                </div>
             </section>
             
         </div>
@@ -307,6 +389,11 @@
         let saldoUSD = 0;
         let feeCalculadoActual = 0;
         
+        // 🆕 NUEVO: Variables para CSV
+        let csvAlumnos = [];
+        let csvFeeUnitario = 0;
+        let csvCostoTotal = 0;
+        
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const toast = document.getElementById('toast');
@@ -336,8 +423,17 @@
                 document.getElementById('viewSubtitle').textContent = 'Revenue Share';
                 cargarAlumnosSelect();
                 cargarCursosSelect();
+                cargarCursosBatchSelect();
             }
             lucide.createIcons();
+        }
+        
+        // 🆕 NUEVO: TABS DE EMISIÓN
+        function switchTabEmision(tab, el) {
+            document.querySelectorAll('.tab-emision-item').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.tab-emision-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`tab-emision-${tab}`).classList.add('active');
         }
         
         async function checkAuth() {
@@ -375,7 +471,6 @@
             }
         }
         
-        // ============ SALDO ============
         async function cargarSaldo() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
@@ -396,7 +491,6 @@
             lucide.createIcons();
         }
         
-        // ============ FEE ============
         function calcularFee(nivel, precio) {
             const porcentaje = nivel === 1 ? 0.30 : (nivel === 2 ? 0.25 : 0.20);
             let fee = precio * porcentaje;
@@ -432,7 +526,7 @@
             return `ASARI-TX-${hash}-${Date.now().toString(36).toUpperCase()}`;
         }
         
-        // ============ FILES ============
+        // ============ FILES INDIVIDUALES ============
         function handleFileDrop(input, tipo) {
             if (input.files && input.files[0]) {
                 archivosSeleccionados[tipo] = input.files[0];
@@ -507,7 +601,7 @@
             showToast('Certificado revocado');
         }
         
-        // ============ EMISOR ============
+        // ============ EMISOR INDIVIDUAL ============
         async function cargarAlumnosSelect() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
@@ -524,7 +618,6 @@
             const select = document.getElementById('emisorCursoSelect');
             select.innerHTML = '<option value="">Selecciona un curso...</option>' + cursosData.map(c => `<option value="${c.id}" data-titulo="${c.titulo}" data-precio="${c.precio_declarado_usd}">${c.titulo} — $${(c.precio_declarado_usd||0).toFixed(2)} USD</option>`).join('');
             
-            // CRÍTICO: Si no hay cursos, deshabilitar botón de emitir y mostrar alerta
             const alert = document.getElementById('alertSinCursos');
             const btnEmitir = document.getElementById('btnEmitir');
             
@@ -538,6 +631,12 @@
                 btnEmitir.classList.remove('opacity-40', 'cursor-not-allowed');
             }
             lucide.createIcons();
+        }
+        
+        // 🆕 NUEVO: Cargar cursos en select batch
+        async function cargarCursosBatchSelect() {
+            const select = document.getElementById('batchCursoSelect');
+            select.innerHTML = '<option value="">Selecciona un curso...</option>' + cursosData.map(c => `<option value="${c.id}" data-titulo="${c.titulo}" data-precio="${c.precio_declarado_usd}">${c.titulo} — $${(c.precio_declarado_usd||0).toFixed(2)} USD</option>`).join('');
         }
         
         async function emitirCertificado() {
@@ -628,6 +727,154 @@
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i data-lucide="shield-check" class="w-5 h-5"></i><span>Emitir Certificado</span>';
+                lucide.createIcons();
+            }
+        }
+        
+        // ============ 🆕 NUEVO: EMISIÓN MASIVA CSV ============
+        function handleCSVFile(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                document.getElementById('csvFileName').textContent = file.name;
+                document.getElementById('dropCSV').classList.add('has-file');
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    parsearCSV(e.target.result);
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        function parsearCSV(texto) {
+            const lineas = texto.split('\n').filter(l => l.trim() !== '');
+            csvAlumnos = [];
+            
+            for (let i = 0; i < lineas.length; i++) {
+                // Saltar header si existe
+                if (i === 0 && (lineas[i].toLowerCase().includes('email') || lineas[i].toLowerCase().includes('nombre'))) {
+                    continue;
+                }
+                
+                const partes = lineas[i].split(',');
+                if (partes.length >= 2) {
+                    const email = partes[0].trim();
+                    const nombre = partes.slice(1).join(',').trim().replace(/"/g, '');
+                    if (email) {
+                        csvAlumnos.push({ email, nombre_completo: nombre || email.split('@')[0] });
+                    }
+                }
+            }
+            
+            actualizarResumenBatch();
+        }
+        
+        async function actualizarResumenBatch() {
+            const cursoId = document.getElementById('batchCursoSelect').value;
+            const curso = cursosData.find(c => c.id === cursoId);
+            const resumen = document.getElementById('resumenBatch');
+            const btnBatch = document.getElementById('btnBatchEmitir');
+            const advertencia = document.getElementById('batchAdvertenciaRow');
+            
+            if (!curso || csvAlumnos.length === 0) {
+                resumen.classList.add('hidden');
+                btnBatch.disabled = true;
+                return;
+            }
+            
+            const nivel = tenantConfig?.instituto?.nivel || tenantConfig?.configuracion?.nivel_instituto || 1;
+            csvFeeUnitario = calcularFee(nivel, curso.precio_declarado_usd || 0);
+            csvCostoTotal = csvFeeUnitario * csvAlumnos.length;
+            
+            document.getElementById('batchTotalAlumnos').textContent = csvAlumnos.length;
+            document.getElementById('batchFeeUnitario').textContent = `$${csvFeeUnitario.toFixed(2)}`;
+            document.getElementById('batchCostoTotal').textContent = `$${csvCostoTotal.toFixed(2)} USD`;
+            document.getElementById('batchSaldoActual').textContent = `$${saldoUSD.toFixed(2)} USD`;
+            
+            resumen.classList.remove('hidden');
+            
+            if (saldoUSD < csvCostoTotal) {
+                btnBatch.disabled = true;
+                advertencia.style.display = 'flex';
+            } else {
+                btnBatch.disabled = false;
+                advertencia.style.display = 'none';
+            }
+        }
+        
+        document.getElementById('batchCursoSelect').addEventListener('change', actualizarResumenBatch);
+        
+        async function iniciarEmisionMasiva() {
+            const institutoId = tenantConfig?.instituto?.id;
+            if (!institutoId) return;
+            
+            const cursoId = document.getElementById('batchCursoSelect').value;
+            const curso = cursosData.find(c => c.id === cursoId);
+            
+            if (!curso) { showToast('Selecciona un curso', 'error'); return; }
+            if (csvAlumnos.length === 0) { showToast('Sube un CSV con alumnos', 'error'); return; }
+            if (saldoUSD < csvCostoTotal) {
+                showToast('Saldo insuficiente para este lote', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('btnBatchEmitir');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-5 h-5"></div> Emitiendo lote...';
+            
+            try {
+                // 1. Generar array de certificados
+                const batchCertificados = csvAlumnos.map(alumno => ({
+                    instituto_id: institutoId,
+                    alumno_email: alumno.email,
+                    alumno_nombre: alumno.nombre_completo,
+                    curso_id: cursoId,
+                    curso_titulo: curso.titulo,
+                    curso_tipo: curso.tipo_curso,
+                    txid: generarTXID(),
+                    archivos: {},
+                    estado: 'activo',
+                    fee_asari_retenido: csvFeeUnitario,
+                    precio_declarado_usd: curso.precio_declarado_usd
+                }));
+                
+                // 2. INSERT masivo
+                const { error: insertError } = await window.supabase.from('sys_certificados').insert(batchCertificados);
+                if (insertError) throw insertError;
+                
+                // 3. UPDATE billetera
+                const nuevoSaldo = saldoUSD - csvCostoTotal;
+                const { error: billeteraError } = await window.supabase.from('sys_billetera_institutos').update({ saldo_usd: nuevoSaldo }).eq('instituto_id', institutoId);
+                if (billeteraError) throw billeteraError;
+                
+                // 4. INSERT transacción
+                const { error: transError } = await window.supabase.from('sys_transacciones').insert([{
+                    instituto_id: institutoId,
+                    tipo_operacion: 'consumo_fee_certificado_lote',
+                    monto_usd: -csvCostoTotal,
+                    estado: 'completado',
+                    descripcion: `Emisión masiva: Lote ${csvAlumnos.length} diplomas curso ${curso.titulo}`
+                }]);
+                if (transError) throw transError;
+                
+                saldoUSD = nuevoSaldo;
+                await cargarSaldo();
+                
+                // Limpiar
+                csvAlumnos = [];
+                document.getElementById('fileCSV').value = '';
+                document.getElementById('csvFileName').textContent = 'Click para subir CSV';
+                document.getElementById('dropCSV').classList.remove('has-file');
+                document.getElementById('resumenBatch').classList.add('hidden');
+                document.getElementById('batchCursoSelect').value = '';
+                
+                showToast(`Lote de ${batchCertificados.length} certificados emitido exitosamente`, 'success');
+                navegarA('ledger');
+            } catch(e) {
+                showToast('Error: ' + e.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🚀 Iniciar Emisión Masiva';
                 lucide.createIcons();
             }
         }
