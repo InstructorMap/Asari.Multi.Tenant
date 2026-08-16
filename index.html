@@ -318,7 +318,18 @@
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Email *</label><input type="email" id="creadorEmail" class="input-dios" required></div>
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Teléfono *</label><input type="tel" id="creadorTelefono" class="input-dios" required></div>
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Especialidad *</label><input type="text" id="creadorEspecialidad" class="input-dios" placeholder="Ej: Inteligencia Artificial, Marketing, Derecho" required></div>
-                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Link a tu Perfil / CV *</label><input type="url" id="creadorLink" class="input-dios" placeholder="https://linkedin.com/in/tuperfil" required></div>
+                <div>
+                    <label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Perfil de LinkedIn (Opcional)</label>
+                    <input type="url" id="creadorLinkedin" class="input-dios" placeholder="https://linkedin.com/in/tuperfil">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Curriculum Vitae (PDF) *</label>
+                    <div class="file-drop-zone" id="dropCv">
+                        <input type="file" accept=".pdf" id="fileCv" onchange="handleCv(this)" required>
+                        <i data-lucide="file-text" class="w-6 h-6 text-gray-400 mx-auto mb-1"></i>
+                        <p class="text-xs text-gray-500" id="cvFileName">Click para subir tu CV en formato PDF</p>
+                    </div>
+                </div>
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Temática del Curso *</label><textarea id="creadorTematica" class="input-dios" rows="3" placeholder="Describe brevemente el contenido del curso..." required></textarea></div>
                 
                 <label class="legal-checkbox">
@@ -359,6 +370,7 @@
         let tenantConfig = null;
         let cursosData = [];
         let comprobanteFile = null;
+        let cvFile = null;
         
         function showToast(msg, type = 'success') {
             const t = document.getElementById('toastMsg');
@@ -380,6 +392,14 @@
             return `${path}?instituto=${encodeURIComponent(slug)}`;
         }
         
+        function handleCv(input) {
+            if (input.files && input.files[0]) {
+                cvFile = input.files[0];
+                document.getElementById('dropCv').classList.add('has-file');
+                document.getElementById('cvFileName').textContent = input.files[0].name;
+            }
+        }
+        
         // ✅ NUEVO: Función genérica para enviar leads de negocio
         async function enviarLeadNegocio(event, origen_lead) {
             event.preventDefault();
@@ -390,6 +410,7 @@
                 nombre = document.getElementById('creadorNombre').value.trim();
                 email = document.getElementById('creadorEmail').value.trim();
                 telefono = document.getElementById('creadorTelefono').value.trim();
+                const linkedin = document.getElementById('creadorLinkedin').value.trim();
             } else if (origen_lead === 'afiliado') {
                 nombre = document.getElementById('afiliadoNombre').value.trim();
                 email = document.getElementById('afiliadoEmail').value.trim();
@@ -407,14 +428,28 @@
             btn.innerHTML = '<div class="spinner w-4 h-4"></div> Enviando...';
             
             try {
-                const { error } = await window.supabase.from('crm_leads').insert([{
+                let cvUrl = null;
+                if (origen_lead === 'creador' && cvFile) {
+                    const ext = cvFile.name.split('.').pop();
+                    const path = `cvs/${tenantConfig.instituto.id}/${Date.now()}_${Math.random().toString(36).substring(2,8)}.${ext}`;
+                    const { error: uploadError } = await window.supabase.storage.from(STORAGE_BUCKET).upload(path, cvFile, { cacheControl: '3600', contentType: cvFile.type });
+                    if (uploadError) throw uploadError;
+                    const { data } = window.supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+                    cvUrl = data.publicUrl;
+                }
+                
+                const leadData = {
                     instituto_id: tenantConfig.instituto.id,
                     nombre_completo: nombre,
                     email: email,
                     telefono: telefono,
                     origen: origen_lead,
-                    estado: 'nuevo'
-                }]);
+                    estado: 'nuevo',
+                    perfil_social: origen_lead === 'creador' ? linkedin : null,
+                    cv_url: cvUrl
+                };
+                
+                const { error } = await window.supabase.from('crm_leads').insert([leadData]);
                 
                 if (error) throw error;
                 
@@ -601,6 +636,9 @@
         function cerrarModalCreador() {
             document.getElementById('modalCreador').classList.add('hidden');
             document.getElementById('creadorForm').reset();
+            cvFile = null;
+            document.getElementById('dropCv').classList.remove('has-file');
+            document.getElementById('cvFileName').textContent = 'Click para subir tu CV en formato PDF';
         }
         
         function abrirModalAfiliado() {
