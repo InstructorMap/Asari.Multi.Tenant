@@ -199,26 +199,20 @@
         
         function showToast(msg, type = 'success') {
             const t = document.getElementById('toastMsg');
-            document.getElementById('toastText').textContent = msg;
+            t.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-triangle'}" class="w-5 h-5"></i><span style="margin-left:8px;">${msg}</span>`;
             t.className = `toast show ${type}`;
-            const icon = t.querySelector('i');
-            icon.setAttribute('data-lucide', type === 'success' ? 'check-circle' : 'alert-triangle');
             lucide.createIcons();
             clearTimeout(window._tt);
-            window._tt = setTimeout(() => { t.classList.remove('show'); }, 4000);
+            window._tt = setTimeout(() => { t.classList.remove('show'); t.innerHTML = ''; }, 4000);
         }
         
         // ✅ CORRECCIÓN: Renombrada de getTenantSlug() a obtenerSlugLocal()
-        // Evita colisión con la función global window.getTenantSlug que causaba infinite loop
         function obtenerSlugLocal() {
-            // Si existe la función global, la usamos directamente
             if (typeof window.getTenantSlug === 'function') return window.getTenantSlug();
-            // Fallback: leer de URL o localStorage
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('instituto') || localStorage.getItem('asari_tenant_slug') || 'default';
         }
         
-        // ✅ CORRECCIÓN: buildUrl ahora llama a obtenerSlugLocal()
         function buildUrl(path) {
             const slug = obtenerSlugLocal();
             return `${path}?instituto=${encodeURIComponent(slug)}`;
@@ -244,6 +238,22 @@
                 if (configuracion?.branding?.logo_principal) {
                     document.getElementById('navLogoImg').src = configuracion.branding.logo_principal;
                     document.getElementById('navLogoPlaceholder').style.display = 'none';
+                }
+                
+                // ✅ NUEVO: Inyección dinámica de colores de la franquicia
+                if (configuracion?.branding?.colores?.primario) {
+                    const c = configuracion.branding.colores.primario;
+                    document.documentElement.style.setProperty('--color-primary', c);
+                    
+                    const dynamicStyle = document.createElement('style');
+                    dynamicStyle.innerHTML = `
+                        .btn-primary { background: linear-gradient(135deg, ${c}, ${c}dd) !important; border-color: ${c} !important; }
+                        .btn-primary:hover { box-shadow: 0 0 20px ${c}60 !important; }
+                        .input-dios:focus { border-color: ${c} !important; }
+                        .curso-card:hover, .noticia-card:hover, .quick-card:hover, .file-drop-zone:hover { border-color: ${c} !important; }
+                        .text-purple-400 { color: ${c} !important; }
+                    `;
+                    document.head.appendChild(dynamicStyle);
                 }
                 
                 cargarRedes(configuracion?.redes_sociales || {});
