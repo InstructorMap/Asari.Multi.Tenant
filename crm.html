@@ -69,74 +69,56 @@
         .kpi-value { font-size: 24px; font-weight: 800; color: white; line-height: 1; }
         .kpi-label { font-size: 12px; color: #94a3b8; margin-top: 4px; }
         
-        .tab-nav-item { padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; white-space: nowrap; }
-        .tab-nav-item:hover { color: rgba(255,255,255,0.8); }
-        .tab-nav-item.active { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(124,58,237,0.1); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        
-        .table-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
-        .table-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-        .table-title { font-size: 16px; font-weight: 700; color: white; }
-        .search-input { padding: 8px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-size: 13px; color: white; outline: none; width: 240px; }
-        .search-input:focus { border-color: rgba(139,92,246,0.5); }
-        .search-input::placeholder { color: #475569; }
-        .table-wrapper { overflow-x: auto; }
-        
-        table { width: 100%; border-collapse: collapse; }
-        thead th { text-align: left; padding: 12px 24px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.05); white-space: nowrap; }
-        tbody td { padding: 14px 24px; font-size: 14px; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); }
-        tbody tr:hover { background: rgba(255,255,255,0.02); }
-        
-        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        .status-badge.activo { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
-        .status-badge.suspendido { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
-        .status-dot { width: 6px; height: 6px; border-radius: 50%; }
-        .status-dot.green { background: #10b981; }
-        .status-dot.red { background: #ef4444; }
-        
-        .btn-icon-sm { width: 34px; height: 34px; border-radius: 8px; background: none; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.15s ease; }
-        .btn-icon-sm:hover { background: rgba(255,255,255,0.05); color: white; }
-        .btn-icon-sm.danger:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+        /* TABS WORKSPACE */
+        .workspace-tabs { display: flex; gap: 12px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
+        .workspace-tab { flex: 1; min-width: 180px; padding: 16px 20px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: all 0.25s ease; position: relative; }
+        .workspace-tab:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+        .workspace-tab.active { background: rgba(124,58,237,0.08); border-color: rgba(139,92,246,0.3); box-shadow: 0 0 20px rgba(139,92,246,0.1); }
+        .workspace-tab-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px; }
+        .workspace-tab-title { font-size: 15px; font-weight: 700; color: white; }
+        .workspace-tab-count { font-size: 11px; color: #94a3b8; margin-top: 4px; }
         
         /* KANBAN */
         .kanban-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .kanban-grid.two-cols { grid-template-columns: repeat(2, 1fr); }
         .kanban-column { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; min-height: 300px; }
         .kanban-column-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .kanban-column-title { font-size: 14px; font-weight: 700; color: white; display: flex; align-items: center; gap: 8px; }
         .kanban-count { background: rgba(255,255,255,0.08); padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
         
-        .lead-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all 0.2s ease; }
-        .lead-card:hover { border-color: rgba(139,92,246,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .lead-name { font-weight: 700; color: white; font-size: 14px; margin-bottom: 2px; }
-        .lead-email { font-size: 12px; color: #94a3b8; margin-bottom: 6px; word-break: break-all; }
-        .lead-curso { font-size: 11px; color: #a78bfa; margin-bottom: 8px; }
+        /* LEAD CARDS */
+        .lead-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all 0.2s ease; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+        .lead-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.1); transform: translateY(-2px); border-color: rgba(139,92,246,0.3); }
+        .lead-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .lead-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: white; flex-shrink: 0; }
+        .lead-name { font-weight: 700; color: #1e293b; font-size: 14px; }
+        .lead-email { font-size: 12px; color: #94a3b8; word-break: break-all; }
+        .lead-meta { display: flex; gap: 12px; font-size: 11px; color: #64748b; margin-top: 4px; }
+        .lead-tags { display: flex; gap: 6px; margin-top: 8px; }
+        .lead-tag { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+        .lead-tag.pdf { background: rgba(239,68,68,0.1); color: #ef4444; }
+        .lead-tag.payment { background: rgba(59,130,246,0.1); color: #3b82f6; }
+        .lead-tag.social { background: rgba(16,185,129,0.1); color: #10b981; }
         
-        .btn-matricular { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-matricular:hover { background: rgba(16,185,129,0.25); }
+        /* OFFCANVAS */
+        .offcanvas-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 60; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .offcanvas-overlay.active { opacity: 1; pointer-events: auto; }
+        .offcanvas { position: fixed; top: 0; right: 0; bottom: 0; width: 420px; max-width: 100%; background: #0f0f1a; border-left: 1px solid rgba(255,255,255,0.1); z-index: 70; transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; }
+        .offcanvas.active { transform: translateX(0); }
+        .offcanvas-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
+        .offcanvas-title { font-size: 18px; font-weight: 700; color: white; }
+        .offcanvas-close { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #94a3b8; }
+        .offcanvas-close:hover { background: rgba(255,255,255,0.1); color: white; }
+        .offcanvas-body { flex: 1; padding: 24px; overflow-y: auto; }
+        .offcanvas-footer { padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; gap: 10px; }
+        .offcanvas-info-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .offcanvas-info-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        .offcanvas-info-value { font-size: 14px; color: #e2e8f0; font-weight: 500; }
         
-        .btn-comprobante { background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
-        .btn-comprobante:hover { background: rgba(59,130,246,0.25); }
-        
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .modal-overlay.hidden { display: none; }
-        .modal-card { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.5); animation: modalIn 0.25s ease-out; }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        .modal-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; }
-        .modal-title { font-size: 18px; font-weight: 700; color: white; }
-        .modal-close { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #94a3b8; }
-        .modal-close:hover { background: rgba(255,255,255,0.1); color: white; }
-        .modal-body { padding: 24px; }
-        .modal-footer { padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; gap: 10px; justify-content: flex-end; }
-        
-        .form-group { margin-bottom: 18px; }
-        .form-label { display: block; font-size: 13px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; }
-        .form-input, .form-select { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px; color: white; outline: none; transition: all 0.15s ease; }
-        .form-input:focus, .form-select:focus { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 15px rgba(139,92,246,0.1); background: rgba(255,255,255,0.06); }
-        .form-input::placeholder { color: #475569; }
-        select.form-select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 10px center; background-repeat: no-repeat; background-size: 20px; padding-right: 40px; }
-        select.form-select option { background: #1a1a2e; color: white; }
-        .form-hint { font-size: 11px; color: #64748b; margin-top: 4px; }
+        .btn-approve { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-approve:hover { background: rgba(16,185,129,0.25); box-shadow: 0 0 20px rgba(16,185,129,0.2); }
+        .btn-outline-light { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-outline-light:hover { background: rgba(255,255,255,0.1); }
         
         .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: toastIn 0.3s ease-out; max-width: 400px; }
         .toast.success { background: #059669; color: white; }
@@ -148,8 +130,8 @@
         
         .empty-state { text-align: center; padding: 40px 20px; color: #64748b; }
         
-        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } .btn-hamburger { display: flex; } .kanban-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 640px) { .content-area { padding: 16px; } .topbar { padding: 12px 16px; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } .btn-hamburger { display: flex; } .kanban-grid { grid-template-columns: 1fr; } .kanban-grid.two-cols { grid-template-columns: 1fr; } .offcanvas { width: 100%; } }
+        @media (max-width: 640px) { .content-area { padding: 16px; } .topbar { padding: 12px 16px; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } .workspace-tabs { flex-direction: column; } .workspace-tab { min-width: auto; } }
     </style>
 </head>
 <body>
@@ -238,32 +220,89 @@
             
             <!-- TAB KANBAN -->
             <div class="tab-content" id="tab-kanban">
-                <div class="kanban-grid">
-                    <!-- Columna Nuevos -->
-                    <div class="kanban-column">
-                        <div class="kanban-column-header">
-                            <span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos</span>
-                            <span class="kanban-count" id="countNuevos">0</span>
-                        </div>
-                        <div id="kanbanNuevos"></div>
+                <!-- WORKSPACE TABS -->
+                <div class="workspace-tabs" id="workspaceTabs">
+                    <div class="workspace-tab active" data-workspace="ventas" onclick="switchWorkspace('ventas', this)">
+                        <div class="workspace-tab-icon" style="background:rgba(124,58,237,0.15);">📚</div>
+                        <div class="workspace-tab-title">Ventas (Alumnos)</div>
+                        <div class="workspace-tab-count" id="countVentas">0 leads</div>
                     </div>
-                    
-                    <!-- Columna Contactados -->
-                    <div class="kanban-column">
-                        <div class="kanban-column-header">
-                            <span class="kanban-column-title"><i data-lucide="phone" class="w-4 h-4 text-yellow-400"></i> Contactados</span>
-                            <span class="kanban-count" id="countContactados">0</span>
-                        </div>
-                        <div id="kanbanContactados"></div>
+                    <div class="workspace-tab" data-workspace="creadores" onclick="switchWorkspace('creadores', this)">
+                        <div class="workspace-tab-icon" style="background:rgba(239,68,68,0.15);">🎬</div>
+                        <div class="workspace-tab-title">Creadores</div>
+                        <div class="workspace-tab-count" id="countCreadores">0 leads</div>
                     </div>
-                    
-                    <!-- Columna Pagos Pendientes -->
-                    <div class="kanban-column">
-                        <div class="kanban-column-header">
-                            <span class="kanban-column-title"><i data-lucide="credit-card" class="w-4 h-4 text-green-400"></i> Pagos Pendientes</span>
-                            <span class="kanban-count" id="countPagos">0</span>
+                    <div class="workspace-tab" data-workspace="afiliados" onclick="switchWorkspace('afiliados', this)">
+                        <div class="workspace-tab-icon" style="background:rgba(16,185,129,0.15);">🤝</div>
+                        <div class="workspace-tab-title">Afiliados</div>
+                        <div class="workspace-tab-count" id="countAfiliados">0 leads</div>
+                    </div>
+                </div>
+                
+                <!-- KANBAN VENTAS -->
+                <div class="workspace-content" id="workspace-ventas">
+                    <div class="kanban-grid">
+                        <div class="kanban-column">
+                            <div class="kanban-column-header">
+                                <span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos</span>
+                                <span class="kanban-count" id="countVentasNuevos">0</span>
+                            </div>
+                            <div id="kanbanVentasNuevos"></div>
                         </div>
-                        <div id="kanbanPagos"></div>
+                        <div class="kanban-column">
+                            <div class="kanban-column-header">
+                                <span class="kanban-column-title"><i data-lucide="credit-card" class="w-4 h-4 text-yellow-400"></i> Pago Pendiente</span>
+                                <span class="kanban-count" id="countVentasPagoPendiente">0</span>
+                            </div>
+                            <div id="kanbanVentasPagoPendiente"></div>
+                        </div>
+                        <div class="kanban-column">
+                            <div class="kanban-column-header">
+                                <span class="kanban-column-title"><i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i> Aprobados</span>
+                                <span class="kanban-count" id="countVentasAprobados">0</span>
+                            </div>
+                            <div id="kanbanVentasAprobados"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- KANBAN CREADORES -->
+                <div class="workspace-content" id="workspace-creadores" style="display:none;">
+                    <div class="kanban-grid two-cols">
+                        <div class="kanban-column">
+                            <div class="kanban-column-header">
+                                <span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos Postulantes</span>
+                                <span class="kanban-count" id="countCreadoresNuevos">0</span>
+                            </div>
+                            <div id="kanbanCreadoresNuevos"></div>
+                        </div>
+                        <div class="kanban-column">
+                            <div class="kanban-column-header">
+                                <span class="kanban-column-title"><i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i> Aprobados</span>
+                                <span class="kanban-count" id="countCreadoresAprobados">0</span>
+                            </div>
+                            <div id="kanbanCreadoresAprobados"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- KANBAN AFILIADOS -->
+                <div class="workspace-content" id="workspace-afiliados" style="display:none;">
+                    <div class="kanban-grid two-cols">
+                        <div class="kanban-column">
+                            <div class="kanban-column-header">
+                                <span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos Postulantes</span>
+                                <span class="kanban-count" id="countAfiliadosNuevos">0</span>
+                            </div>
+                            <div id="kanbanAfiliadosNuevos"></div>
+                        </div>
+                        <div class="kanban-column">
+                            <div class="kanban-column-header">
+                                <span class="kanban-column-title"><i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i> Aprobados</span>
+                                <span class="kanban-count" id="countAfiliadosAprobados">0</span>
+                            </div>
+                            <div id="kanbanAfiliadosAprobados"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -314,6 +353,21 @@
         </div>
     </div>
     
+    <!-- OFFCANVAS -->
+    <div class="offcanvas-overlay" id="offcanvasOverlay" onclick="closeOffcanvas()"></div>
+    <div class="offcanvas" id="offcanvas">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title" id="offcanvasTitle">Detalles del Lead</h3>
+            <button class="offcanvas-close" onclick="closeOffcanvas()"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="offcanvas-body" id="offcanvasBody">
+            <!-- Contenido dinámico -->
+        </div>
+        <div class="offcanvas-footer" id="offcanvasFooter">
+            <!-- Botón dinámico -->
+        </div>
+    </div>
+    
     <div id="toast" class="toast hidden"></div>
 
     <script src="supabase-config.js?v=5"></script>
@@ -331,6 +385,8 @@
         let saldoUSD = 0;
         let costoAlta = 0;
         let currentTab = 'padron';
+        let currentWorkspace = 'ventas';
+        let currentLead = null;
         
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -346,6 +402,15 @@
             document.getElementById(`tab-${tab}`).classList.add('active');
             currentTab = tab;
             if (tab === 'kanban') cargarLeads();
+        }
+        
+        function switchWorkspace(workspace, el) {
+            currentWorkspace = workspace;
+            document.querySelectorAll('.workspace-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.workspace-content').forEach(w => w.style.display = 'none');
+            document.getElementById(`workspace-${workspace}`).style.display = 'block';
+            renderizarWorkspace();
         }
         
         function showToast(msg, type = 'success') {
@@ -588,18 +653,64 @@
             
             document.getElementById('statLeads').textContent = leadsData.length;
             
-            const nuevos = leadsData.filter(l => l.estado === 'nuevo');
-            const contactados = leadsData.filter(l => l.estado === 'contactado');
-            const pagos = leadsData.filter(l => l.estado === 'pago_pendiente');
+            // Contadores por workspace
+            const ventas = leadsData.filter(l => l.origen === 'portal_web');
+            const creadores = leadsData.filter(l => l.origen === 'creador');
+            const afiliados = leadsData.filter(l => l.origen === 'afiliado');
             
-            document.getElementById('countNuevos').textContent = nuevos.length;
-            document.getElementById('countContactados').textContent = contactados.length;
-            document.getElementById('countPagos').textContent = pagos.length;
+            document.getElementById('countVentas').textContent = `${ventas.length} leads`;
+            document.getElementById('countCreadores').textContent = `${creadores.length} leads`;
+            document.getElementById('countAfiliados').textContent = `${afiliados.length} leads`;
             
-            renderizarColumna('kanbanNuevos', nuevos);
-            renderizarColumna('kanbanContactados', contactados);
-            renderizarColumna('kanbanPagos', pagos);
+            renderizarWorkspace();
+        }
+        
+        function renderizarWorkspace() {
+            const ventas = leadsData.filter(l => l.origen === 'portal_web');
+            const creadores = leadsData.filter(l => l.origen === 'creador');
+            const afiliados = leadsData.filter(l => l.origen === 'afiliado');
+            
+            if (currentWorkspace === 'ventas') {
+                const nuevos = ventas.filter(l => l.estado === 'nuevo');
+                const pagos = ventas.filter(l => l.estado === 'pago_pendiente');
+                const aprobados = ventas.filter(l => l.estado === 'aprobado');
+                
+                document.getElementById('countVentasNuevos').textContent = nuevos.length;
+                document.getElementById('countVentasPagoPendiente').textContent = pagos.length;
+                document.getElementById('countVentasAprobados').textContent = aprobados.length;
+                
+                renderizarColumna('kanbanVentasNuevos', nuevos);
+                renderizarColumna('kanbanVentasPagoPendiente', pagos);
+                renderizarColumna('kanbanVentasAprobados', aprobados);
+            } else if (currentWorkspace === 'creadores') {
+                const nuevos = creadores.filter(l => l.estado === 'nuevo');
+                const aprobados = creadores.filter(l => l.estado === 'aprobado');
+                
+                document.getElementById('countCreadoresNuevos').textContent = nuevos.length;
+                document.getElementById('countCreadoresAprobados').textContent = aprobados.length;
+                
+                renderizarColumna('kanbanCreadoresNuevos', nuevos);
+                renderizarColumna('kanbanCreadoresAprobados', aprobados);
+            } else if (currentWorkspace === 'afiliados') {
+                const nuevos = afiliados.filter(l => l.estado === 'nuevo');
+                const aprobados = afiliados.filter(l => l.estado === 'aprobado');
+                
+                document.getElementById('countAfiliadosNuevos').textContent = nuevos.length;
+                document.getElementById('countAfiliadosAprobados').textContent = aprobados.length;
+                
+                renderizarColumna('kanbanAfiliadosNuevos', nuevos);
+                renderizarColumna('kanbanAfiliadosAprobados', aprobados);
+            }
+            
             lucide.createIcons();
+        }
+        
+        function getAvatarColor(lead) {
+            const colors = ['#7c3aed', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316'];
+            let hash = 0;
+            const str = lead.email || lead.nombre_completo || 'lead';
+            for (let i = 0; i < str.length; i++) { hash = str.charCodeAt(i) + ((hash << 5) - hash); }
+            return colors[Math.abs(hash) % colors.length];
         }
         
         function renderizarColumna(containerId, leads) {
@@ -610,23 +721,198 @@
             }
             
             container.innerHTML = leads.map(lead => {
-                const comprobanteBtn = lead.comprobante_url 
-                    ? `<a href="${lead.comprobante_url}" target="_blank" class="btn-comprobante mb-2"><i data-lucide="eye" class="w-3 h-3"></i> Ver Comprobante</a>` 
-                    : '';
+                const tags = [];
+                if (lead.cv_url) tags.push('<span class="lead-tag pdf">📎 PDF</span>');
+                if (lead.comprobante_url) tags.push('<span class="lead-tag payment">💰 Pago</span>');
+                if (lead.perfil_social) tags.push('<span class="lead-tag social">🔗 Social</span>');
+                
+                const avatarColor = getAvatarColor(lead);
                 
                 return `
-                    <div class="lead-card">
-                        <p class="lead-name">${lead.nombre_completo}</p>
-                        <p class="lead-email">${lead.email}</p>
-                        <p class="lead-curso">📚 ${getCursoNombre(lead.curso_interes)}</p>
-                        <p class="text-xs text-gray-500 mb-2">Origen: ${lead.origen || '-'}</p>
-                        ${comprobanteBtn}
-                        <button class="btn-matricular" onclick="matricularLead('${lead.id}')"><i data-lucide="check-circle" class="w-3 h-3"></i> Matricular</button>
+                    <div class="lead-card" onclick="abrirOffcanvas('${lead.id}')">
+                        <div class="lead-card-header">
+                            <div class="lead-avatar" style="background:${avatarColor};">${obtenerIniciales(lead.nombre_completo)}</div>
+                            <div>
+                                <div class="lead-name">${lead.nombre_completo}</div>
+                                <div class="lead-email">${lead.email}</div>
+                            </div>
+                        </div>
+                        <div class="lead-meta">
+                            <span>📱 ${lead.telefono || 'Sin teléfono'}</span>
+                            <span>📅 ${new Date(lead.created_at).toLocaleDateString()}</span>
+                        </div>
+                        ${tags.length > 0 ? `<div class="lead-tags">${tags.join('')}</div>` : ''}
                     </div>
                 `;
             }).join('');
         }
         
+        // ============ OFFCANVAS ============
+        function abrirOffcanvas(leadId) {
+            const lead = leadsData.find(l => l.id === leadId);
+            if (!lead) return;
+            currentLead = lead;
+            
+            document.getElementById('offcanvasTitle').textContent = 'Detalles del Lead';
+            
+            let socialBtn = '';
+            let cvBtn = '';
+            let extraInfo = '';
+            
+            if (lead.origen === 'creador') {
+                if (lead.perfil_social) {
+                    socialBtn = `<a href="${lead.perfil_social}" target="_blank" class="btn-outline-light flex-1"><i data-lucide="linkedin" class="w-4 h-4"></i> Ver LinkedIn</a>`;
+                }
+                if (lead.cv_url) {
+                    cvBtn = `<a href="${lead.cv_url}" target="_blank" class="btn-outline-light flex-1"><i data-lucide="file-text" class="w-4 h-4"></i> Ver CV (PDF)</a>`;
+                }
+                extraInfo = `
+                    <div class="offcanvas-info-row">
+                        <div>
+                            <div class="offcanvas-info-label">Especialidad</div>
+                            <div class="offcanvas-info-value">${lead.especialidad || 'No especificada'}</div>
+                        </div>
+                    </div>
+                    <div class="offcanvas-info-row">
+                        <div>
+                            <div class="offcanvas-info-label">Temática del Curso</div>
+                            <div class="offcanvas-info-value">${lead.tematica || 'No especificada'}</div>
+                        </div>
+                    </div>
+                `;
+            } else if (lead.origen === 'afiliado') {
+                extraInfo = `
+                    <div class="offcanvas-info-row">
+                        <div>
+                            <div class="offcanvas-info-label">Tipo</div>
+                            <div class="offcanvas-info-value">Afiliado</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Ventas
+                extraInfo = `
+                    <div class="offcanvas-info-row">
+                        <div>
+                            <div class="offcanvas-info-label">Curso de Interés</div>
+                            <div class="offcanvas-info-value">${getCursoNombre(lead.curso_interes)}</div>
+                        </div>
+                    </div>
+                    ${lead.comprobante_url ? `
+                    <div class="offcanvas-info-row">
+                        <div>
+                            <div class="offcanvas-info-label">Comprobante</div>
+                            <div class="offcanvas-info-value"><a href="${lead.comprobante_url}" target="_blank" class="text-blue-400 hover:underline">Ver comprobante</a></div>
+                        </div>
+                    </div>` : ''}
+                `;
+            }
+            
+            document.getElementById('offcanvasBody').innerHTML = `
+                <div class="flex items-center gap-4 mb-6">
+                    <div style="width:60px;height:60px;border-radius:50%;background:${getAvatarColor(lead)};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:white;">${obtenerIniciales(lead.nombre_completo)}</div>
+                    <div>
+                        <div class="text-lg font-bold text-white">${lead.nombre_completo}</div>
+                        <div class="text-sm text-gray-400">${lead.origen === 'creador' ? 'Creador' : lead.origen === 'afiliado' ? 'Afiliado' : 'Alumno'}</div>
+                    </div>
+                </div>
+                
+                <div class="offcanvas-info-row">
+                    <div><div class="offcanvas-info-label">Email</div><div class="offcanvas-info-value">${lead.email}</div></div>
+                </div>
+                <div class="offcanvas-info-row">
+                    <div><div class="offcanvas-info-label">Teléfono</div><div class="offcanvas-info-value">${lead.telefono || 'No registrado'}</div></div>
+                </div>
+                <div class="offcanvas-info-row">
+                    <div><div class="offcanvas-info-label">Fecha</div><div class="offcanvas-info-value">${new Date(lead.created_at).toLocaleString()}</div></div>
+                </div>
+                <div class="offcanvas-info-row">
+                    <div><div class="offcanvas-info-label">Estado</div><div class="offcanvas-info-value">${lead.estado || 'nuevo'}</div></div>
+                </div>
+                ${extraInfo}
+            `;
+            
+            if (lead.estado !== 'aprobado') {
+                document.getElementById('offcanvasFooter').innerHTML = `
+                    <button class="btn-approve" onclick="aprobarLead('${lead.id}')"><i data-lucide="check-circle" class="w-4 h-4"></i> Aprobar Lead</button>
+                `;
+            } else {
+                document.getElementById('offcanvasFooter').innerHTML = `
+                    <div class="text-center w-full py-3 text-green-400 font-semibold">✓ Lead Aprobado</div>
+                `;
+            }
+            
+            if (socialBtn || cvBtn) {
+                const btnContainer = document.createElement('div');
+                btnContainer.className = 'flex gap-2 w-full';
+                btnContainer.innerHTML = socialBtn + cvBtn;
+                document.getElementById('offcanvasFooter').prepend(btnContainer);
+            }
+            
+            document.getElementById('offcanvasOverlay').classList.add('active');
+            document.getElementById('offcanvas').classList.add('active');
+            lucide.createIcons();
+        }
+        
+        function closeOffcanvas() {
+            document.getElementById('offcanvasOverlay').classList.remove('active');
+            document.getElementById('offcanvas').classList.remove('active');
+            currentLead = null;
+        }
+        
+        // ============ APROBAR LEAD ============
+        async function aprobarLead(leadId) {
+            const lead = leadsData.find(l => l.id === leadId);
+            if (!lead) return;
+            
+            if (!confirm(`¿Aprobar a ${lead.nombre_completo}?`)) return;
+            
+            try {
+                // 1. Actualizar estado del lead
+                const { error: updateLeadError } = await window.supabase.from('crm_leads')
+                    .update({ estado: 'aprobado' })
+                    .eq('id', leadId);
+                if (updateLeadError) throw updateLeadError;
+                
+                // 2. Determinar rol
+                let rol = 'alumno';
+                if (lead.origen === 'creador') rol = 'profesor';
+                else if (lead.origen === 'afiliado') rol = 'afiliado';
+                
+                // 3. UPSERT en sys_roles_usuarios
+                const { error: upsertError } = await window.supabase.from('sys_roles_usuarios')
+                    .upsert({
+                        user_email: lead.email,
+                        instituto_id: lead.instituto_id,
+                        rol: rol
+                    }, { onConflict: 'user_email,instituto_id' });
+                if (upsertError) throw upsertError;
+                
+                // 4. Disparar WhatsApp
+                let mensaje = '';
+                if (lead.origen === 'creador') {
+                    mensaje = `¡Hola ${lead.nombre_completo}! 🎉 Tu postulación en nuestro Instituto ha sido aprobada. Regístrate en nuestro portal con tu correo (${lead.email}) y tu panel de Creator Studio se activará automáticamente.`;
+                } else if (lead.origen === 'afiliado') {
+                    mensaje = `¡Hola ${lead.nombre_completo}! 🤝 Tu solicitud de afiliado ha sido aprobada. Regístrate con tu correo (${lead.email}) y tu código de afiliado se activará automáticamente.`;
+                } else {
+                    mensaje = `¡Hola ${lead.nombre_completo}! 🎉 Tu inscripción ha sido aprobada. Regístrate con tu correo (${lead.email}) para acceder al campus.`;
+                }
+                
+                const telefonoLimpio = (lead.telefono || '').replace(/[^0-9+]/g, '');
+                if (telefonoLimpio) {
+                    const url = `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
+                    window.open(url, '_blank');
+                }
+                
+                closeOffcanvas();
+                await cargarLeads();
+                showToast('Lead aprobado correctamente');
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            }
+        }
+        
+        // ============ MATRICULAR LEAD (Legado) ============
         async function matricularLead(leadId) {
             const lead = leadsData.find(l => l.id === leadId);
             if (!lead) return;
@@ -642,11 +928,9 @@
             if (!confirm(`¿Matricular a ${lead.nombre_completo}? Se descontarán $${costoAlta.toFixed(2)} USD`)) return;
             
             try {
-                // 1. Crear en Auth silencioso
                 const password = lead.email.split('@')[0] + '123';
                 await registrarUsuarioEnAuth(lead.email, password, lead.nombre_completo);
                 
-                // 2. INSERT en padron_global
                 const { data: alumnoCreado, error: insertError } = await window.supabase.from('padron_global').insert([{
                     instituto_id: tenantConfig.instituto.id,
                     nombre_completo: lead.nombre_completo,
@@ -658,11 +942,9 @@
                 }]).select().single();
                 if (insertError) throw insertError;
                 
-                // 3. Descontar saldo
                 const nuevoSaldo = saldoUSD - costoAlta;
                 await window.supabase.from('sys_billetera_institutos').update({ saldo_usd: nuevoSaldo }).eq('instituto_id', tenantConfig.instituto.id);
                 
-                // 4. Registrar transacción
                 await window.supabase.from('sys_transacciones').insert([{
                     instituto_id: tenantConfig.instituto.id,
                     tipo_operacion: 'consumo_alta_alumno',
@@ -671,7 +953,6 @@
                     descripcion: `Matriculación desde Lead: ${lead.nombre_completo}`
                 }]);
                 
-                // 5. Borrar lead
                 await window.supabase.from('crm_leads').delete().eq('id', leadId);
                 
                 saldoUSD = nuevoSaldo;
@@ -684,7 +965,13 @@
             }
         }
         
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); document.getElementById('saldoModal').classList.add('hidden'); } });
+        document.addEventListener('keydown', (e) => { 
+            if (e.key === 'Escape') { 
+                closeModal(); 
+                document.getElementById('saldoModal').classList.add('hidden');
+                closeOffcanvas();
+            } 
+        });
         document.getElementById('alumnoModal').addEventListener('click', (e) => { if (e.target === document.getElementById('alumnoModal')) closeModal(); });
         document.getElementById('saldoModal').addEventListener('click', function(e) { if (e.target === this) this.classList.add('hidden'); });
         
