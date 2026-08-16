@@ -16,57 +16,83 @@
         * { font-family: 'Inter', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
-        :root { --color-primary: #7c3aed; --color-primary-light: #a78bfa; --color-primary-dark: #5b21b6; }
+        :root { 
+            --color-primary: #7c3aed; 
+            --color-primary-light: #a78bfa; 
+            --color-primary-dark: #5b21b6; 
+        }
         
-        body { background: #0f172a; color: #e2e8f0; -webkit-font-smoothing: antialiased; }
+        body { background: #f8fafc; color: #1e293b; -webkit-font-smoothing: antialiased; }
         
-        .navbar { position: sticky; top: 0; z-index: 50; background: rgba(15,23,42,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        /* NAVBAR */
+        .navbar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
         
-        .hero-section { position: relative; min-height: 500px; background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; display: flex; align-items: center; }
-        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.9) 100%); }
+        /* HERO */
+        .hero-section { position: relative; min-height: 560px; background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; display: flex; align-items: center; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, var(--color-primary-dark)ee 50%, rgba(15,23,42,0.8) 100%); }
         
-        .section-title { font-size: 28px; font-weight: 800; color: white; margin-bottom: 8px; }
-        .section-subtitle { font-size: 15px; color: #94a3b8; margin-bottom: 32px; }
+        .section-title { font-size: 32px; font-weight: 900; color: #0f172a; margin-bottom: 8px; letter-spacing: -1px; }
+        .section-subtitle { font-size: 16px; color: #64748b; margin-bottom: 40px; }
         
-        .quick-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: #e2e8f0; }
-        .quick-card:hover { border-color: var(--color-primary-light); box-shadow: 0 10px 30px rgba(124,58,237,0.2); transform: translateY(-4px); }
-        .quick-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 22px; }
+        /* QUICK CARDS */
+        .quick-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: #1e293b; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .quick-card:hover { border-color: var(--color-primary); box-shadow: 0 15px 35px rgba(0,0,0,0.08); transform: translateY(-4px); }
+        .quick-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 22px; background: var(--color-primary-light)20; color: var(--color-primary); }
         
-        .curso-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; transition: all 0.3s ease; }
-        .curso-card:hover { border-color: var(--color-primary-light); box-shadow: 0 10px 30px rgba(124,58,237,0.15); }
+        /* CURSO CARDS */
+        .curso-card { background: white; border: 1px solid #e2e8f0; border-radius: 18px; padding: 28px; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+        .curso-card:hover { border-color: var(--color-primary); box-shadow: 0 20px 40px rgba(0,0,0,0.08); transform: translateY(-4px); }
         
-        .noticia-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; transition: all 0.3s ease; }
-        .noticia-card:hover { border-color: var(--color-primary-light); }
-        .noticia-card img { width: 100%; height: 180px; object-fit: cover; }
+        /* NOTICIA CARDS */
+        .noticia-card { background: white; border: 1px solid #e2e8f0; border-radius: 18px; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+        .noticia-card:hover { border-color: var(--color-primary); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+        .noticia-card img { width: 100%; height: 200px; object-fit: cover; }
         
-        .btn-primary { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; border: 1px solid rgba(139,92,246,0.3); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; }
-        .btn-primary:hover { box-shadow: 0 0 20px rgba(139,92,246,0.3); transform: translateY(-1px); }
-        .btn-secondary { background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        /* BOTONES */
+        .btn-primary { background: var(--color-primary); color: white; border: none; padding: 12px 28px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .btn-primary:hover { background: var(--color-primary-dark); box-shadow: 0 8px 25px rgba(0,0,0,0.15); transform: translateY(-2px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: white; color: #475569; border: 2px solid #e2e8f0; padding: 12px 28px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: all 0.2s ease; }
+        .btn-secondary:hover { border-color: var(--color-primary); color: var(--color-primary); }
         
-        .input-dios { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; padding: 10px 14px; width: 100%; font-size: 14px; outline: none; }
-        .input-dios:focus { border-color: #7c3aed; }
+        /* INPUTS */
+        .input-dios { background: white; border: 1px solid #e2e8f0; border-radius: 10px; color: #1e293b; padding: 12px 16px; width: 100%; font-size: 14px; outline: none; transition: all 0.2s ease; }
+        .input-dios:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
         select.input-dios { appearance: none; }
-        select.input-dios option { background: #0f172a; color: white; }
+        select.input-dios option { background: white; color: #1e293b; }
         
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        /* MODAL */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.7); backdrop-filter: blur(8px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.hidden { display: none; }
-        .modal-card { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.5); animation: modalIn 0.25s ease-out; }
+        .modal-card { background: white; border-radius: 24px; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; box-shadow: 0 30px 80px rgba(0,0,0,0.2); animation: modalIn 0.3s ease-out; }
         @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         
-        .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(100px); opacity: 0; transition: all 0.3s ease; }
+        /* TOAST */
+        .toast { position: fixed; bottom: 24px; right: 24px; padding: 16px 24px; border-radius: 14px; font-size: 14px; font-weight: 600; z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); transform: translateY(100px); opacity: 0; transition: all 0.3s ease; }
         .toast.show { transform: translateY(0); opacity: 1; }
         .toast.success { background: #059669; color: white; }
         .toast.error { background: #dc2626; color: white; }
         
-        .file-drop-zone { border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; position: relative; background: rgba(0,0,0,0.2); }
-        .file-drop-zone:hover { border-color: #7c3aed; }
+        /* FILE DROP */
+        .file-drop-zone { border: 2px dashed #e2e8f0; border-radius: 14px; padding: 24px; text-align: center; cursor: pointer; position: relative; background: #f8fafc; transition: all 0.2s ease; }
+        .file-drop-zone:hover { border-color: var(--color-primary); background: #f1f5f9; }
         .file-drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-        .file-drop-zone.has-file { border-color: #10b981; }
+        .file-drop-zone.has-file { border-color: #10b981; background: #f0fdf4; }
         
-        .spinner { width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #a78bfa; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+        /* SPINNER */
+        .spinner { width: 28px; height: 28px; border: 3px solid #e2e8f0; border-top-color: var(--color-primary); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        @media (max-width: 768px) { .hero-section { min-height: 350px; } }
+        /* FOOTER */
+        .footer-premium { background: #0f172a; color: #94a3b8; }
+        
+        /* SECCIÓN ACCESOS */
+        .accesos-section { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        .accesos-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 22px; text-align: center; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: white; }
+        .accesos-card:hover { background: rgba(255,255,255,0.12); transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .accesos-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 22px; }
+        
+        @media (max-width: 768px) { .hero-section { min-height: 400px; } }
     </style>
 </head>
 <body>
@@ -74,16 +100,16 @@
     <!-- NAVBAR -->
     <nav class="navbar px-6 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center" id="navLogoContainer">
+            <div class="w-11 h-11 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center" id="navLogoContainer">
                 <img data-tenant-logo="principal" src="" alt="Logo" id="navLogoImg" style="display:none;" onload="this.style.display='block';" onerror="this.style.display='none';">
                 <span id="navLogoPlaceholder" class="text-xl">🎓</span>
             </div>
-            <span class="font-bold text-white hidden sm:block" id="navInstituteName">Instituto</span>
+            <span class="font-bold text-gray-900 hidden sm:block text-lg" id="navInstituteName">Instituto</span>
         </div>
         <div class="flex items-center gap-4">
-            <a href="#cursos" class="text-sm text-gray-400 hover:text-white transition hidden md:block">Cursos</a>
-            <a href="#noticias" class="text-sm text-gray-400 hover:text-white transition hidden md:block">Noticias</a>
-            <a href="#nosotros" class="text-sm text-gray-400 hover:text-white transition hidden md:block">Nosotros</a>
+            <a href="#cursos" class="text-sm text-gray-600 hover:text-gray-900 transition hidden md:block font-medium">Cursos</a>
+            <a href="#noticias" class="text-sm text-gray-600 hover:text-gray-900 transition hidden md:block font-medium">Noticias</a>
+            <a href="#nosotros" class="text-sm text-gray-600 hover:text-gray-900 transition hidden md:block font-medium">Nosotros</a>
             <a href="login.html" class="btn-primary text-sm"><i data-lucide="log-in" class="w-4 h-4"></i> Acceso Alumnos</a>
         </div>
     </nav>
@@ -91,94 +117,100 @@
     <!-- HERO -->
     <section class="hero-section">
         <div class="hero-overlay"></div>
-        <div class="relative z-10 text-center px-6 py-16 max-w-4xl mx-auto">
-            <h1 class="text-4xl md:text-5xl font-black text-white mb-4" id="heroInstituteName">Instituto</h1>
-            <p class="text-xl md:text-2xl text-purple-300 font-semibold mb-6" id="heroLema">Excelencia académica</p>
-            <p class="text-gray-300 max-w-2xl mx-auto mb-8">Formación de calidad con credenciales digitales verificables</p>
-            <a href="#cursos" class="btn-primary text-lg px-8 py-3"><i data-lucide="book-open" class="w-5 h-5"></i> Ver Oferta Académica</a>
+        <div class="relative z-10 px-6 py-20 max-w-3xl">
+            <h1 class="text-4xl md:text-6xl font-black text-white mb-4 leading-tight" id="heroInstituteName">Instituto</h1>
+            <p class="text-xl md:text-2xl text-white/90 font-semibold mb-6" id="heroLema">Excelencia académica</p>
+            <p class="text-white/70 max-w-2xl mb-10 text-lg">Formación de calidad con credenciales digitales verificables</p>
+            <div class="flex flex-wrap gap-4">
+                <a href="#cursos" class="btn-primary text-lg px-10 py-4"><i data-lucide="book-open" class="w-5 h-5"></i> Ver Oferta Académica</a>
+                <a href="#nosotros" class="btn-secondary text-lg px-10 py-4 bg-white/10 border-white/30 text-white hover:bg-white/20"><i data-lucide="info" class="w-5 h-5"></i> Conócenos</a>
+            </div>
         </div>
     </section>
 
-    <!-- ACCESOS RÁPIDOS -->
-    <section class="px-6 py-16 max-w-6xl mx-auto">
-        <h2 class="section-title text-center">Accesos Rápidos</h2>
-        <p class="section-subtitle text-center">Todo lo que necesitas en un solo lugar</p>
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <a href="login.html" class="quick-card"><div class="quick-icon" style="background:rgba(124,58,237,0.2);color:#a78bfa;"><i data-lucide="wallet" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Billetera</h3></a>
-            <a href="campus.html" class="quick-card"><div class="quick-icon" style="background:rgba(59,130,246,0.2);color:#93c5fd;"><i data-lucide="graduation-cap" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Campus</h3></a>
-            <a href="validador.html" class="quick-card"><div class="quick-icon" style="background:rgba(16,185,129,0.2);color:#6ee7b7;"><i data-lucide="shield-check" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Validador</h3></a>
-            <a href="biblioteca.html" class="quick-card"><div class="quick-icon" style="background:rgba(245,158,11,0.2);color:#fcd34d;"><i data-lucide="library" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Biblioteca</h3></a>
-            <a href="calendario.html" class="quick-card"><div class="quick-icon" style="background:rgba(236,72,153,0.2);color:#f9a8d4;"><i data-lucide="calendar" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Calendario</h3></a>
+    <!-- ACCESOS RÁPIDOS (Franja Premium) -->
+    <section class="accesos-section px-6 py-16">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl font-black text-white text-center mb-4">Portal del Alumno</h2>
+            <p class="text-white/60 text-center mb-12">Servicios estudiantiles digitales</p>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <a href="login.html" class="accesos-card"><div class="accesos-icon" style="background:rgba(124,58,237,0.3);color:#c4b5fd;"><i data-lucide="wallet" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Billetera</h3></a>
+                <a href="campus.html" class="accesos-card"><div class="accesos-icon" style="background:rgba(59,130,246,0.3);color:#93c5fd;"><i data-lucide="graduation-cap" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Campus</h3></a>
+                <a href="validador.html" class="accesos-card"><div class="accesos-icon" style="background:rgba(16,185,129,0.3);color:#6ee7b7;"><i data-lucide="shield-check" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Validador</h3></a>
+                <a href="biblioteca.html" class="accesos-card"><div class="accesos-icon" style="background:rgba(245,158,11,0.3);color:#fcd34d;"><i data-lucide="library" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Biblioteca</h3></a>
+                <a href="calendario.html" class="accesos-card"><div class="accesos-icon" style="background:rgba(236,72,153,0.3);color:#f9a8d4;"><i data-lucide="calendar" class="w-6 h-6"></i></div><h3 class="font-semibold text-sm">Calendario</h3></a>
+            </div>
         </div>
     </section>
 
     <!-- OFERTA ACADÉMICA -->
-    <section id="cursos" class="px-6 py-16 max-w-6xl mx-auto">
+    <section id="cursos" class="px-6 py-20 max-w-6xl mx-auto">
         <h2 class="section-title">Oferta Académica</h2>
-        <p class="section-subtitle">Explora nuestros programas</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="cursosGrid">
+        <p class="section-subtitle">Explora nuestros programas de estudio</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="cursosGrid">
             <div class="text-center py-12 col-span-full"><div class="spinner mx-auto"></div></div>
         </div>
     </section>
 
     <!-- NOTICIAS -->
-    <section id="noticias" class="px-6 py-16 max-w-6xl mx-auto">
+    <section id="noticias" class="px-6 py-20 max-w-6xl mx-auto bg-gray-50 rounded-3xl">
         <h2 class="section-title">Cartelera y Noticias</h2>
         <p class="section-subtitle">Novedades institucionales</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="noticiasGrid">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="noticiasGrid">
             <div class="text-center py-12 col-span-full"><div class="spinner mx-auto"></div></div>
         </div>
     </section>
 
     <!-- NOSOTROS -->
-    <section id="nosotros" class="px-6 py-16 max-w-4xl mx-auto">
+    <section id="nosotros" class="px-6 py-20 max-w-4xl mx-auto">
         <h2 class="section-title">Quiénes Somos</h2>
-        <p class="text-gray-300 leading-relaxed mb-8" id="historiaText">Cargando...</p>
-        <h3 class="text-xl font-bold text-white mb-4">Nuestra Historia</h3>
-        <p class="text-gray-300 leading-relaxed mb-12" id="quienesText">Cargando...</p>
+        <p class="text-gray-600 leading-relaxed mb-8" id="historiaText">Cargando...</p>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Nuestra Historia</h3>
+        <p class="text-gray-600 leading-relaxed mb-12" id="quienesText">Cargando...</p>
         
-        <h3 class="text-xl font-bold text-white mb-6">Redes Sociales</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-6">Redes Sociales</h3>
         <div class="flex gap-4" id="redesContainer"></div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="border-t border-white/5 py-8 text-center text-gray-500 text-sm">
-        Powered by <strong class="text-purple-400">ASARI</strong>
-        <a href="admin-login.html" class="block mt-2 text-xs text-gray-600 hover:text-purple-400">Acceso Administrativo</a>
+    <!-- FOOTER PREMIUM -->
+    <footer class="footer-premium py-12 text-center">
+        <p class="text-lg font-bold text-white mb-2">Powered by <span style="color: var(--color-primary-light);">ASARI</span></p>
+        <p class="text-sm mb-4">Plataforma Educativa Multi-Tenant</p>
+        <a href="admin-login.html" class="text-xs text-gray-500 hover:text-white transition">Acceso Administrativo</a>
     </footer>
 
     <!-- MODAL INSCRIPCIÓN -->
     <div class="modal-overlay hidden" id="inscripcionModal">
         <div class="modal-card">
-            <div class="p-6 border-b border-white/10 flex justify-between items-center">
-                <h3 class="text-xl font-bold text-white" id="modalCursoTitulo">Inscripción</h3>
-                <button onclick="cerrarModalInscripcion()" class="p-2 hover:bg-white/10 rounded-lg text-gray-400"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-900" id="modalCursoTitulo">Inscripción</h3>
+                <button onclick="cerrarModalInscripcion()" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <form id="inscripcionForm" class="p-6 space-y-5">
                 <input type="hidden" id="cursoSeleccionadoId">
-                <div><label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Nombre Completo *</label><input type="text" id="leadNombre" class="input-dios" required></div>
-                <div><label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Email *</label><input type="email" id="leadEmail" class="input-dios" required></div>
-                <div><label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Teléfono *</label><input type="tel" id="leadTelefono" class="input-dios" required></div>
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Nombre Completo *</label><input type="text" id="leadNombre" class="input-dios" required></div>
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Email *</label><input type="email" id="leadEmail" class="input-dios" required></div>
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Teléfono *</label><input type="tel" id="leadTelefono" class="input-dios" required></div>
                 <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Método de Pago *</label>
+                    <label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Método de Pago *</label>
                     <select id="leadMetodoPago" class="input-dios" onchange="toggleMetodoPago()">
                         <option value="">-- Seleccione --</option>
                         <option value="transferencia">Transferencia Bancaria</option>
                         <option value="mercadopago">MercadoPago</option>
                     </select>
                 </div>
-                <div id="divDatosBancarios" class="hidden bg-black/30 p-4 rounded-xl">
-                    <label class="text-xs font-bold text-gray-400 uppercase mb-2 block">Datos Bancarios</label>
-                    <pre class="text-xs text-green-300 font-mono whitespace-pre-wrap" id="datosBancariosTexto"></pre>
-                    <label class="text-xs font-bold text-gray-400 uppercase mt-4 mb-2 block">Comprobante de Pago *</label>
+                <div id="divDatosBancarios" class="hidden bg-gray-50 p-4 rounded-xl">
+                    <label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Datos Bancarios</label>
+                    <pre class="text-xs text-green-700 font-mono whitespace-pre-wrap" id="datosBancariosTexto"></pre>
+                    <label class="text-xs font-bold text-gray-600 uppercase mt-4 mb-2 block">Comprobante de Pago *</label>
                     <div class="file-drop-zone" id="dropComprobante">
                         <input type="file" accept="image/*,.pdf" id="fileComprobante" onchange="handleComprobante(this)">
-                        <i data-lucide="upload-cloud" class="w-6 h-6 text-gray-500 mx-auto mb-1"></i>
-                        <p class="text-xs text-gray-400" id="comprobanteFileName">Click para subir comprobante</p>
+                        <i data-lucide="upload-cloud" class="w-6 h-6 text-gray-400 mx-auto mb-1"></i>
+                        <p class="text-xs text-gray-500" id="comprobanteFileName">Click para subir comprobante</p>
                     </div>
                 </div>
-                <div id="divMercadoPago" class="hidden bg-blue-500/10 p-4 rounded-xl text-center">
-                    <p class="text-sm text-blue-300">Serás redirigido a la pasarela de pago de MercadoPago</p>
+                <div id="divMercadoPago" class="hidden bg-blue-50 p-4 rounded-xl text-center">
+                    <p class="text-sm text-blue-700">Serás redirigido a la pasarela de pago de MercadoPago</p>
                 </div>
                 <button type="submit" class="btn-primary w-full justify-center" id="btnEnviarLead"><i data-lucide="send" class="w-4 h-4"></i> Enviar Inscripción</button>
             </form>
@@ -206,7 +238,6 @@
             window._tt = setTimeout(() => { t.classList.remove('show'); t.innerHTML = ''; }, 4000);
         }
         
-        // ✅ CORRECCIÓN: Renombrada de getTenantSlug() a obtenerSlugLocal()
         function obtenerSlugLocal() {
             if (typeof window.getTenantSlug === 'function') return window.getTenantSlug();
             const urlParams = new URLSearchParams(window.location.search);
@@ -240,18 +271,20 @@
                     document.getElementById('navLogoPlaceholder').style.display = 'none';
                 }
                 
-                // ✅ NUEVO: Inyección dinámica de colores de la franquicia
+                // Inyección dinámica de colores de la franquicia
                 if (configuracion?.branding?.colores?.primario) {
                     const c = configuracion.branding.colores.primario;
                     document.documentElement.style.setProperty('--color-primary', c);
                     
                     const dynamicStyle = document.createElement('style');
                     dynamicStyle.innerHTML = `
-                        .btn-primary { background: linear-gradient(135deg, ${c}, ${c}dd) !important; border-color: ${c} !important; }
-                        .btn-primary:hover { box-shadow: 0 0 20px ${c}60 !important; }
-                        .input-dios:focus { border-color: ${c} !important; }
-                        .curso-card:hover, .noticia-card:hover, .quick-card:hover, .file-drop-zone:hover { border-color: ${c} !important; }
-                        .text-purple-400 { color: ${c} !important; }
+                        .btn-primary { background: ${c} !important; }
+                        .btn-primary:hover { background: ${c}dd !important; box-shadow: 0 8px 25px ${c}40 !important; }
+                        .input-dios:focus { border-color: ${c} !important; box-shadow: 0 0 0 3px ${c}20 !important; }
+                        .curso-card:hover, .noticia-card:hover, .quick-card:hover, .accesos-card:hover, .file-drop-zone:hover { border-color: ${c} !important; }
+                        .section-title { color: ${c} !important; }
+                        .quick-icon { color: ${c} !important; background: ${c}15 !important; }
+                        .hero-overlay { background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, ${c}dd 50%, rgba(15,23,42,0.8) 100%) !important; }
                     `;
                     document.head.appendChild(dynamicStyle);
                 }
@@ -275,10 +308,10 @@
             const container = document.getElementById('redesContainer');
             const redesHTML = [];
             
-            if (redes.whatsapp) redesHTML.push(`<a href="${redes.whatsapp}" target="_blank" class="quick-card flex-1"><i data-lucide="message-circle" class="w-6 h-6 text-green-400"></i><span class="text-xs">WhatsApp</span></a>`);
-            if (redes.instagram) redesHTML.push(`<a href="${redes.instagram}" target="_blank" class="quick-card flex-1"><i data-lucide="instagram" class="w-6 h-6 text-pink-400"></i><span class="text-xs">Instagram</span></a>`);
-            if (redes.facebook) redesHTML.push(`<a href="${redes.facebook}" target="_blank" class="quick-card flex-1"><i data-lucide="facebook" class="w-6 h-6 text-blue-400"></i><span class="text-xs">Facebook</span></a>`);
-            if (redes.linkedin) redesHTML.push(`<a href="${redes.linkedin}" target="_blank" class="quick-card flex-1"><i data-lucide="linkedin" class="w-6 h-6 text-blue-300"></i><span class="text-xs">LinkedIn</span></a>`);
+            if (redes.whatsapp) redesHTML.push(`<a href="${redes.whatsapp}" target="_blank" class="quick-card flex-1"><i data-lucide="message-circle" class="w-6 h-6" style="color:#10b981;"></i><span class="text-xs text-gray-700">WhatsApp</span></a>`);
+            if (redes.instagram) redesHTML.push(`<a href="${redes.instagram}" target="_blank" class="quick-card flex-1"><i data-lucide="instagram" class="w-6 h-6" style="color:#ec4899;"></i><span class="text-xs text-gray-700">Instagram</span></a>`);
+            if (redes.facebook) redesHTML.push(`<a href="${redes.facebook}" target="_blank" class="quick-card flex-1"><i data-lucide="facebook" class="w-6 h-6" style="color:#3b82f6;"></i><span class="text-xs text-gray-700">Facebook</span></a>`);
+            if (redes.linkedin) redesHTML.push(`<a href="${redes.linkedin}" target="_blank" class="quick-card flex-1"><i data-lucide="linkedin" class="w-6 h-6" style="color:#0ea5e9;"></i><span class="text-xs text-gray-700">LinkedIn</span></a>`);
             
             container.innerHTML = redesHTML.length > 0 ? redesHTML.join('') : '<p class="text-gray-500 text-sm">Sin redes sociales configuradas</p>';
             lucide.createIcons();
@@ -298,9 +331,9 @@
             
             grid.innerHTML = cursosData.map(c => `
                 <div class="curso-card">
-                    <h3 class="text-lg font-bold text-white mb-2">${c.titulo}</h3>
-                    <p class="text-sm text-purple-300 mb-2">${c.tipo_curso || 'Curso'}</p>
-                    <p class="font-mono text-green-400 text-2xl font-bold mb-4">$${(c.precio_declarado_usd || 0).toFixed(2)} USD</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">${c.titulo}</h3>
+                    <p class="text-sm text-gray-500 mb-4">${c.tipo_curso || 'Curso'}</p>
+                    <p class="font-mono text-3xl font-black mb-6" style="color: var(--color-primary);">$${(c.precio_declarado_usd || 0).toFixed(2)} USD</p>
                     <button class="btn-primary w-full justify-center" onclick="abrirModalInscripcion('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')">
                         <i data-lucide="clipboard-list" class="w-4 h-4"></i> Quiero Inscribirme
                     </button>
@@ -323,11 +356,11 @@
             
             grid.innerHTML = noticias.map(n => `
                 <div class="noticia-card">
-                    ${n.imagen_url ? `<img src="${n.imagen_url}" alt="${n.titulo}">` : '<div class="h-44 bg-white/5 flex items-center justify-center"><i data-lucide="newspaper" class="w-10 h-10 text-gray-600"></i></div>'}
-                    <div class="p-5">
-                        <span class="text-xs text-purple-400 font-bold uppercase">${n.tipo}</span>
-                        <h3 class="font-bold text-white mt-1 mb-2">${n.titulo}</h3>
-                        <p class="text-sm text-gray-400 line-clamp-3">${n.descripcion || ''}</p>
+                    ${n.imagen_url ? `<img src="${n.imagen_url}" alt="${n.titulo}">` : '<div class="h-48 bg-gray-100 flex items-center justify-center"><i data-lucide="newspaper" class="w-10 h-10 text-gray-300"></i></div>'}
+                    <div class="p-6">
+                        <span class="text-xs font-bold uppercase" style="color: var(--color-primary);">${n.tipo}</span>
+                        <h3 class="font-bold text-gray-900 mt-2 mb-3 text-lg">${n.titulo}</h3>
+                        <p class="text-sm text-gray-600 line-clamp-3">${n.descripcion || ''}</p>
                     </div>
                 </div>
             `).join('');
