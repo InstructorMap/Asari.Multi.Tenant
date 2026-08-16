@@ -29,7 +29,6 @@
         
         /* HERO CINEMÁTICO */
         .hero-section { position: relative; min-height: 80vh; display: flex; align-items: center; overflow: hidden; background: #0f172a; }
-        .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.4; transition: opacity 1s ease; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.7) 0%, rgba(15,23,42,0.9) 100%); }
         .hero-glow { position: absolute; bottom: -50%; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse, var(--color-primary)30 0%, transparent 70%); pointer-events: none; }
         
@@ -130,7 +129,6 @@
 
     <!-- HERO CINEMÁTICO -->
     <section class="hero-section" id="heroSection">
-        <div class="hero-bg" id="heroBackground"></div>
         <div class="hero-overlay"></div>
         <div class="hero-glow"></div>
         <div class="relative z-10 px-8 py-24 max-w-3xl">
@@ -383,6 +381,14 @@
                     document.getElementById('navLogoPlaceholder').style.display = 'none';
                 }
                 
+                // ✅ CIRUGÍA: Inyectar logo_secundario como background del Hero
+                if (configuracion?.branding?.logo_secundario) {
+                    const heroEl = document.getElementById('heroSection');
+                    if (heroEl) {
+                        heroEl.style.cssText = `background-image: linear-gradient(to bottom, rgba(15,23,42,0.7), rgba(15,23,42,0.9)), url('${configuracion.branding.logo_secundario}') !important; background-size: cover !important; background-position: center !important;`;
+                    }
+                }
+                
                 // Inyección dinámica de colores
                 if (configuracion?.branding?.colores?.primario) {
                     const c = configuracion.branding.colores.primario;
@@ -400,13 +406,6 @@
                         .creator-section { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, ${c} 100%) !important; }
                     `;
                     document.head.appendChild(dynamicStyle);
-                    
-                    // Hero background con color dinámico
-                    const heroBg = document.getElementById('heroBackground');
-                    heroBg.style.backgroundImage = `linear-gradient(135deg, ${c}40 0%, #0f172a 100%), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')`;
-                } else {
-                    const heroBg = document.getElementById('heroBackground');
-                    heroBg.style.backgroundImage = `url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80')`;
                 }
                 
                 cargarRedes(configuracion?.redes_sociales || {});
