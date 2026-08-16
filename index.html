@@ -208,14 +208,19 @@
             window._tt = setTimeout(() => { t.classList.remove('show'); }, 4000);
         }
         
-        function getTenantSlug() {
+        // ✅ CORRECCIÓN: Renombrada de getTenantSlug() a obtenerSlugLocal()
+        // Evita colisión con la función global window.getTenantSlug que causaba infinite loop
+        function obtenerSlugLocal() {
+            // Si existe la función global, la usamos directamente
             if (typeof window.getTenantSlug === 'function') return window.getTenantSlug();
+            // Fallback: leer de URL o localStorage
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('instituto') || localStorage.getItem('asari_tenant_slug') || 'default';
         }
         
+        // ✅ CORRECCIÓN: buildUrl ahora llama a obtenerSlugLocal()
         function buildUrl(path) {
-            const slug = getTenantSlug();
+            const slug = obtenerSlugLocal();
             return `${path}?instituto=${encodeURIComponent(slug)}`;
         }
         
