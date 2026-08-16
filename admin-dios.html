@@ -469,15 +469,14 @@
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); }
 
+        // ✅ CORRECCIÓN: showToast ahora inyecta HTML de cero, evitando TypeError con Lucide
         function showToast(msg, type = 'success') {
             const t = document.getElementById('toastMsg');
-            const icon = t.querySelector('i');
-            t.querySelector('span').textContent = msg;
-            if(type === 'success') { t.className = 'toast show success'; icon.setAttribute('data-lucide', 'check-circle'); }
-            else { t.className = 'toast show error'; icon.setAttribute('data-lucide', 'alert-triangle'); }
+            t.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-triangle'}" class="w-5 h-5"></i><span style="margin-left:8px;">${msg}</span>`;
+            t.className = `toast show ${type}`;
             lucide.createIcons();
             clearTimeout(window._tt);
-            window._tt = setTimeout(() => { t.classList.remove('show'); }, 3500);
+            window._tt = setTimeout(() => { t.classList.remove('show'); t.innerHTML = ''; }, 3500);
         }
 
         function verificarSesionAdmin() {
@@ -657,7 +656,7 @@
             document.getElementById('miTermMatricula').value = 'Nº Registro';
             
             ['modCrm','modSedes','modCampus','modCertificados','modPortal','modReportes','modWallet'].forEach(id => document.getElementById(id).checked = true);
-            document.getElementById('modGamificacion').checked = false; // Off por defecto
+            document.getElementById('modGamificacion').checked = false;
             
             document.getElementById('slaAltaAlumno').value = 10;
             document.getElementById('slaFeeCert').value = 20;
