@@ -28,7 +28,7 @@
         .navbar { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.92); backdrop-filter: blur(30px); border-bottom: 1px solid rgba(0,0,0,0.06); }
         
         /* HERO CINEMÁTICO */
-        .hero-section { position: relative; min-height: 80vh; display: flex; align-items: center; overflow: hidden; background: #0f172a; }
+        .hero-section { position: relative; min-height: 80vh; display: flex; align-items: center; overflow: hidden; background: #0f172a; background-size: cover !important; background-position: center center !important; background-repeat: no-repeat !important; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,42,0.7) 0%, rgba(15,23,42,0.9) 100%); }
         .hero-glow { position: absolute; bottom: -50%; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse, var(--color-primary)30 0%, transparent 70%); pointer-events: none; }
         
@@ -112,8 +112,11 @@
     <!-- NAVBAR -->
     <nav class="navbar px-6 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center" id="navLogoContainer">
-                <img data-tenant-logo="principal" src="" alt="Logo" id="navLogoImg" style="display:none;" onload="this.style.display='block';" onerror="this.style.display='none';">
+            <!-- ✅ CIRUGÍA: Contenedor dinámico para logo sin restricciones cuadradas -->
+            <div class="h-12 md:h-16 flex items-center justify-start" id="navLogoContainer">
+                <img data-tenant-logo="principal" src="" alt="Logo" id="navLogoImg" style="display:none;" 
+                     class="h-full w-auto object-contain max-w-[200px] md:max-w-[250px] drop-shadow-sm"
+                     onload="this.style.display='block';" onerror="this.style.display='none';">
                 <span id="navLogoPlaceholder" class="text-xl">🎓</span>
             </div>
             <span class="font-bold text-gray-900 hidden sm:block text-lg" id="navInstituteName">Instituto</span>
@@ -225,7 +228,7 @@
             </div>
             <p class="text-gray-500 text-lg mb-4">Gana comisiones recomendando nuestros cursos</p>
             <p class="text-gray-400 mb-8">Obtén tu código de afiliado en tu Billetera Digital y empieza a generar ingresos compartiendo enlaces.</p>
-            <a href="login.html" class="btn-primary px-8 py-3"><i data-lucide="wallet" class="w-4 h-4"></i> Obtener mi Código</a>
+            <button class="btn-primary px-8 py-3" onclick="abrirModalAfiliado()"><i data-lucide="link-2" class="w-4 h-4"></i> Quiero ser Afiliado</button>
         </div>
     </section>
 
@@ -303,7 +306,7 @@
         </div>
     </div>
 
-    <!-- [NUEVO] MODAL CREADOR -->
+    <!-- MODAL CREADOR -->
     <div class="modal-overlay hidden" id="modalCreador">
         <div class="modal-card">
             <div class="p-6 border-b border-gray-200 flex justify-between items-center">
@@ -313,6 +316,7 @@
             <form id="creadorForm" class="p-6 space-y-5">
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Nombre Completo *</label><input type="text" id="creadorNombre" class="input-dios" required></div>
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Email *</label><input type="email" id="creadorEmail" class="input-dios" required></div>
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Teléfono *</label><input type="tel" id="creadorTelefono" class="input-dios" required></div>
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Especialidad *</label><input type="text" id="creadorEspecialidad" class="input-dios" placeholder="Ej: Inteligencia Artificial, Marketing, Derecho" required></div>
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Link a tu Perfil / CV *</label><input type="url" id="creadorLink" class="input-dios" placeholder="https://linkedin.com/in/tuperfil" required></div>
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Temática del Curso *</label><textarea id="creadorTematica" class="input-dios" rows="3" placeholder="Describe brevemente el contenido del curso..." required></textarea></div>
@@ -323,6 +327,23 @@
                 </label>
                 
                 <button type="submit" class="btn-primary w-full justify-center" id="btnEnviarCreador"><i data-lucide="send" class="w-4 h-4"></i> Enviar Postulación</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL AFILIADO -->
+    <div class="modal-overlay hidden" id="modalAfiliado">
+        <div class="modal-card">
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-900">Programa de Afiliados</h3>
+                <button onclick="cerrarModalAfiliado()" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="afiliadoForm" class="p-6 space-y-5">
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Nombre Completo *</label><input type="text" id="afiliadoNombre" class="input-dios" required></div>
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Email *</label><input type="email" id="afiliadoEmail" class="input-dios" required></div>
+                <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Teléfono *</label><input type="tel" id="afiliadoTelefono" class="input-dios" required></div>
+                
+                <button type="submit" class="btn-primary w-full justify-center" id="btnEnviarAfiliado"><i data-lucide="send" class="w-4 h-4"></i> Solicitar mi Código</button>
             </form>
         </div>
     </div>
@@ -359,6 +380,62 @@
             return `${path}?instituto=${encodeURIComponent(slug)}`;
         }
         
+        // ✅ NUEVO: Función genérica para enviar leads de negocio
+        async function enviarLeadNegocio(event, origen_lead) {
+            event.preventDefault();
+            
+            let nombre, email, telefono;
+            
+            if (origen_lead === 'creador') {
+                nombre = document.getElementById('creadorNombre').value.trim();
+                email = document.getElementById('creadorEmail').value.trim();
+                telefono = document.getElementById('creadorTelefono').value.trim();
+            } else if (origen_lead === 'afiliado') {
+                nombre = document.getElementById('afiliadoNombre').value.trim();
+                email = document.getElementById('afiliadoEmail').value.trim();
+                telefono = document.getElementById('afiliadoTelefono').value.trim();
+            }
+            
+            if (!nombre || !email || !telefono) {
+                showToast('Completa todos los campos', 'error');
+                return;
+            }
+            
+            const btnId = origen_lead === 'creador' ? 'btnEnviarCreador' : 'btnEnviarAfiliado';
+            const btn = document.getElementById(btnId);
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner w-4 h-4"></div> Enviando...';
+            
+            try {
+                const { error } = await window.supabase.from('crm_leads').insert([{
+                    instituto_id: tenantConfig.instituto.id,
+                    nombre_completo: nombre,
+                    email: email,
+                    telefono: telefono,
+                    origen: origen_lead,
+                    estado: 'nuevo'
+                }]);
+                
+                if (error) throw error;
+                
+                if (origen_lead === 'creador') {
+                    cerrarModalCreador();
+                } else {
+                    cerrarModalAfiliado();
+                }
+                
+                showToast('Solicitud enviada con éxito', 'success');
+            } catch(err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = origen_lead === 'creador' 
+                    ? '<i data-lucide="send" class="w-4 h-4"></i> Enviar Postulación' 
+                    : '<i data-lucide="send" class="w-4 h-4"></i> Solicitar mi Código';
+                lucide.createIcons();
+            }
+        }
+        
         async function inicializar() {
             if (typeof window.fetchTenantConfig !== 'function') { setTimeout(inicializar, 100); return; }
             tenantConfig = await window.fetchTenantConfig();
@@ -381,11 +458,11 @@
                     document.getElementById('navLogoPlaceholder').style.display = 'none';
                 }
                 
-                // ✅ CIRUGÍA: Inyectar logo_secundario como background del Hero
+                // Inyectar logo_secundario como background del Hero
                 if (configuracion?.branding?.logo_secundario) {
                     const heroEl = document.getElementById('heroSection');
                     if (heroEl) {
-                        heroEl.style.cssText = `background-image: linear-gradient(to bottom, rgba(15,23,42,0.7), rgba(15,23,42,0.9)), url('${configuracion.branding.logo_secundario}') !important; background-size: cover !important; background-position: center !important;`;
+                        heroEl.style.cssText = `background-image: linear-gradient(to bottom, rgba(15,23,42,0.7), rgba(15,23,42,0.9)), url('${configuracion.branding.logo_secundario}') !important; background-size: cover !important; background-position: center center !important; background-repeat: no-repeat !important;`;
                     }
                 }
                 
@@ -515,7 +592,7 @@
             }
         }
         
-        // 🆕 NUEVO: Modal Creador
+        // 🆕 Funciones para modales de negocio
         function abrirModalCreador() {
             document.getElementById('modalCreador').classList.remove('hidden');
             lucide.createIcons();
@@ -526,53 +603,19 @@
             document.getElementById('creadorForm').reset();
         }
         
-        document.getElementById('creadorForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const nombre = document.getElementById('creadorNombre').value.trim();
-            const email = document.getElementById('creadorEmail').value.trim();
-            const especialidad = document.getElementById('creadorEspecialidad').value.trim();
-            const link = document.getElementById('creadorLink').value.trim();
-            const tematica = document.getElementById('creadorTematica').value.trim();
-            const legal = document.getElementById('creadorLegal').checked;
-            
-            if (!nombre || !email || !especialidad || !link || !tematica) {
-                showToast('Completa todos los campos', 'error');
-                return;
-            }
-            
-            if (!legal) {
-                showToast('Debes aceptar los términos legales', 'error');
-                return;
-            }
-            
-            const btn = document.getElementById('btnEnviarCreador');
-            btn.disabled = true;
-            btn.innerHTML = '<div class="spinner w-4 h-4"></div> Enviando...';
-            
-            try {
-                const { error } = await window.supabase.from('crm_creadores').insert([{
-                    instituto_id: tenantConfig.instituto.id,
-                    nombre_completo: nombre,
-                    email: email,
-                    especialidad: especialidad,
-                    link_perfil: link,
-                    tematica_curso: tematica,
-                    estado: 'pendiente'
-                }]);
-                
-                if (error) throw error;
-                
-                cerrarModalCreador();
-                showToast('Postulación enviada. Te contactaremos pronto.', 'success');
-            } catch(err) {
-                showToast('Error: ' + err.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Enviar Postulación';
-                lucide.createIcons();
-            }
-        });
+        function abrirModalAfiliado() {
+            document.getElementById('modalAfiliado').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        
+        function cerrarModalAfiliado() {
+            document.getElementById('modalAfiliado').classList.add('hidden');
+            document.getElementById('afiliadoForm').reset();
+        }
+        
+        // ✅ Formularios conectados al CRM
+        document.getElementById('creadorForm').addEventListener('submit', (e) => enviarLeadNegocio(e, 'creador'));
+        document.getElementById('afiliadoForm').addEventListener('submit', (e) => enviarLeadNegocio(e, 'afiliado'));
         
         document.getElementById('inscripcionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -642,6 +685,10 @@
         
         document.getElementById('modalCreador').addEventListener('click', function(e) {
             if (e.target === this) cerrarModalCreador();
+        });
+        
+        document.getElementById('modalAfiliado').addEventListener('click', function(e) {
+            if (e.target === this) cerrarModalAfiliado();
         });
         
         window.addEventListener('DOMContentLoaded', inicializar);
