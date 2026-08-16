@@ -404,13 +404,13 @@
         async function enviarLeadNegocio(event, origen_lead) {
             event.preventDefault();
             
-            let nombre, email, telefono;
+            let nombre, email, telefono, linkedin = null;
             
             if (origen_lead === 'creador') {
                 nombre = document.getElementById('creadorNombre').value.trim();
                 email = document.getElementById('creadorEmail').value.trim();
                 telefono = document.getElementById('creadorTelefono').value.trim();
-                const linkedin = document.getElementById('creadorLinkedin').value.trim();
+                linkedin = document.getElementById('creadorLinkedin').value.trim();
             } else if (origen_lead === 'afiliado') {
                 nombre = document.getElementById('afiliadoNombre').value.trim();
                 email = document.getElementById('afiliadoEmail').value.trim();
@@ -419,6 +419,11 @@
             
             if (!nombre || !email || !telefono) {
                 showToast('Completa todos los campos', 'error');
+                return;
+            }
+            
+            if (origen_lead === 'creador' && !cvFile) {
+                showToast('Debes subir tu CV en formato PDF', 'error');
                 return;
             }
             
