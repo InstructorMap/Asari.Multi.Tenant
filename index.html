@@ -112,7 +112,6 @@
     <!-- NAVBAR -->
     <nav class="navbar px-6 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <!-- ✅ CIRUGÍA: Contenedor dinámico para logo sin restricciones cuadradas -->
             <div class="h-12 md:h-16 flex items-center justify-start" id="navLogoContainer">
                 <img data-tenant-logo="principal" src="" alt="Logo" id="navLogoImg" style="display:none;" 
                      class="h-full w-auto object-contain max-w-[200px] md:max-w-[250px] drop-shadow-sm"
@@ -194,7 +193,7 @@
         </div>
     </section>
 
-    <!-- [NUEVO] CREATOR STUDIO -->
+    <!-- CREADORES -->
     <section id="creadores" class="creator-section px-6 py-24 relative overflow-hidden">
         <div class="creator-glow"></div>
         <div class="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -219,7 +218,7 @@
         </div>
     </section>
 
-    <!-- [NUEVO] PROGRAMA DE AFILIADOS -->
+    <!-- PROGRAMA DE AFILIADOS -->
     <section id="afiliados" class="affiliate-section px-6 py-16">
         <div class="max-w-4xl mx-auto text-center">
             <div class="inline-flex items-center gap-3 mb-6">
@@ -268,7 +267,7 @@
         </div>
     </footer>
 
-    <!-- MODAL INSCRIPCIÓN -->
+    <!-- MODAL INSCRIPCIÓN / CHECKOUT -->
     <div class="modal-overlay hidden" id="inscripcionModal">
         <div class="modal-card">
             <div class="p-6 border-b border-gray-200 flex justify-between items-center">
@@ -276,7 +275,11 @@
                 <button onclick="cerrarModalInscripcion()" class="p-2 hover:bg-gray-100 rounded-lg text-gray-500"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <form id="inscripcionForm" class="p-6 space-y-5">
+                <!-- CAMPOS OCULTOS PARA LA LÓGICA DE AFILIADOS -->
                 <input type="hidden" id="cursoSeleccionadoId">
+                <input type="hidden" id="cursoSeleccionadoTitulo">
+                <input type="hidden" id="cursoSeleccionadoPrecio">
+                
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Nombre Completo *</label><input type="text" id="leadNombre" class="input-dios" required></div>
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Email *</label><input type="email" id="leadEmail" class="input-dios" required></div>
                 <div><label class="text-xs font-bold text-gray-600 uppercase mb-2 block">Teléfono *</label><input type="tel" id="leadTelefono" class="input-dios" required></div>
@@ -301,7 +304,7 @@
                 <div id="divMercadoPago" class="hidden bg-blue-50 p-4 rounded-xl text-center">
                     <p class="text-sm text-blue-700">Serás redirigido a la pasarela de pago de MercadoPago</p>
                 </div>
-                <button type="submit" class="btn-primary w-full justify-center" id="btnEnviarLead"><i data-lucide="send" class="w-4 h-4"></i> Enviar Inscripción</button>
+                <button type="submit" class="btn-primary w-full justify-center" id="btnEnviarLead"><i data-lucide="send" class="w-4 h-4"></i> Completar Inscripción</button>
             </form>
         </div>
     </div>
@@ -334,7 +337,7 @@
                 
                 <label class="legal-checkbox">
                     <input type="checkbox" id="creadorLegal" required>
-                    <span class="text-sm text-gray-600 leading-relaxed">Acepto los <strong>Términos de Contratista Independiente</strong> (Locación de Servicios - Sin relación de dependencia) y las <strong>Políticas de Copyright</strong>. Entiendo que mi participación es como prestador independiente.</span>
+                    <span class="text-sm text-gray-600 leading-relaxed">Acepto los <strong>Términos de Contratista Independiente</strong> y las <strong>Políticas de Copyright</strong>.</span>
                 </label>
                 
                 <button type="submit" class="btn-primary w-full justify-center" id="btnEnviarCreador"><i data-lucide="send" class="w-4 h-4"></i> Enviar Postulación</button>
@@ -391,6 +394,16 @@
             const slug = obtenerSlugLocal();
             return `${path}?instituto=${encodeURIComponent(slug)}`;
         }
+
+        // ✅ LÓGICA DE RASTREO DE AFILIADOS INVISIBLE
+        function capturarAfiliado() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if (ref) {
+                localStorage.setItem('asari_ref_afiliado', ref);
+                console.log("Afiliado capturado:", ref);
+            }
+        }
         
         function handleCv(input) {
             if (input.files && input.files[0]) {
@@ -400,7 +413,6 @@
             }
         }
         
-        // ✅ NUEVO: Función genérica para enviar leads de negocio
         async function enviarLeadNegocio(event, origen_lead) {
             event.preventDefault();
             
@@ -477,6 +489,8 @@
         }
         
         async function inicializar() {
+            capturarAfiliado(); // Capturamos el link apenas carga la web
+            
             if (typeof window.fetchTenantConfig !== 'function') { setTimeout(inicializar, 100); return; }
             tenantConfig = await window.fetchTenantConfig();
             
@@ -498,7 +512,6 @@
                     document.getElementById('navLogoPlaceholder').style.display = 'none';
                 }
                 
-                // Inyectar logo_secundario como background del Hero
                 if (configuracion?.branding?.logo_secundario) {
                     const heroEl = document.getElementById('heroSection');
                     if (heroEl) {
@@ -506,7 +519,6 @@
                     }
                 }
                 
-                // Inyección dinámica de colores
                 if (configuracion?.branding?.colores?.primario) {
                     const c = configuracion.branding.colores.primario;
                     document.documentElement.style.setProperty('--color-primary', c);
@@ -564,12 +576,13 @@
                 return;
             }
             
+            // ✅ PASAMOS EL PRECIO Y TÍTULO AL MODAL DE INSCRIPCIÓN
             grid.innerHTML = cursosData.map(c => `
                 <div class="curso-card">
-                    <span class="curso-badge mb-4">${c.tipo_curso || 'Curso'}</span>
+                    <span class="curso-badge mb-4">${c.especialidad || 'Curso'}</span>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">${c.titulo}</h3>
                     <p class="font-mono text-3xl font-black mb-6" style="color: var(--color-primary);">$${(c.precio_declarado_usd || 0).toFixed(2)} USD</p>
-                    <button class="btn-primary w-full justify-center" onclick="abrirModalInscripcion('${c.id}', '${c.titulo.replace(/'/g, "\\'")}')">
+                    <button class="btn-primary w-full justify-center" onclick="abrirModalInscripcion('${c.id}', '${c.titulo.replace(/'/g, "\\'")}', ${c.precio_declarado_usd || 0})">
                         <i data-lucide="clipboard-list" class="w-4 h-4"></i> Quiero Inscribirme
                     </button>
                 </div>
@@ -602,8 +615,11 @@
             lucide.createIcons();
         }
         
-        function abrirModalInscripcion(cursoId, cursoTitulo) {
+        function abrirModalInscripcion(cursoId, cursoTitulo, cursoPrecio) {
             document.getElementById('cursoSeleccionadoId').value = cursoId;
+            document.getElementById('cursoSeleccionadoTitulo').value = cursoTitulo;
+            document.getElementById('cursoSeleccionadoPrecio').value = cursoPrecio;
+            
             document.getElementById('modalCursoTitulo').textContent = `Inscripción: ${cursoTitulo}`;
             document.getElementById('inscripcionForm').reset();
             comprobanteFile = null;
@@ -632,7 +648,6 @@
             }
         }
         
-        // 🆕 Funciones para modales de negocio
         function abrirModalCreador() {
             document.getElementById('modalCreador').classList.remove('hidden');
             lucide.createIcons();
@@ -656,7 +671,6 @@
             document.getElementById('afiliadoForm').reset();
         }
         
-        // ✅ Formularios conectados al CRM
         document.getElementById('creadorForm').addEventListener('submit', (e) => enviarLeadNegocio(e, 'creador'));
         document.getElementById('afiliadoForm').addEventListener('submit', (e) => enviarLeadNegocio(e, 'afiliado'));
         
@@ -664,6 +678,9 @@
             e.preventDefault();
             
             const cursoId = document.getElementById('cursoSeleccionadoId').value;
+            const cursoTitulo = document.getElementById('cursoSeleccionadoTitulo').value;
+            const cursoPrecio = parseFloat(document.getElementById('cursoSeleccionadoPrecio').value) || 0;
+            
             const nombre = document.getElementById('leadNombre').value.trim();
             const email = document.getElementById('leadEmail').value.trim();
             const telefono = document.getElementById('leadTelefono').value.trim();
@@ -696,6 +713,7 @@
                     comprobanteUrl = data.publicUrl;
                 }
                 
+                // 1. Guardar la inscripción en el CRM
                 const leadData = {
                     instituto_id: tenantConfig.instituto.id,
                     nombre_completo: nombre,
@@ -711,13 +729,34 @@
                 const { error: insertError } = await window.supabase.from('crm_leads').insert([leadData]);
                 if (insertError) throw insertError;
                 
+                // ✅ 2. LÓGICA DE AFILIADOS (El toque maestro)
+                const refAfiliado = localStorage.getItem('asari_ref_afiliado');
+                if (refAfiliado) {
+                    const porcentaje = tenantConfig.configuracion?.config_afiliados?.porcentaje_comision || 30; // 30% por defecto
+                    const comisionGanada = cursoPrecio * (porcentaje / 100);
+                    
+                    const billeteraData = {
+                        afiliado_id: refAfiliado,
+                        instituto_id: tenantConfig.instituto.id,
+                        curso_id: cursoId,
+                        monto_ganado: comisionGanada,
+                        tipo_moneda: tenantConfig.configuracion?.config_afiliados?.moneda_instituto || 'fiat',
+                        estado: 'pendiente', // Estará pendiente hasta que se apruebe el lead en el CRM
+                        nombre_referido: nombre,
+                        curso_titulo: cursoTitulo
+                    };
+                    
+                    // Insertamos silenciosamente para no detener al alumno si falla
+                    await window.supabase.from('sys_billetera_afiliados').insert([billeteraData]);
+                }
+                
                 cerrarModalInscripcion();
                 showToast(metodo === 'transferencia' ? '¡Inscripción recibida! Verificaremos el pago en breve.' : 'Redirigiendo a pasarela...', 'success');
             } catch(err) {
                 showToast('Error: ' + err.message, 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Enviar Inscripción';
+                btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Completar Inscripción';
                 lucide.createIcons();
             }
         });
