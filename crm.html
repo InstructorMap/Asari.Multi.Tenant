@@ -881,12 +881,13 @@
                 if (lead.origen === 'creador') rol = 'creador';
                 else if (lead.origen === 'afiliado') rol = 'afiliado';
                 
-                // 3. UPSERT en sys_roles_usuarios
+                // 3. UPSERT en sys_roles_usuarios (AHORA INSERTA EN rol_nivel)
                 const { error: upsertError } = await window.supabase.from('sys_roles_usuarios')
                     .upsert({
                         user_email: lead.email,
                         instituto_id: lead.instituto_id,
-                        rol: rol
+                        nombre_completo: lead.nombre_completo,
+                        rol_nivel: rol
                     }, { onConflict: 'user_email,instituto_id' });
                 if (upsertError) throw upsertError;
                 
