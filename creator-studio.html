@@ -207,7 +207,9 @@
             align-items: center; 
             justify-content: center;
             font-size: 48px;
+            object-fit: cover;
         }
+        .course-cover img { width: 100%; height: 100%; object-fit: cover; }
         .course-body { padding: 20px; }
         .course-title { font-size: 18px; font-weight: 700; color: white; margin-bottom: 8px; }
         .course-price { font-size: 24px; font-weight: 800; color: var(--color-primary-light); }
@@ -339,11 +341,71 @@
         
         .empty-state { text-align: center; padding: 60px 20px; color: #64748b; }
         
+        /* COURSE BUILDER */
+        .builder-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: #0f172a; 
+            z-index: 100; 
+            display: none; 
+            flex-direction: column;
+        }
+        .builder-overlay.active { display: flex; }
+        .builder-header { 
+            padding: 16px 28px; 
+            border-bottom: 1px solid rgba(255,255,255,0.08); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            background: #1e293b;
+        }
+        .builder-body { 
+            flex: 1; 
+            display: flex; 
+            overflow: hidden;
+        }
+        .builder-sidebar { 
+            width: 300px; 
+            background: #1e293b; 
+            border-right: 1px solid rgba(255,255,255,0.08); 
+            padding: 20px; 
+            overflow-y: auto;
+        }
+        .builder-content { 
+            flex: 1; 
+            padding: 24px; 
+            overflow-y: auto;
+        }
+        .module-item { 
+            padding: 14px 16px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            margin-bottom: 8px;
+            border: 1px solid transparent;
+        }
+        .module-item:hover { background: rgba(255,255,255,0.05); }
+        .module-item.active { background: rgba(124,58,237,0.15); border-color: rgba(139,92,246,0.3); }
+        .lesson-item { 
+            padding: 14px 16px; 
+            border-radius: 10px; 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid rgba(255,255,255,0.06); 
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+        .lesson-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(139,92,246,0.2); }
+        
         @media (max-width: 1024px) { 
             .sidebar { transform: translateX(-100%); } 
             .sidebar.open { transform: translateX(0); } 
             .main-content { margin-left: 0; } 
             .btn-hamburger { display: flex; } 
+            .builder-sidebar { width: 100%; position: absolute; z-index: 10; height: 50%; }
+            .builder-content { margin-top: 50%; }
         }
         @media (max-width: 640px) { 
             .content-area { padding: 16px; } 
@@ -589,6 +651,97 @@
         </div>
     </div>
     
+    <!-- COURSE BUILDER OVERLAY -->
+    <div class="builder-overlay" id="courseBuilderOverlay">
+        <div class="builder-header">
+            <div>
+                <h2 class="text-xl font-bold text-white" id="builderCourseTitle">Constructor de Curso</h2>
+                <p class="text-sm text-gray-400">Organiza tus módulos y lecciones</p>
+            </div>
+            <button class="btn-secondary" onclick="cerrarCourseBuilder()">
+                <i data-lucide="x" class="w-4 h-4"></i>
+                Cerrar Editor
+            </button>
+        </div>
+        <div class="builder-body">
+            <div class="builder-sidebar">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-white">Módulos</h3>
+                    <button class="btn-icon-sm" onclick="crearModulo()" title="Nuevo Módulo">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div id="modulesList">
+                    <div class="empty-state text-sm py-8">Sin módulos aún</div>
+                </div>
+            </div>
+            <div class="builder-content">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="font-semibold text-white" id="lessonsTitle">Lecciones</h3>
+                    <button class="btn-primary" id="btnNewLesson" onclick="abrirModalLeccion()" disabled>
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Nueva Lección
+                    </button>
+                </div>
+                <div id="lessonsList">
+                    <div class="empty-state text-sm py-8">Selecciona un módulo para ver sus lecciones</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL NUEVA LECCIÓN -->
+    <div class="modal-overlay hidden" id="modalLeccion">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">Nueva Lección</h3>
+                <button class="modal-close" onclick="cerrarModalLeccion()">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form id="leccionForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Título de la Lección *</label>
+                        <input type="text" id="leccionTitulo" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Contenido *</label>
+                        <select id="leccionTipo" class="form-select" onchange="toggleTipoLeccion()">
+                            <option value="video">🎬 Video</option>
+                            <option value="pdf">📄 PDF</option>
+                            <option value="excel">📊 Excel</option>
+                            <option value="examen">📝 Examen</option>
+                        </select>
+                    </div>
+                    <div id="divVideoUrl" class="form-group">
+                        <label class="form-label">URL del Video (YouTube/Vimeo)</label>
+                        <input type="url" id="leccionUrl" class="form-input" placeholder="https://youtube.com/watch?v=...">
+                    </div>
+                    <div id="divArchivo" class="form-group hidden">
+                        <label class="form-label">Archivo</label>
+                        <input type="file" id="leccionArchivo" class="form-input">
+                    </div>
+                    <div id="divExamen" class="form-group hidden">
+                        <label class="form-label">Preguntas del Examen</label>
+                        <div id="preguntasExamen"></div>
+                        <button type="button" class="btn-secondary w-full justify-center mt-2" onclick="agregarPregunta()">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            Agregar Pregunta
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="cerrarModalLeccion()">Cancelar</button>
+                    <button type="submit" class="btn-primary">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        Guardar Lección
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
     <div id="toast" class="toast hidden"></div>
 
     <script src="supabase-config.js?v=5"></script>
@@ -599,6 +752,11 @@
         let tenantConfig = null;
         let cursosCreador = [];
         let gananciasData = [];
+        let currentCursoId = null;
+        let currentModuloId = null;
+        let modulosData = [];
+        let leccionesData = [];
+        let preguntasTemporales = [];
         
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -675,13 +833,10 @@
             
             await inicializarTenant();
             
-            // Obtener datos del usuario
             const { data: { session } } = await window.supabase.auth.getSession();
             if (session?.user) {
                 const iniciales = obtenerIniciales(session.user.email || 'C');
                 document.getElementById('avatarIniciales').textContent = iniciales;
-                
-                // Cargar datos del creador
                 await cargarDatosCreador(session.user.email);
             }
         }
@@ -713,7 +868,6 @@
                 const institutoId = tenantConfig?.instituto?.id;
                 if (!institutoId) return;
                 
-                // Cargar cursos
                 const { data: cursos, error: errorCursos } = await window.supabase
                     .from('sys_cursos')
                     .select('*')
@@ -726,7 +880,6 @@
                     document.getElementById('kpiCursos').textContent = cursos.length;
                 }
                 
-                // Cargar ganancias (simulado por ahora)
                 gananciasData = [];
                 renderizarGanancias();
                 
@@ -749,7 +902,9 @@
             } else {
                 grid.innerHTML = cursosCreador.map(curso => `
                     <div class="course-card">
-                        <div class="course-cover">🎓</div>
+                        <div class="course-cover">
+                            ${curso.portada_url ? `<img src="${curso.portada_url}" alt="${curso.titulo}">` : '🎓'}
+                        </div>
                         <div class="course-body">
                             <h3 class="course-title">${curso.titulo || 'Curso sin título'}</h3>
                             <div class="flex items-center justify-between mt-2 mb-4">
@@ -759,7 +914,7 @@
                                 </span>
                             </div>
                             <div class="flex gap-2">
-                                <button class="btn-secondary flex-1 justify-center text-sm py-2" onclick="showToast('Editor de módulos próximamente', 'error')">
+                                <button class="btn-secondary flex-1 justify-center text-sm py-2" onclick="abrirCourseBuilder('${curso.id}', '${curso.titulo.replace(/'/g, "\\'")}')">
                                     <i data-lucide="edit-2" class="w-3 h-3"></i>
                                     Editar Módulos
                                 </button>
@@ -812,6 +967,7 @@
             const descripcion = document.getElementById('cursoDescripcion').value.trim();
             const especialidad = document.getElementById('cursoEspecialidad').value.trim();
             const precio = parseFloat(document.getElementById('cursoPrecio').value) || 0;
+            const portadaInput = document.getElementById('cursoPortada');
             
             if (!titulo || !especialidad || precio <= 0) {
                 showToast('Completa todos los campos obligatorios', 'error');
@@ -824,7 +980,27 @@
                     showToast('Sesión no válida', 'error');
                     return;
                 }
+
+                // 1. Subir la portada si el usuario seleccionó una
+                let portadaUrl = null;
+                if (portadaInput.files && portadaInput.files[0]) {
+                    const file = portadaInput.files[0];
+                    const path = `portadas_cursos/${tenantConfig.instituto.id}/${Date.now()}_${file.name}`;
+                    
+                    const { error: uploadError } = await window.supabase.storage
+                        .from('archivos_cursos')
+                        .upload(path, file);
+                    
+                    if (uploadError) throw uploadError;
+                    
+                    const { data } = window.supabase.storage
+                        .from('archivos_cursos')
+                        .getPublicUrl(path);
+                        
+                    portadaUrl = data.publicUrl;
+                }
                 
+                // 2. Insertar el curso en la base de datos
                 const { error } = await window.supabase.from('sys_cursos').insert([{
                     instituto_id: tenantConfig.instituto.id,
                     titulo: titulo,
@@ -832,6 +1008,7 @@
                     especialidad: especialidad,
                     precio_declarado_usd: precio,
                     instructor_email: session.user.email,
+                    portada_url: portadaUrl,
                     estado: 'borrador'
                 }]);
                 
@@ -845,15 +1022,284 @@
             }
         });
         
+        // ============ COURSE BUILDER ============
+        function abrirCourseBuilder(cursoId, titulo) {
+            currentCursoId = cursoId;
+            currentModuloId = null;
+            document.getElementById('builderCourseTitle').textContent = `📚 ${titulo}`;
+            document.getElementById('courseBuilderOverlay').classList.add('active');
+            cargarModulos();
+        }
+        
+        function cerrarCourseBuilder() {
+            document.getElementById('courseBuilderOverlay').classList.remove('active');
+            currentCursoId = null;
+            currentModuloId = null;
+            modulosData = [];
+            leccionesData = [];
+        }
+        
+        async function cargarModulos() {
+            if (!currentCursoId) return;
+            
+            const modulesList = document.getElementById('modulesList');
+            modulesList.innerHTML = '<div class="text-center py-8"><div class="spinner"></div></div>';
+            
+            const { data, error } = await window.supabase
+                .from('sys_modulos')
+                .select('*')
+                .eq('curso_id', currentCursoId)
+                .order('orden', { ascending: true });
+            
+            if (error) {
+                modulesList.innerHTML = '<div class="empty-state text-sm py-8">Error cargando módulos</div>';
+                return;
+            }
+            
+            modulosData = data || [];
+            
+            if (modulosData.length === 0) {
+                modulesList.innerHTML = '<div class="empty-state text-sm py-8">Sin módulos aún</div>';
+            } else {
+                modulesList.innerHTML = modulosData.map(m => `
+                    <div class="module-item ${currentModuloId === m.id ? 'active' : ''}" onclick="seleccionarModulo('${m.id}')">
+                        <div class="font-semibold text-sm text-white">${m.titulo}</div>
+                        <div class="text-xs text-gray-400 mt-1">${m.descripcion || 'Sin descripción'}</div>
+                    </div>
+                `).join('');
+            }
+            
+            lucide.createIcons();
+        }
+        
+        async function crearModulo() {
+            const titulo = prompt('Título del nuevo módulo:');
+            if (!titulo || !titulo.trim()) return;
+            
+            const descripcion = prompt('Descripción (opcional):') || '';
+            
+            try {
+                const { data, error } = await window.supabase.from('sys_modulos').insert([{
+                    curso_id: currentCursoId,
+                    titulo: titulo.trim(),
+                    descripcion: descripcion,
+                    orden: modulosData.length + 1
+                }]).select().single();
+                
+                if (error) throw error;
+                
+                showToast('Módulo creado correctamente');
+                await cargarModulos();
+                
+                if (data) {
+                    seleccionarModulo(data.id);
+                }
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+        
+        function seleccionarModulo(moduloId) {
+            currentModuloId = moduloId;
+            document.querySelectorAll('.module-item').forEach(el => el.classList.remove('active'));
+            event.target.closest('.module-item').classList.add('active');
+            document.getElementById('btnNewLesson').disabled = false;
+            document.getElementById('lessonsTitle').textContent = 'Lecciones del Módulo';
+            cargarLecciones(moduloId);
+        }
+        
+        async function cargarLecciones(moduloId) {
+            const lessonsList = document.getElementById('lessonsList');
+            lessonsList.innerHTML = '<div class="text-center py-8"><div class="spinner"></div></div>';
+            
+            const { data, error } = await window.supabase
+                .from('sys_lecciones')
+                .select('*')
+                .eq('modulo_id', moduloId)
+                .order('orden', { ascending: true });
+            
+            if (error) {
+                lessonsList.innerHTML = '<div class="empty-state text-sm py-8">Error cargando lecciones</div>';
+                return;
+            }
+            
+            leccionesData = data || [];
+            
+            if (leccionesData.length === 0) {
+                lessonsList.innerHTML = '<div class="empty-state text-sm py-8">Sin lecciones en este módulo</div>';
+            } else {
+                lessonsList.innerHTML = leccionesData.map(l => `
+                    <div class="lesson-item">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">${getIconoTipo(l.tipo_archivo)}</span>
+                            <div>
+                                <div class="font-semibold text-sm text-white">${l.titulo}</div>
+                                <div class="text-xs text-gray-400">${l.tipo_archivo}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            lucide.createIcons();
+        }
+        
+        function getIconoTipo(tipo) {
+            const iconos = { video: '🎬', pdf: '📄', excel: '📊', examen: '📝' };
+            return iconos[tipo] || '📄';
+        }
+        
+        function abrirModalLeccion() {
+            if (!currentModuloId) {
+                showToast('Primero selecciona un módulo', 'error');
+                return;
+            }
+            
+            preguntasTemporales = [];
+            document.getElementById('leccionForm').reset();
+            document.getElementById('leccionTipo').value = 'video';
+            toggleTipoLeccion();
+            document.getElementById('modalLeccion').classList.remove('hidden');
+            lucide.createIcons();
+        }
+        
+        function cerrarModalLeccion() {
+            document.getElementById('modalLeccion').classList.add('hidden');
+            document.getElementById('leccionForm').reset();
+            preguntasTemporales = [];
+        }
+        
+        function toggleTipoLeccion() {
+            const tipo = document.getElementById('leccionTipo').value;
+            document.getElementById('divVideoUrl').classList.toggle('hidden', tipo !== 'video');
+            document.getElementById('divArchivo').classList.toggle('hidden', tipo !== 'pdf' && tipo !== 'excel');
+            document.getElementById('divExamen').classList.toggle('hidden', tipo !== 'examen');
+            
+            if (tipo === 'examen' && preguntasTemporales.length === 0) {
+                agregarPregunta();
+            }
+        }
+        
+        function agregarPregunta() {
+            const container = document.getElementById('preguntasExamen');
+            const index = preguntasTemporales.length;
+            
+            const preguntaDiv = document.createElement('div');
+            preguntaDiv.className = 'bg-white/5 border border-white/10 rounded-lg p-4 mb-3';
+            preguntaDiv.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label text-xs">Pregunta ${index + 1}</label>
+                    <input type="text" class="form-input pregunta-texto" placeholder="Escribe la pregunta">
+                </div>
+                <div class="space-y-2">
+                    ${[0,1,2,3].map(i => `
+                        <div class="flex items-center gap-2">
+                            <input type="radio" name="correcta_${index}" value="${i}" ${i === 0 ? 'checked' : ''} class="correcta-radio">
+                            <input type="text" class="form-input opcion-input" placeholder="Opción ${i + 1}">
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            container.appendChild(preguntaDiv);
+            lucide.createIcons();
+        }
+        
+        document.getElementById('leccionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('leccionTitulo').value.trim();
+            const tipo = document.getElementById('leccionTipo').value;
+            
+            if (!titulo) {
+                showToast('Ingresa un título', 'error');
+                return;
+            }
+            
+            try {
+                let archivoUrl = null;
+                
+                if (tipo === 'video') {
+                    archivoUrl = document.getElementById('leccionUrl').value.trim();
+                    if (!archivoUrl) {
+                        showToast('Ingresa la URL del video', 'error');
+                        return;
+                    }
+                } else if (tipo === 'pdf' || tipo === 'excel') {
+                    const archivoInput = document.getElementById('leccionArchivo');
+                    if (archivoInput.files && archivoInput.files[0]) {
+                        const file = archivoInput.files[0];
+                        const path = `cursos/${currentCursoId}/modulo_${currentModuloId}/${Date.now()}_${file.name}`;
+                        const { error: uploadError } = await window.supabase.storage
+                            .from('archivos_cursos')
+                            .upload(path, file);
+                        
+                        if (uploadError) throw uploadError;
+                        
+                        const { data } = window.supabase.storage
+                            .from('archivos_cursos')
+                            .getPublicUrl(path);
+                        
+                        archivoUrl = data.publicUrl;
+                    } else {
+                        showToast('Selecciona un archivo', 'error');
+                        return;
+                    }
+                } else if (tipo === 'examen') {
+                    // Construir examen
+                    const preguntas = [];
+                    const preguntaDivs = document.querySelectorAll('#preguntasExamen > div');
+                    
+                    preguntaDivs.forEach((div, idx) => {
+                        const texto = div.querySelector('.pregunta-texto').value.trim();
+                        const opciones = Array.from(div.querySelectorAll('.opcion-input')).map(o => o.value.trim());
+                        const correcta = parseInt(div.querySelector('.correcta-radio:checked').value);
+                        
+                        if (texto && opciones.every(o => o)) {
+                            preguntas.push({ texto, opciones, correcta });
+                        }
+                    });
+                    
+                    if (preguntas.length === 0) {
+                        showToast('Agrega al menos una pregunta', 'error');
+                        return;
+                    }
+                    
+                    archivoUrl = JSON.stringify(preguntas);
+                }
+                
+                const { error } = await window.supabase.from('sys_lecciones').insert([{
+                    modulo_id: currentModuloId,
+                    titulo: titulo,
+                    tipo_archivo: tipo,
+                    archivo_url: archivoUrl,
+                    orden: leccionesData.length + 1
+                }]);
+                
+                if (error) throw error;
+                
+                cerrarModalLeccion();
+                await cargarLecciones(currentModuloId);
+                showToast('Lección guardada correctamente');
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        });
+        
         document.addEventListener('keydown', (e) => { 
             if (e.key === 'Escape') { 
                 cerrarModalCurso();
+                cerrarModalLeccion();
                 closeSidebar();
             } 
         });
         
         document.getElementById('modalCurso').addEventListener('click', function(e) { 
             if (e.target === this) cerrarModalCurso(); 
+        });
+        
+        document.getElementById('modalLeccion').addEventListener('click', function(e) { 
+            if (e.target === this) cerrarModalLeccion(); 
         });
         
         window.addEventListener('DOMContentLoaded', inicializar);
