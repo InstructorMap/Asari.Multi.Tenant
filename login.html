@@ -548,7 +548,7 @@
                 }
                 
                 if (session?.user) {
-                    console.log('✅ Sesión activa detectada, redirigiendo a wallet...');
+                    console.log('✅ Sesión activa detectada, redirigiendo...');
                     return true;
                 }
                 
@@ -674,9 +674,9 @@
                     `;
                     lucide.createIcons();
                     
-                    // Redirigir a wallet
-                    setTimeout(() => {
-                        window.location.href = 'wallet.html';
+                    // Usar el Enrutador Inteligente (RBAC)
+                    setTimeout(async () => {
+                        await window.enrutarPorRol();
                     }, 800);
                 }
             } catch (error) {
@@ -759,7 +759,7 @@
                 if (hasSession) {
                     // Mostrar mensaje de redirección
                     institutoNombre.textContent = 'Sesión Activa';
-                    institutoSlug.textContent = 'Redirigiendo a tu billetera...';
+                    institutoSlug.textContent = 'Redirigiendo...';
                     
                     submitBtn.innerHTML = `
                         <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
@@ -768,9 +768,9 @@
                     lucide.createIcons();
                     submitBtn.disabled = true;
                     
-                    // Redirigir después de una breve pausa
-                    setTimeout(() => {
-                        window.location.href = 'wallet.html';
+                    // Redirigir usando el Enrutador Inteligente
+                    setTimeout(async () => {
+                        await window.enrutarPorRol();
                     }, 1000);
                     
                     return;
