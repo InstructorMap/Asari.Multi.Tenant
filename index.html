@@ -729,27 +729,40 @@
                 const { error: insertError } = await window.supabase.from('crm_leads').insert([leadData]);
                 if (insertError) throw insertError;
                 
-                // ✅ 2. LÓGICA DE AFILIADOS (El toque maestro)
-                const refAfiliado = localStorage.getItem('asari_ref_afiliado');
-                if (refAfiliado) {
-                    const porcentaje = tenantConfig.configuracion?.config_afiliados?.porcentaje_comision || 30; // 30% por defecto
-                    const comisionGanada = cursoPrecio * (porcentaje / 100);
-                    
-                    const billeteraData = {
-                        afiliado_id: refAfiliado,
-                        instituto_id: tenantConfig.instituto.id,
-                        curso_id: cursoId,
-                        monto_ganado: comisionGanada,
-                        tipo_moneda: tenantConfig.configuracion?.config_afiliados?.moneda_instituto || 'fiat',
-                        estado: 'pendiente', // Estará pendiente hasta que se apruebe el lead en el CRM
-                        nombre_referido: nombre,
-                        curso_titulo: cursoTitulo
-                    };
-                    
-                    // Insertamos silenciosamente para no detener al alumno si falla
-                    await window.supabase.from('sys_billetera_afiliados').insert([billeteraData]);
-                }
-                
+                // ✅ 2. LÓGICA DE AFILIADOS (MODO DEBUG)
+const refAfiliado = localStorage.getItem('asari_ref_afiliado');
+console.log("ID del Afiliado detectado en memoria:", refAfiliado);
+
+if (refAfiliado) {
+    const porcentaje = tenantConfig.configuracion?.config_afiliados?.porcentaje_comision || 30;
+    const comisionGanada = cursoPrecio * (porcentaje / 100);
+    
+    const billeteraData = {
+        afiliado_id: refAfiliado,
+        instituto_id: tenantConfig.instituto.id,
+        curso_id: cursoId || null,
+        monto_ganado: comisionGanada,
+        tipo_moneda: tenantConfig.configuracion?.config_afiliados?.moneda_instituto || 'fiat',
+        estado: 'pendiente',
+        nombre_referido: nombre,
+        curso_titulo: cursoTitulo
+    };
+    
+    console.log("Intentando guardar esta data en billetera:", billeteraData);
+    
+    const { data: dataAfiliado, error: errorAfiliado } = await window.supabase
+        .from('sys_billetera_afiliados')
+        .insert([billeteraData]);
+        
+    if (errorAfiliado) {
+        console.error("🛑 ERROR DE SUPABASE AL GUARDAR COMISIÓN:", errorAfiliado);
+        alert("Fallo al guardar comisión: " + errorAfiliado.message); // Esto nos dirá el problema exacto
+    } else {
+        console.log("✅ Comisión guardada con éxito.");
+    }
+} else {
+    alert("⚠️ No se encontró ningún código de afiliado en la memoria del navegador. Asegúrate de haber entrado usando el link mágico exacto.");
+}                
                 cerrarModalInscripcion();
                 showToast(metodo === 'transferencia' ? '¡Inscripción recibida! Verificaremos el pago en breve.' : 'Redirigiendo a pasarela...', 'success');
             } catch(err) {
