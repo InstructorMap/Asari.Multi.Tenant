@@ -69,16 +69,36 @@
         .kpi-value { font-size: 24px; font-weight: 800; color: white; line-height: 1; }
         .kpi-label { font-size: 12px; color: #94a3b8; margin-top: 4px; }
         
-        /* TABS WORKSPACE */
-        .workspace-tabs { display: flex; gap: 12px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
-        .workspace-tab { flex: 1; min-width: 180px; padding: 16px 20px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: all 0.25s ease; position: relative; }
-        .workspace-tab:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
-        .workspace-tab.active { background: rgba(124,58,237,0.08); border-color: rgba(139,92,246,0.3); box-shadow: 0 0 20px rgba(139,92,246,0.1); }
-        .workspace-tab-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px; }
-        .workspace-tab-title { font-size: 15px; font-weight: 700; color: white; }
-        .workspace-tab-count { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+        .tab-nav-item { padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; white-space: nowrap; }
+        .tab-nav-item:hover { color: rgba(255,255,255,0.8); }
+        .tab-nav-item.active { color: #a78bfa; border-bottom-color: #7c3aed; background: rgba(124,58,237,0.1); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         
-        /* KANBAN */
+        .table-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden; }
+        .table-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .table-title { font-size: 16px; font-weight: 700; color: white; }
+        .search-input { padding: 8px 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-size: 13px; color: white; outline: none; width: 240px; }
+        .search-input:focus { border-color: rgba(139,92,246,0.5); }
+        .search-input::placeholder { color: #475569; }
+        .table-wrapper { overflow-x: auto; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        thead th { text-align: left; padding: 12px 24px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.05); white-space: nowrap; }
+        tbody td { padding: 14px 24px; font-size: 14px; color: #cbd5e1; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        tbody tr:hover { background: rgba(255,255,255,0.02); }
+        
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-badge.activo { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+        .status-badge.suspendido { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .status-dot.green { background: #10b981; }
+        .status-dot.red { background: #ef4444; }
+        
+        .btn-icon-sm { width: 34px; height: 34px; border-radius: 8px; background: none; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.15s ease; }
+        .btn-icon-sm:hover { background: rgba(255,255,255,0.05); color: white; }
+        .btn-icon-sm.danger:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+        
         .kanban-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .kanban-grid.two-cols { grid-template-columns: repeat(2, 1fr); }
         .kanban-column { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; min-height: 300px; }
@@ -86,7 +106,6 @@
         .kanban-column-title { font-size: 14px; font-weight: 700; color: white; display: flex; align-items: center; gap: 8px; }
         .kanban-count { background: rgba(255,255,255,0.08); padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
         
-        /* LEAD CARDS */
         .lead-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all 0.2s ease; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
         .lead-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.1); transform: translateY(-2px); border-color: rgba(139,92,246,0.3); }
         .lead-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
@@ -100,7 +119,6 @@
         .lead-tag.payment { background: rgba(59,130,246,0.1); color: #3b82f6; }
         .lead-tag.social { background: rgba(16,185,129,0.1); color: #10b981; }
         
-        /* OFFCANVAS */
         .offcanvas-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 60; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .offcanvas-overlay.active { opacity: 1; pointer-events: auto; }
         .offcanvas { position: fixed; top: 0; right: 0; bottom: 0; width: 420px; max-width: 100%; background: #0f0f1a; border-left: 1px solid rgba(255,255,255,0.1); z-index: 70; transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; }
@@ -131,13 +149,12 @@
         .empty-state { text-align: center; padding: 40px 20px; color: #64748b; }
         
         @media (max-width: 1024px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content { margin-left: 0; } .btn-hamburger { display: flex; } .kanban-grid { grid-template-columns: 1fr; } .kanban-grid.two-cols { grid-template-columns: 1fr; } .offcanvas { width: 100%; } }
-        @media (max-width: 640px) { .content-area { padding: 16px; } .topbar { padding: 12px 16px; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } .workspace-tabs { flex-direction: column; } .workspace-tab { min-width: auto; } }
+        @media (max-width: 640px) { .content-area { padding: 16px; } .topbar { padding: 12px 16px; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     
-    <!-- SIDEBAR UNIFICADO -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="flex items-center gap-3">
@@ -170,7 +187,6 @@
         </div>
     </aside>
     
-    <!-- MAIN CONTENT -->
     <main class="main-content">
         <header class="topbar">
             <div class="flex items-center gap-4">
@@ -187,14 +203,11 @@
         </header>
         
         <div class="content-area">
-            
-            <!-- TABS -->
             <div class="flex gap-2 border-b border-white/10 mb-6 overflow-x-auto pb-2">
                 <div class="tab-nav-item active" onclick="switchTab('padron', this)">📋 Padrón Oficial</div>
                 <div class="tab-nav-item" onclick="switchTab('kanban', this)">🚀 Tablero de Ventas (Leads)</div>
             </div>
             
-            <!-- KPIs -->
             <div class="kpi-grid">
                 <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(124,58,237,0.15);"><i data-lucide="users" class="w-4 h-4" style="color:#a78bfa;"></i></div><div class="kpi-value" id="statTotalAlumnos">0</div><div class="kpi-label">Alumnos</div></div>
                 <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(16,185,129,0.15);"><i data-lucide="user-check" class="w-4 h-4" style="color:#10b981;"></i></div><div class="kpi-value" id="statActivos">0</div><div class="kpi-label">Activos</div></div>
@@ -203,7 +216,6 @@
                 <div class="kpi-card"><div class="kpi-icon-box" style="background:rgba(245,158,11,0.15);"><i data-lucide="target" class="w-4 h-4" style="color:#f59e0b;"></i></div><div class="kpi-value" id="statLeads">0</div><div class="kpi-label">Leads Activos</div></div>
             </div>
             
-            <!-- TAB PADRÓN -->
             <div class="tab-content active" id="tab-padron">
                 <div class="table-card">
                     <div class="table-header">
@@ -219,99 +231,68 @@
                 </div>
             </div>
             
-            <!-- TAB KANBAN -->
             <div class="tab-content" id="tab-kanban">
-                <!-- WORKSPACE TABS -->
-                <div class="workspace-tabs" id="workspaceTabs">
-                    <div class="workspace-tab active" data-workspace="ventas" onclick="switchWorkspace('ventas', this)">
-                        <div class="workspace-tab-icon" style="background:rgba(124,58,237,0.15);">📚</div>
-                        <div class="workspace-tab-title">Ventas (Alumnos)</div>
-                        <div class="workspace-tab-count" id="countVentas">0 leads</div>
+                <div class="workspace-tabs flex gap-3 mb-6 overflow-x-auto" id="workspaceTabs">
+                    <div class="workspace-tab active px-4 py-3 rounded-lg bg-white/5 border border-white/10 cursor-pointer" data-workspace="ventas" onclick="switchWorkspace('ventas', this)">
+                        <div class="font-bold text-sm">📚 Ventas</div>
+                        <div class="text-xs text-gray-400" id="countVentas">0 leads</div>
                     </div>
-                    <div class="workspace-tab" data-workspace="creadores" onclick="switchWorkspace('creadores', this)">
-                        <div class="workspace-tab-icon" style="background:rgba(239,68,68,0.15);">🎬</div>
-                        <div class="workspace-tab-title">Creadores</div>
-                        <div class="workspace-tab-count" id="countCreadores">0 leads</div>
+                    <div class="workspace-tab px-4 py-3 rounded-lg bg-white/5 border border-white/10 cursor-pointer" data-workspace="creadores" onclick="switchWorkspace('creadores', this)">
+                        <div class="font-bold text-sm">🎬 Creadores</div>
+                        <div class="text-xs text-gray-400" id="countCreadores">0 leads</div>
                     </div>
-                    <div class="workspace-tab" data-workspace="afiliados" onclick="switchWorkspace('afiliados', this)">
-                        <div class="workspace-tab-icon" style="background:rgba(16,185,129,0.15);">🤝</div>
-                        <div class="workspace-tab-title">Afiliados</div>
-                        <div class="workspace-tab-count" id="countAfiliados">0 leads</div>
+                    <div class="workspace-tab px-4 py-3 rounded-lg bg-white/5 border border-white/10 cursor-pointer" data-workspace="afiliados" onclick="switchWorkspace('afiliados', this)">
+                        <div class="font-bold text-sm">🤝 Afiliados</div>
+                        <div class="text-xs text-gray-400" id="countAfiliados">0 leads</div>
                     </div>
                 </div>
                 
-                <!-- KANBAN VENTAS -->
                 <div class="workspace-content" id="workspace-ventas">
                     <div class="kanban-grid">
                         <div class="kanban-column">
-                            <div class="kanban-column-header">
-                                <span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos</span>
-                                <span class="kanban-count" id="countVentasNuevos">0</span>
-                            </div>
+                            <div class="kanban-column-header"><span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos</span><span class="kanban-count" id="countVentasNuevos">0</span></div>
                             <div id="kanbanVentasNuevos"></div>
                         </div>
                         <div class="kanban-column">
-                            <div class="kanban-column-header">
-                                <span class="kanban-column-title"><i data-lucide="credit-card" class="w-4 h-4 text-yellow-400"></i> Pago Pendiente</span>
-                                <span class="kanban-count" id="countVentasPagoPendiente">0</span>
-                            </div>
+                            <div class="kanban-column-header"><span class="kanban-column-title"><i data-lucide="credit-card" class="w-4 h-4 text-yellow-400"></i> Pago Pendiente</span><span class="kanban-count" id="countVentasPagoPendiente">0</span></div>
                             <div id="kanbanVentasPagoPendiente"></div>
                         </div>
                         <div class="kanban-column">
-                            <div class="kanban-column-header">
-                                <span class="kanban-column-title"><i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i> Aprobados</span>
-                                <span class="kanban-count" id="countVentasAprobados">0</span>
-                            </div>
+                            <div class="kanban-column-header"><span class="kanban-column-title"><i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i> Aprobados</span><span class="kanban-count" id="countVentasAprobados">0</span></div>
                             <div id="kanbanVentasAprobados"></div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- KANBAN CREADORES -->
                 <div class="workspace-content" id="workspace-creadores" style="display:none;">
                     <div class="kanban-grid two-cols">
                         <div class="kanban-column">
-                            <div class="kanban-column-header">
-                                <span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos Postulantes</span>
-                                <span class="kanban-count" id="countCreadoresNuevos">0</span>
-                            </div>
+                            <div class="kanban-column-header"><span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos Postulantes</span><span class="kanban-count" id="countCreadoresNuevos">0</span></div>
                             <div id="kanbanCreadoresNuevos"></div>
                         </div>
                         <div class="kanban-column">
-                            <div class="kanban-column-header">
-                                <span class="kanban-column-title"><i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i> Aprobados</span>
-                                <span class="kanban-count" id="countCreadoresAprobados">0</span>
-                            </div>
+                            <div class="kanban-column-header"><span class="kanban-column-title"><i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i> Aprobados</span><span class="kanban-count" id="countCreadoresAprobados">0</span></div>
                             <div id="kanbanCreadoresAprobados"></div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- KANBAN AFILIADOS -->
                 <div class="workspace-content" id="workspace-afiliados" style="display:none;">
                     <div class="kanban-grid two-cols">
                         <div class="kanban-column">
-                            <div class="kanban-column-header">
-                                <span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos Postulantes</span>
-                                <span class="kanban-count" id="countAfiliadosNuevos">0</span>
-                            </div>
+                            <div class="kanban-column-header"><span class="kanban-column-title"><i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i> Nuevos Postulantes</span><span class="kanban-count" id="countAfiliadosNuevos">0</span></div>
                             <div id="kanbanAfiliadosNuevos"></div>
                         </div>
                         <div class="kanban-column">
-                            <div class="kanban-column-header">
-                                <span class="kanban-column-title"><i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i> Aprobados</span>
-                                <span class="kanban-count" id="countAfiliadosAprobados">0</span>
-                            </div>
+                            <div class="kanban-column-header"><span class="kanban-column-title"><i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i> Aprobados</span><span class="kanban-count" id="countAfiliadosAprobados">0</span></div>
                             <div id="kanbanAfiliadosAprobados"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            
         </div>
     </main>
     
-    <!-- MODAL ALUMNO -->
     <div class="modal-overlay hidden" id="alumnoModal">
         <div class="modal-card">
             <div class="modal-header"><h3 class="modal-title" id="modalTitle">Nuevo Alumno</h3><button class="modal-close" onclick="closeModal()"><i data-lucide="x" class="w-5 h-5"></i></button></div>
@@ -336,7 +317,6 @@
         </div>
     </div>
     
-    <!-- MODAL SALDO INSUFICIENTE -->
     <div class="modal-overlay hidden" id="saldoModal">
         <div class="modal-card" style="max-width: 440px; text-align: center;">
             <div class="modal-body py-8">
@@ -354,19 +334,11 @@
         </div>
     </div>
     
-    <!-- OFFCANVAS -->
     <div class="offcanvas-overlay" id="offcanvasOverlay" onclick="closeOffcanvas()"></div>
     <div class="offcanvas" id="offcanvas">
-        <div class="offcanvas-header">
-            <h3 class="offcanvas-title" id="offcanvasTitle">Detalles del Lead</h3>
-            <button class="offcanvas-close" onclick="closeOffcanvas()"><i data-lucide="x" class="w-5 h-5"></i></button>
-        </div>
-        <div class="offcanvas-body" id="offcanvasBody">
-            <!-- Contenido dinámico -->
-        </div>
-        <div class="offcanvas-footer" id="offcanvasFooter">
-            <!-- Botón dinámico -->
-        </div>
+        <div class="offcanvas-header"><h3 class="offcanvas-title" id="offcanvasTitle">Detalles del Lead</h3><button class="offcanvas-close" onclick="closeOffcanvas()"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+        <div class="offcanvas-body" id="offcanvasBody"></div>
+        <div class="offcanvas-footer" id="offcanvasFooter"></div>
     </div>
     
     <div id="toast" class="toast hidden"></div>
@@ -482,7 +454,6 @@
             return curso ? curso.titulo : 'Curso desconocido';
         }
         
-        // ============ PADRÓN ============
         async function cargarAlumnos() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
@@ -643,7 +614,6 @@
             showToast('Alumno eliminado');
         }
         
-        // ============ KANBAN LEADS ============
         async function cargarLeads() {
             const institutoId = tenantConfig?.instituto?.id;
             if (!institutoId) return;
@@ -654,7 +624,6 @@
             
             document.getElementById('statLeads').textContent = leadsData.length;
             
-            // Contadores por workspace
             const ventas = leadsData.filter(l => l.origen === 'portal_web');
             const creadores = leadsData.filter(l => l.origen === 'creador');
             const afiliados = leadsData.filter(l => l.origen === 'afiliado');
@@ -748,7 +717,6 @@
             }).join('');
         }
         
-        // ============ OFFCANVAS ============
         function abrirOffcanvas(leadId) {
             const lead = leadsData.find(l => l.id === leadId);
             if (!lead) return;
@@ -761,52 +729,13 @@
             let extraInfo = '';
             
             if (lead.origen === 'creador') {
-                if (lead.perfil_social) {
-                    socialBtn = `<a href="${lead.perfil_social}" target="_blank" class="btn-outline-light flex-1"><i data-lucide="linkedin" class="w-4 h-4"></i> Ver LinkedIn</a>`;
-                }
-                if (lead.cv_url) {
-                    cvBtn = `<a href="${lead.cv_url}" target="_blank" class="btn-outline-light flex-1"><i data-lucide="file-text" class="w-4 h-4"></i> Ver CV (PDF)</a>`;
-                }
-                extraInfo = `
-                    <div class="offcanvas-info-row">
-                        <div>
-                            <div class="offcanvas-info-label">Especialidad</div>
-                            <div class="offcanvas-info-value">${lead.especialidad || 'No especificada'}</div>
-                        </div>
-                    </div>
-                    <div class="offcanvas-info-row">
-                        <div>
-                            <div class="offcanvas-info-label">Temática del Curso</div>
-                            <div class="offcanvas-info-value">${lead.tematica || 'No especificada'}</div>
-                        </div>
-                    </div>
-                `;
+                if (lead.perfil_social) socialBtn = `<a href="${lead.perfil_social}" target="_blank" class="btn-outline-light flex-1"><i data-lucide="linkedin" class="w-4 h-4"></i> Ver LinkedIn</a>`;
+                if (lead.cv_url) cvBtn = `<a href="${lead.cv_url}" target="_blank" class="btn-outline-light flex-1"><i data-lucide="file-text" class="w-4 h-4"></i> Ver CV (PDF)</a>`;
+                extraInfo = `<div class="offcanvas-info-row"><div><div class="offcanvas-info-label">Especialidad</div><div class="offcanvas-info-value">${lead.especialidad || 'No especificada'}</div></div></div><div class="offcanvas-info-row"><div><div class="offcanvas-info-label">Temática del Curso</div><div class="offcanvas-info-value">${lead.tematica || 'No especificada'}</div></div></div>`;
             } else if (lead.origen === 'afiliado') {
-                extraInfo = `
-                    <div class="offcanvas-info-row">
-                        <div>
-                            <div class="offcanvas-info-label">Tipo</div>
-                            <div class="offcanvas-info-value">Afiliado</div>
-                        </div>
-                    </div>
-                `;
+                extraInfo = `<div class="offcanvas-info-row"><div><div class="offcanvas-info-label">Tipo</div><div class="offcanvas-info-value">Afiliado</div></div></div>`;
             } else {
-                // Ventas
-                extraInfo = `
-                    <div class="offcanvas-info-row">
-                        <div>
-                            <div class="offcanvas-info-label">Curso de Interés</div>
-                            <div class="offcanvas-info-value">${getCursoNombre(lead.curso_interes)}</div>
-                        </div>
-                    </div>
-                    ${lead.comprobante_url ? `
-                    <div class="offcanvas-info-row">
-                        <div>
-                            <div class="offcanvas-info-label">Comprobante</div>
-                            <div class="offcanvas-info-value"><a href="${lead.comprobante_url}" target="_blank" class="text-blue-400 hover:underline">Ver comprobante</a></div>
-                        </div>
-                    </div>` : ''}
-                `;
+                extraInfo = `<div class="offcanvas-info-row"><div><div class="offcanvas-info-label">Curso de Interés</div><div class="offcanvas-info-value">${getCursoNombre(lead.curso_interes)}</div></div></div>${lead.comprobante_url ? `<div class="offcanvas-info-row"><div><div class="offcanvas-info-label">Comprobante</div><div class="offcanvas-info-value"><a href="${lead.comprobante_url}" target="_blank" class="text-blue-400 hover:underline">Ver comprobante</a></div></div></div>` : ''}`;
             }
             
             document.getElementById('offcanvasBody').innerHTML = `
@@ -817,31 +746,18 @@
                         <div class="text-sm text-gray-400">${lead.origen === 'creador' ? 'Creador' : lead.origen === 'afiliado' ? 'Afiliado' : 'Alumno'}</div>
                     </div>
                 </div>
-                
-                <div class="offcanvas-info-row">
-                    <div><div class="offcanvas-info-label">Email</div><div class="offcanvas-info-value">${lead.email}</div></div>
-                </div>
-                <div class="offcanvas-info-row">
-                    <div><div class="offcanvas-info-label">Teléfono</div><div class="offcanvas-info-value">${lead.telefono || 'No registrado'}</div></div>
-                </div>
-                <div class="offcanvas-info-row">
-                    <div><div class="offcanvas-info-label">Fecha</div><div class="offcanvas-info-value">${new Date(lead.created_at).toLocaleString()}</div></div>
-                </div>
-                <div class="offcanvas-info-row">
-                    <div><div class="offcanvas-info-label">Estado</div><div class="offcanvas-info-value">${lead.estado || 'nuevo'}</div></div>
-                </div>
+                <div class="offcanvas-info-row"><div><div class="offcanvas-info-label">Email</div><div class="offcanvas-info-value">${lead.email}</div></div></div>
+                <div class="offcanvas-info-row"><div><div class="offcanvas-info-label">Teléfono</div><div class="offcanvas-info-value">${lead.telefono || 'No registrado'}</div></div></div>
+                <div class="offcanvas-info-row"><div><div class="offcanvas-info-label">Fecha</div><div class="offcanvas-info-value">${new Date(lead.created_at).toLocaleString()}</div></div></div>
+                <div class="offcanvas-info-row"><div><div class="offcanvas-info-label">Estado</div><div class="offcanvas-info-value">${lead.estado || 'nuevo'}</div></div></div>
                 ${extraInfo}
             `;
             
             if (lead.estado !== 'aprobado') {
                 const actionFn = (lead.origen === 'creador' || lead.origen === 'afiliado') ? `aprobarLead('${lead.id}')` : `matricularLead('${lead.id}')`;
-                document.getElementById('offcanvasFooter').innerHTML = `
-                    <button class="btn-approve" onclick="${actionFn}"><i data-lucide="check-circle" class="w-4 h-4"></i> Aprobar Lead</button>
-                `;
+                document.getElementById('offcanvasFooter').innerHTML = `<button class="btn-approve" onclick="${actionFn}"><i data-lucide="check-circle" class="w-4 h-4"></i> Aprobar Lead</button>`;
             } else {
-                document.getElementById('offcanvasFooter').innerHTML = `
-                    <div class="text-center w-full py-3 text-green-400 font-semibold">✓ Lead Aprobado</div>
-                `;
+                document.getElementById('offcanvasFooter').innerHTML = `<div class="text-center w-full py-3 text-green-400 font-semibold">✓ Lead Aprobado</div>`;
             }
             
             if (socialBtn || cvBtn) {
@@ -870,6 +786,16 @@
             if (!confirm(`¿Aprobar a ${lead.nombre_completo}?`)) return;
             
             try {
+                // 0. AUTO-REGISTRO MÁGICO SILENCIOSO
+                const telefonoLimpio = (lead.telefono || '').replace(/[^0-9]/g, '');
+                const passwordGenerada = telefonoLimpio.length >= 6 ? telefonoLimpio : 'asari123';
+                
+                try {
+                    await registrarUsuarioEnAuth(lead.email, passwordGenerada, lead.nombre_completo);
+                } catch (e) {
+                    console.log("Nota: El usuario ya existía en Auth o hubo un error menor.", e);
+                }
+
                 // 1. Actualizar estado del lead
                 const { error: updateLeadError } = await window.supabase.from('crm_leads')
                     .update({ estado: 'aprobado' })
@@ -881,7 +807,7 @@
                 if (lead.origen === 'creador') rol = 'creador';
                 else if (lead.origen === 'afiliado') rol = 'afiliado';
                 
-                // 3. UPSERT en sys_roles_usuarios (AHORA INSERTA EN rol_nivel)
+                // 3. UPSERT en sys_roles_usuarios
                 const { error: upsertError } = await window.supabase.from('sys_roles_usuarios')
                     .upsert({
                         user_email: lead.email,
@@ -891,17 +817,16 @@
                     }, { onConflict: 'user_email,instituto_id' });
                 if (upsertError) throw upsertError;
                 
-                // 4. Disparar WhatsApp
+                // 4. Disparar WhatsApp con las Credenciales
                 let mensaje = '';
                 if (lead.origen === 'creador') {
-                    mensaje = `¡Hola ${lead.nombre_completo}! 🎉 Tu postulación en nuestro Instituto ha sido aprobada. Regístrate en nuestro portal con tu correo (${lead.email}) y tu panel de Creator Studio se activará automáticamente.`;
+                    mensaje = `¡Hola ${lead.nombre_completo}! 🎉 Tu postulación en nuestro Instituto ha sido aprobada.\n\nIngresa a nuestro portal con estos datos:\n📧 Usuario: ${lead.email}\n🔑 Contraseña: ${passwordGenerada}\n\nTu Creator Studio se activará automáticamente al entrar.`;
                 } else if (lead.origen === 'afiliado') {
-                    mensaje = `¡Hola ${lead.nombre_completo}! 🤝 Tu solicitud de afiliado ha sido aprobada. Regístrate con tu correo (${lead.email}) y tu código de afiliado se activará automáticamente.`;
+                    mensaje = `¡Hola ${lead.nombre_completo}! 🤝 Tu solicitud de afiliado ha sido aprobada.\n\nIngresa a nuestro portal con estos datos:\n📧 Usuario: ${lead.email}\n🔑 Contraseña: ${passwordGenerada}\n\nTu panel de ganancias se activará automáticamente al entrar.`;
                 } else {
-                    mensaje = `¡Hola ${lead.nombre_completo}! 🎉 Tu inscripción ha sido aprobada. Regístrate con tu correo (${lead.email}) para acceder al campus.`;
+                    mensaje = `¡Hola ${lead.nombre_completo}! 🎉 Tu cuenta ha sido aprobada.\n\nIngresa al portal con estos datos:\n📧 Usuario: ${lead.email}\n🔑 Contraseña: ${passwordGenerada}`;
                 }
                 
-                const telefonoLimpio = (lead.telefono || '').replace(/[^0-9+]/g, '');
                 if (telefonoLimpio) {
                     const url = `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
                     window.open(url, '_blank');
@@ -909,7 +834,7 @@
                 
                 closeOffcanvas();
                 await cargarLeads();
-                showToast('Lead aprobado correctamente');
+                showToast('Lead aprobado y usuario creado mágicamente');
             } catch(err) {
                 showToast('Error: ' + err.message, 'error');
             }
