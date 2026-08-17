@@ -535,6 +535,7 @@
         
         let tenantConfig = null;
         let afiliadoEmail = null;
+        let afiliadoId = null;
         let ventasAfiliado = [];
         let saldoTotal = 0;
         
@@ -640,13 +641,13 @@
         }
         
         async function cargarDatosAfiliado() {
-            if (!afiliadoEmail) return;
+            if (!afiliadoId) return;
             
             try {
                 const { data, error } = await window.supabase
                     .from('sys_billetera_afiliados')
                     .select('*')
-                    .eq('afiliado_email', afiliadoEmail)
+                    .eq('afiliado_id', afiliadoId)
                     .order('created_at', { ascending: false });
                 
                 if (error) throw error;
@@ -763,6 +764,7 @@
                 document.getElementById('avatarIniciales').textContent = iniciales;
                 
                 afiliadoEmail = session.user.email;
+                afiliadoId = session.user.id;
                 
                 // 🔗 GENERADOR DE ENLACE MÁGICO DINÁMICO
                 const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
