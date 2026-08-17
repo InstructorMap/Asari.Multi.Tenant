@@ -190,19 +190,20 @@ window.fetchTenantConfig = fetchTenantConfig;
  * @returns {Promise<string>} Rol del usuario ('dios', 'director', 'secretario', 'asesor', 'creador', 'profesor', 'afiliado', 'alumno').
  */
 window.obtenerRolUsuario = async function(email, instituto_id) {
-    // 1. Buscar en sys_roles_usuarios (Staff, Directores, Asesores, Secretarios, Creadores, Afiliados)
+    // 1. Buscar en sys_roles_usuarios (AHORA BUSCA rol_nivel)
     const { data: rolData } = await window.supabase.from('sys_roles_usuarios')
-        .select('rol').eq('user_email', email).eq('instituto_id', instituto_id).maybeSingle();
-    if (rolData) return rolData.rol;
+        .select('rol_nivel').eq('user_email', email).eq('instituto_id', instituto_id).maybeSingle();
+    
+    if (rolData && rolData.rol_nivel) return rolData.rol_nivel;
 
-    // 2. Si no está en roles, buscar en padron_global (Alumnos)
+    // 2. Si no está en roles, buscar en padron_global (Alumnos usan 'rol')
     const { data: alumnoData } = await window.supabase.from('padron_global')
         .select('rol').eq('email', email).eq('instituto_id', instituto_id).maybeSingle();
-    if (alumnoData) return alumnoData.rol;
+    
+    if (alumnoData && alumnoData.rol) return alumnoData.rol;
 
     return 'alumno'; // Rol por defecto si no se encuentra
 };
-
 // ============================================
 // ENRUTADOR INTELIGENTE (Post-Login)
 // ============================================
