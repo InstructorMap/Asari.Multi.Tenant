@@ -177,3 +177,110 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Exportar para uso en otros scripts
 window.getTenantSlug = getTenantSlug;
 window.fetchTenantConfig = fetchTenantConfig;
+
+// ============================================
+// RBAC CENTRAL (Role-Based Access Control)
+// ============================================
+
+/**
+ * Obtiene el rol del usuario activo cruzando la tabla sys_roles_usuarios y padron_global.
+ * 
+ * @param {string} email - Email del usuario autenticado.
+ * @param {string} instituto_id - ID del instituto/tenant.
+ * @returns {Promise<string>} Rol del usuario ('dios', 'director', 'secretario', 'asesor', 'creador', 'profesor', 'afiliado', 'alumno').
+ */
+window.obtenerRolUsuario = async function(email, instituto_id) {
+    // 1. Buscar en sys_roles_usuarios (Staff, Directores, Asesores, Secretarios, Creadores, Afiliados)
+    const { data: rolData } = await window.supabase.from('sys_roles_usuarios')
+        .select('rol').eq('user_email', email).eq('instituto_id', instituto_id).maybeSingle();
+    if (rolData) return rolData.rol;
+
+    // 2. Si no está en roles, buscar en padron_global (Alumnos)
+    const { data: alumnoData } = await window.supabase.from('padron_global')
+        .select('rol').eq('email', email).eq('instituto_id', instituto_id).maybeSingle();
+    if (alumnoData) return alumnoData.rol;
+
+    return 'alumno'; // Rol por defecto si no se encuentra
+};
+
+// ============================================
+// ENRUTADOR INTELIGENTE (Post-Login)
+// ============================================
+
+/**
+ * Redirige al usuario al panel correspondiente según su rol.
+ * Se usa después del login para teletransportar al usuario.
+ */
+window.enrutarPorRol = async function() {
+    const { data: { session } } = await window.supabase.auth.getSession();
+    if (!session?.user) return;
+
+    const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+
+    // Intentar obtener el tenant actual de la memoria o recargarlo
+    let tenantId = null;
+    if (window.__TENANT_CONFIG__ && window.__TENANT_CONFIG__.instituto) {
+        tenantId = window.__TENANT_CONFIG__.instituto.id;
+    } else if (typeof window.fetchTenantConfig === 'function') {
+        const tenant = await window.fetchTenantConfig();
+        if (tenant && tenant.instituto) tenantId = tenant.instituto.id;
+    }
+
+    if (!tenantId) return;
+
+    const rol = await window.obtenerRolUsuario(session.user.email, tenantId);
+
+    // Guardar rol localmente por velocidad
+    localStorage.setItem('asari_user_rol', rol);
+
+    // Teletransportación basada en la Matriz de Poder
+    if (rol === 'dios') window.location.href = `admin-dios.html`;
+    else if (rol === 'director') window.location.href = `dashboard.html?instituto=${slug}`;
+    else if (rol === 'secretario') window.location.href = `campus-admin.html?instituto=${slug}`;
+    else if (rol === 'asesor') window.location.href = `crm.html?instituto=${slug}`;
+    else if (rol === 'creador' || rol === 'profesor') window.location.href = `creator-studio.html?instituto=${slug}`;
+    else if (rol === 'afiliado') window.location.href = `afiliados.html?instituto=${slug}`;
+    else window.location.href = `billetera.html?instituto=${slug}`; // Alumno
+};
+
+// ============================================
+// BLINDAJE DE RUTAS (El Guardián)
+// ============================================
+
+/**
+ * Protege una ruta verificando que el usuario tenga un rol permitido.
+ * Si no tiene sesión, lo envía al login.
+ * Si su rol no está en rolesPermitidos, lo expulsa a su panel autorizado.
+ * 
+ * @param {string[]} rolesPermitidos - Array de roles permitidos para acceder a la página.
+ */
+window.protegerRuta = async function(rolesPermitidos) {
+    const { data: { session } } = await window.supabase.auth.getSession();
+    const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+
+    if (!session?.user) {
+        window.location.href = `login.html?instituto=${slug}`;
+        return;
+    }
+
+    let rol = localStorage.getItem('asari_user_rol');
+    if (!rol) {
+        let tenantId = null;
+        if (window.__TENANT_CONFIG__ && window.__TENANT_CONFIG__.instituto) {
+            tenantId = window.__TENANT_CONFIG__.instituto.id;
+        } else if (typeof window.fetchTenantConfig === 'function') {
+            const tenant = await window.fetchTenantConfig();
+            if (tenant && tenant.instituto) tenantId = tenant.instituto.id;
+        }
+        if (tenantId) {
+            rol = await window.obtenerRolUsuario(session.user.email, tenantId);
+            localStorage.setItem('asari_user_rol', rol);
+        }
+    }
+
+    // Si el rol no está en el array de permitidos, lo expulsamos
+    if (rol && !rolesPermitidos.includes(rol)) {
+        alert('Acceso Denegado. Redirigiendo a tu panel autorizado.');
+        window.enrutarPorRol(); 
+    }
+};
