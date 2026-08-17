@@ -987,6 +987,10 @@
         
         async function inicializar() {
             if (!await checkAuth()) return;
+            
+            // 🛡️ ESCUDO DE ROL: Solo Director y Asesor pueden ver el CRM
+            await window.protegerRuta(['director', 'asesor', 'dios']);
+            
             await inicializarTenant();
         }
         window.addEventListener('DOMContentLoaded', inicializar);
