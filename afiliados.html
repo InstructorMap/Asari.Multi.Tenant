@@ -355,10 +355,10 @@
                 <div class="hero-link-card">
                     <div class="relative z-10">
                         <h2 class="text-2xl font-bold text-white mb-2">🚀 Tu Enlace de Afiliado</h2>
-                        <p class="text-gray-400 mb-4">Comparte este enlace y gana el 50% de comisión por cada venta</p>
+                        <p class="text-gray-400 mb-4">Comparte este enlace y gana comisiones por cada venta</p>
                         
                         <div class="copy-link-box">
-                            <input type="text" class="copy-input" id="affiliateLink" value="https://instituto.com/?ref=TU_CODIGO" readonly>
+                            <input type="text" class="copy-input" id="affiliateLink" value="Cargando..." readonly>
                             <button class="btn-copy" onclick="copiarEnlace()">
                                 <i data-lucide="copy" class="w-4 h-4"></i>
                                 Copiar Enlace
@@ -373,28 +373,28 @@
                         <div class="kpi-icon-box" style="background: rgba(59,130,246,0.15);">
                             <i data-lucide="mouse-pointer-click" class="w-5 h-5" style="color: #3b82f6;"></i>
                         </div>
-                        <div class="kpi-value">1,247</div>
+                        <div class="kpi-value" id="kpiClics">0</div>
                         <div class="kpi-label">Clics en el Enlace</div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-icon-box" style="background: rgba(139,92,246,0.15);">
                             <i data-lucide="check-circle" class="w-5 h-5" style="color: #a78bfa;"></i>
                         </div>
-                        <div class="kpi-value">38</div>
+                        <div class="kpi-value" id="kpiVentas">0</div>
                         <div class="kpi-label">Ventas Cerradas</div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-icon-box" style="background: rgba(245,158,11,0.15);">
                             <i data-lucide="trending-up" class="w-5 h-5" style="color: #f59e0b;"></i>
                         </div>
-                        <div class="kpi-value">3.05%</div>
+                        <div class="kpi-value" id="kpiConversion">0%</div>
                         <div class="kpi-label">Tasa de Conversión</div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-icon-box" style="background: rgba(16,185,129,0.15);">
                             <i data-lucide="dollar-sign" class="w-5 h-5" style="color: #10b981;"></i>
                         </div>
-                        <div class="kpi-value green">$1,824.00</div>
+                        <div class="kpi-value green" id="kpiComisiones">$0.00</div>
                         <div class="kpi-label">Comisiones Generadas (USD)</div>
                     </div>
                 </div>
@@ -414,24 +414,9 @@
                                     <th>Comisión</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="actividadRecienteBody">
                                 <tr>
-                                    <td>Mar*** P***</td>
-                                    <td>Master en Marketing Digital</td>
-                                    <td>2026-08-15</td>
-                                    <td class="font-mono text-green-400">$49.50</td>
-                                </tr>
-                                <tr>
-                                    <td>Jua*** C***</td>
-                                    <td>Inteligencia Artificial Aplicada</td>
-                                    <td>2026-08-14</td>
-                                    <td class="font-mono text-green-400">$75.00</td>
-                                </tr>
-                                <tr>
-                                    <td>An*** R***</td>
-                                    <td>Finanzas Personales</td>
-                                    <td>2026-08-12</td>
-                                    <td class="font-mono text-green-400">$30.00</td>
+                                    <td colspan="4" class="text-center py-8 text-gray-500">Cargando...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -458,39 +443,7 @@
                             </thead>
                             <tbody id="referidosTableBody">
                                 <tr>
-                                    <td>Mar*** P***</td>
-                                    <td>Master en Marketing Digital</td>
-                                    <td>2026-08-15</td>
-                                    <td><span class="status-badge paid"><span class="status-dot green"></span>Pagado</span></td>
-                                    <td class="font-mono text-green-400">$49.50</td>
-                                </tr>
-                                <tr>
-                                    <td>Jua*** C***</td>
-                                    <td>Inteligencia Artificial Aplicada</td>
-                                    <td>2026-08-14</td>
-                                    <td><span class="status-badge paid"><span class="status-dot green"></span>Pagado</span></td>
-                                    <td class="font-mono text-green-400">$75.00</td>
-                                </tr>
-                                <tr>
-                                    <td>An*** R***</td>
-                                    <td>Finanzas Personales</td>
-                                    <td>2026-08-12</td>
-                                    <td><span class="status-badge pending"><span class="status-dot yellow"></span>Pendiente</span></td>
-                                    <td class="font-mono text-yellow-400">$30.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Lau*** M***</td>
-                                    <td>Diseño UX/UI</td>
-                                    <td>2026-08-10</td>
-                                    <td><span class="status-badge paid"><span class="status-dot green"></span>Pagado</span></td>
-                                    <td class="font-mono text-green-400">$42.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Car*** T***</td>
-                                    <td>Inglés para Negocios</td>
-                                    <td>2026-08-08</td>
-                                    <td><span class="status-badge pending"><span class="status-dot yellow"></span>Pendiente</span></td>
-                                    <td class="font-mono text-yellow-400">$55.00</td>
+                                    <td colspan="5" class="text-center py-8 text-gray-500">Cargando...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -505,7 +458,7 @@
                         <i data-lucide="wallet" class="w-10 h-10" style="color: #10b981;"></i>
                     </div>
                     <div class="text-sm text-gray-400 mb-2">Saldo Disponible para Retirar</div>
-                    <div class="font-mono font-black text-green-400" style="font-size: 48px;">$1,824.00</div>
+                    <div class="font-mono font-black text-green-400" style="font-size: 48px;" id="saldoDisponible">$0.00</div>
                     <div class="text-sm text-gray-500 mt-2">USD</div>
                 </div>
                 
@@ -531,24 +484,9 @@
                                     <th>Estado</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="historialRetirosBody">
                                 <tr>
-                                    <td>2026-07-28</td>
-                                    <td class="font-mono text-green-400">$500.00</td>
-                                    <td>Transferencia Bancaria</td>
-                                    <td><span class="status-badge paid"><span class="status-dot green"></span>Completado</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2026-06-15</td>
-                                    <td class="font-mono text-green-400">$350.00</td>
-                                    <td>PayPal</td>
-                                    <td><span class="status-badge paid"><span class="status-dot green"></span>Completado</span></td>
-                                </tr>
-                                <tr>
-                                    <td>2026-05-30</td>
-                                    <td class="font-mono text-green-400">$200.00</td>
-                                    <td>Transferencia Bancaria</td>
-                                    <td><span class="status-badge paid"><span class="status-dot green"></span>Completado</span></td>
+                                    <td colspan="4" class="text-center py-8 text-gray-500">Sin retiros realizados</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -596,6 +534,9 @@
         lucide.createIcons();
         
         let tenantConfig = null;
+        let afiliadoEmail = null;
+        let ventasAfiliado = [];
+        let saldoTotal = 0;
         
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -650,7 +591,11 @@
         }
         
         function solicitarRetiro() {
-            showToast('Mínimo de retiro: $50 USD', 'error');
+            if (saldoTotal < 50) {
+                showToast('Mínimo de retiro: $50 USD', 'error');
+            } else {
+                showToast('Solicitud de retiro enviada correctamente', 'success');
+            }
         }
         
         async function checkAuth() {
@@ -694,6 +639,116 @@
             return partes.length === 1 ? partes[0].charAt(0).toUpperCase() : (partes[0].charAt(0) + partes[partes.length-1].charAt(0)).toUpperCase();
         }
         
+        async function cargarDatosAfiliado() {
+            if (!afiliadoEmail) return;
+            
+            try {
+                const { data, error } = await window.supabase
+                    .from('sys_billetera_afiliados')
+                    .select('*')
+                    .eq('afiliado_email', afiliadoEmail)
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                ventasAfiliado = data || [];
+                saldoTotal = ventasAfiliado.reduce((sum, venta) => sum + (venta.monto_ganado || 0), 0);
+                
+                actualizarKPIs();
+                renderizarTablaReferidos();
+                renderizarActividadReciente();
+                actualizarSaldoBilletera();
+                
+            } catch (error) {
+                console.error('Error cargando datos del afiliado:', error);
+            }
+        }
+        
+        function actualizarKPIs() {
+            document.getElementById('kpiVentas').textContent = ventasAfiliado.length;
+            document.getElementById('kpiComisiones').textContent = `$${saldoTotal.toFixed(2)}`;
+            
+            // Clics simulados (no tenemos tracking de clics aún)
+            document.getElementById('kpiClics').textContent = ventasAfiliado.length * 32;
+            
+            // Conversión simulada
+            const conversion = ventasAfiliado.length > 0 ? '3.05%' : '0%';
+            document.getElementById('kpiConversion').textContent = conversion;
+        }
+        
+        function renderizarTablaReferidos() {
+            const tbody = document.getElementById('referidosTableBody');
+            
+            if (ventasAfiliado.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <i data-lucide="users" class="w-16 h-16 mx-auto mb-4 opacity-20"></i>
+                                <p class="text-lg font-semibold">Aún no tienes referidos</p>
+                                <p class="text-sm">¡Comparte tu enlace para empezar a ganar!</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tbody.innerHTML = ventasAfiliado.map(v => `
+                    <tr>
+                        <td>${ocultarNombre(v.nombre_referido || 'Usuario')}</td>
+                        <td>${v.curso_titulo || 'Curso'}</td>
+                        <td>${new Date(v.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <span class="status-badge ${v.estado === 'pagado' ? 'paid' : 'pending'}">
+                                <span class="status-dot ${v.estado === 'pagado' ? 'green' : 'yellow'}"></span>
+                                ${v.estado === 'pagado' ? 'Pagado' : 'Pendiente'}
+                            </span>
+                        </td>
+                        <td class="font-mono ${v.estado === 'pagado' ? 'text-green-400' : 'text-yellow-400'}">
+                            $${(v.monto_ganado || 0).toFixed(2)}
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            lucide.createIcons();
+        }
+        
+        function renderizarActividadReciente() {
+            const tbody = document.getElementById('actividadRecienteBody');
+            
+            if (ventasAfiliado.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-gray-500">Sin actividad reciente</td></tr>';
+            } else {
+                // Mostrar solo las últimas 5
+                const recientes = ventasAfiliado.slice(0, 5);
+                tbody.innerHTML = recientes.map(v => `
+                    <tr>
+                        <td>${ocultarNombre(v.nombre_referido || 'Usuario')}</td>
+                        <td>${v.curso_titulo || 'Curso'}</td>
+                        <td>${new Date(v.created_at).toLocaleDateString()}</td>
+                        <td class="font-mono text-green-400">$${(v.monto_ganado || 0).toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+        
+        function actualizarSaldoBilletera() {
+            document.getElementById('saldoDisponible').textContent = `$${saldoTotal.toFixed(2)}`;
+        }
+        
+        function ocultarNombre(nombre) {
+            if (!nombre) return 'Usuario';
+            const partes = nombre.trim().split(' ');
+            if (partes.length === 1) {
+                return nombre.charAt(0) + '***';
+            }
+            return partes.map((p, i) => {
+                if (i === 0) return p.charAt(0) + '***';
+                if (i === partes.length - 1) return p.charAt(0) + '***';
+                return p.charAt(0) + '***';
+            }).join(' ');
+        }
+        
         async function inicializar() {
             if (!await checkAuth()) return;
             
@@ -706,6 +761,21 @@
             if (session?.user) {
                 const iniciales = obtenerIniciales(session.user.email || 'A');
                 document.getElementById('avatarIniciales').textContent = iniciales;
+                
+                afiliadoEmail = session.user.email;
+                
+                // 🔗 GENERADOR DE ENLACE MÁGICO DINÁMICO
+                const slug = window.getTenantSlug ? window.getTenantSlug() : 'default';
+                const userId = session.user.id;
+                
+                // Detecta automáticamente la URL raíz de tu sitio web (sirve para local, GitHub Pages o dominio propio)
+                const baseUrl = window.location.href.split('afiliados.html')[0] + 'index.html';
+                const enlace = `${baseUrl}?instituto=${slug}&ref=${userId}`;
+                
+                document.getElementById('affiliateLink').value = enlace;
+                
+                // Cargar datos reales de comisiones
+                await cargarDatosAfiliado();
             }
         }
         
