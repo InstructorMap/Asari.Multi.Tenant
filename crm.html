@@ -173,7 +173,7 @@
             <a href="dashboard.html" class="nav-item"><i data-lucide="bar-chart-3" class="w-4 h-4"></i><span>Dashboard</span></a>
             <a href="staff.html" class="nav-item"><i data-lucide="shield" class="w-4 h-4"></i><span>Staff & Permisos</span></a>
             <a href="crm.html" class="nav-item active"><i data-lucide="users" class="w-4 h-4"></i><span>Alumnos</span></a>
-            <a href="sedes.html" class="nav-item"><i data-lucide="map-pin" class="w-4 h-4"></i><span>Sedes y Cobros</span></a>
+            <a href="admin-finanzas.html" class="nav-item"><i data-lucide="wallet" class="w-4 h-4"></i><span>Tesorería & Finanzas</span></a>
             <a href="campus-admin.html" class="nav-item"><i data-lucide="graduation-cap" class="w-4 h-4"></i><span>Campus Virtual</span></a>
             <a href="marketplace.html" class="nav-item"><i data-lucide="shopping-bag" class="w-4 h-4"></i><span>Marketplace</span></a>
             <a href="certificados.html" class="nav-item"><i data-lucide="award" class="w-4 h-4"></i><span>Certificaciones</span></a>
@@ -869,6 +869,25 @@
                     datos_dinamicos: { matricula: 'LEAD-' + lead.id.substring(0,8).toUpperCase() }
                 }]).select().single();
                 if (insertError) throw insertError;
+                
+                // ✅ INYECCIÓN FINANCIERA: Crear registro de cuotas en sys_inscripciones
+                const { error: errorInscripcion } = await window.supabase
+                    .from('sys_inscripciones')
+                    .insert([{
+                        instituto_id: tenantConfig.instituto.id,
+                        alumno_email: lead.email,
+                        curso_id: lead.curso_interes,
+                        tipo_pago: 'suscripcion',
+                        cuotas_totales: 12,
+                        cuotas_pagadas: 1,
+                        proximo_vencimiento: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
+                        estado_acceso: 'activo'
+                    }]);
+
+                if (errorInscripcion) {
+                    console.error("Error al crear ficha financiera:", errorInscripcion);
+                    showToast('Alumno aprobado, pero hubo un error al crear sus cuotas.', 'error');
+                }
                 
                 const nuevoSaldo = saldoUSD - costoAlta;
                 await window.supabase.from('sys_billetera_institutos').update({ saldo_usd: nuevoSaldo }).eq('instituto_id', tenantConfig.instituto.id);
